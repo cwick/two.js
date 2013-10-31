@@ -4,12 +4,13 @@ body {
     size: 14px;
     weight: normal;
   }
+  color: #111211;
 }
 
 .dialog {
   border: {
     color: #999999;
-    width: 1px;
+    width: 2px;
     style: solid;
   }
   -webkit-border-radius: 8px;
@@ -25,7 +26,7 @@ body {
   }
 }
 
-input, select {
+input, select, textarea {
   border: {
     style: solid;
     color: rgb(160,160,160);
@@ -35,8 +36,9 @@ input, select {
 }
 
 input[type="number"] {
-  color: #79B7FE;
+  color: #0076FF;
   &:focus {
+    color: #111211;
     outline: {
       width: 1px;
       color: rgb(160,160,160);

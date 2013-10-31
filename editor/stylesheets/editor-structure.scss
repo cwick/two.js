@@ -28,6 +28,7 @@
   }
 
   td {
+    cursor: default;
     &:first-child {
       padding-right: 10px;
     }
@@ -139,3 +140,4 @@ input::-webkit-inner-spin-button {
     cursor: nwse-resize;
   }
 }
+
