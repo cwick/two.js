@@ -1,3 +1,3 @@
 define
   run: ->
-    alert 'hello'
+    console.log 'hello'
