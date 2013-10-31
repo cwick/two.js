@@ -15,16 +15,47 @@
   top: 0;
   flex-direction: column;
 
-  .dialog-header {
+  .header {
     min-height: 15px;
     width: 100%;
     -webkit-border-top-left-radius: inherit;
     -webkit-border-top-right-radius: inherit;
   }
+
+  .body {
+    padding: 5px;
+  }
+
+  td {
+    &:first-child {
+      padding-right: 10px;
+    }
+  }
 }
 
 .drag-handle {
   cursor: move;
+}
+
+input, select, textarea {
+  -webkit-box-sizing: border-box;
+  width: 100%;
+}
+input[type="number"] {
+  width: 55px;
+  border: none;
+  background-color: inherit;
+  cursor: ew-resize;
+  padding: 4px;
+  padding-left: 4px;
+  &:focus {
+    cursor: auto;
+    box-shadow: none;
+    -webkit-box-shadow: none;
+  }
+}
+input[type="checkbox"] {
+  width: inherit;
 }
 
 // http://stackoverflow.com/questions/3790935/can-i-hide-the-html5-number-inputs-spin-box

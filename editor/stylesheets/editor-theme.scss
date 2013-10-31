@@ -14,12 +14,13 @@ body {
   }
   -webkit-border-radius: 8px;
 
-  .dialog-header {
-    background-color: #F7F7F7;
+  background-color: #F7F7F7;
+
+  .header {
     border-bottom: {
       color: #E2E3E2;
       style: solid;
-      width: 1px;
+      width: 2px;
     }
   }
 }
@@ -33,3 +34,13 @@ input, select {
   -webkit-border-radius: 4px;
 }
 
+input[type="number"] {
+  color: #79B7FE;
+  &:focus {
+    outline: {
+      width: 1px;
+      color: rgb(160,160,160);
+      style: solid;
+    }
+  }
+}
