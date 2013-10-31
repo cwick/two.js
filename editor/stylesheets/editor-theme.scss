@@ -46,3 +46,16 @@ input[type="number"] {
     }
   }
 }
+
+.tab.active {
+  color: #0076FF;
+}
+
+.tabs {
+  justify-content: space-between;
+  border-top: {
+    color: #E2E3E2;
+    style: solid;
+    width: 2px;
+  }
+}
