@@ -1,3 +1,3 @@
-define
+define ['./dialog'], (Dialog) ->
   run: ->
-    console.log 'hello'
+    dialog = new Dialog()

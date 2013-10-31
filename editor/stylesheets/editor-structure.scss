@@ -76,6 +76,7 @@ input::-webkit-inner-spin-button {
 .resizable {
   %resize {
     -webkit-border-radius: inherit;
+    background-color: red;
   }
 
   %vertical-resize {
