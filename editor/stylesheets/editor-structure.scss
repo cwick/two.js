@@ -74,15 +74,15 @@ input::-webkit-inner-spin-button {
 }
 
 .resizable {
+  $handle_width: 4px;
   %resize {
     -webkit-border-radius: inherit;
-    background-color: red;
   }
 
   %vertical-resize {
     @extend %resize;
     cursor: ns-resize;
-    height: 4px;
+    height: $handle_width;
     position: absolute;
     width: 100%;
   }
@@ -90,30 +90,30 @@ input::-webkit-inner-spin-button {
   %horizontal-resize {
     @extend %resize;
     cursor: ew-resize;
-    width: 4px;
+    width: $handle_width;
     position: absolute;
     height: 100%;
   }
 
   .bottom-resize {
     @extend %vertical-resize;
-    bottom: 0;
+    bottom: -$handle_width/2;
   }
   .top-resize {
     @extend %vertical-resize;
-    top: 0;
+    top: -$handle_width/2;
   }
   .left-resize {
     @extend %horizontal-resize;
-    left: 0;
+    left: -$handle_width/2;
   }
   .right-resize {
     @extend %horizontal-resize;
-    right: 0;
+    right: -$handle_width/2;
   }
   %corner-resize {
-    width: 8px;
-    height: 8px;
+    width: $handle_width*2;
+    height: $handle_width*2;
   }
   .bottom-left-resize {
     @extend .bottom-resize;

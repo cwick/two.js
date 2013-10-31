@@ -8,11 +8,7 @@ body {
 }
 
 .dialog {
-  border: {
-    color: #999999;
-    width: 2px;
-    style: solid;
-  }
+  box-shadow: 0px 0px 0px 2px #999999;
   -webkit-border-radius: 8px;
 
   background-color: #F7F7F7;
