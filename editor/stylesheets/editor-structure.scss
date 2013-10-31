@@ -1,0 +1,44 @@
+.panel {
+  display: -webkit-flex;
+  -webkit-user-select: none;
+}
+
+.viewport {
+  width: 100%;
+}
+
+.dialog {
+  position: absolute;
+  min-width: 100px;
+  min-height: 50px;
+  left: 0;
+  top: 0;
+  flex-direction: column;
+
+  .dialog-header {
+    min-height: 15px;
+    width: 100%;
+    -webkit-border-top-left-radius: inherit;
+    -webkit-border-top-right-radius: inherit;
+  }
+}
+
+.drag-handle {
+  cursor: move;
+}
+
+// http://stackoverflow.com/questions/3790935/can-i-hide-the-html5-number-inputs-spin-box
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  /* display: none; <- Crashes Chrome on hover */
+  -webkit-appearance: none;
+  margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+}
+
+#editor {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+}
+
+
