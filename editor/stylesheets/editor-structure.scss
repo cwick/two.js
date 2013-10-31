@@ -14,6 +14,7 @@
   left: 0;
   top: 0;
   flex-direction: column;
+  opacity: 0.95;
 
   .header {
     min-height: 15px;
@@ -42,12 +43,11 @@ input, select, textarea {
   width: 100%;
 }
 input[type="number"] {
-  width: 55px;
+  width: 44px;
   border: none;
   background-color: inherit;
   cursor: ew-resize;
   padding: 4px;
-  padding-left: 4px;
   &:focus {
     cursor: auto;
     box-shadow: none;
@@ -72,4 +72,70 @@ input::-webkit-inner-spin-button {
   position: absolute;
 }
 
+.resizable {
+  %resize {
+    -webkit-border-radius: inherit;
+  }
 
+  %vertical-resize {
+    @extend %resize;
+    cursor: ns-resize;
+    height: 4px;
+    position: absolute;
+    width: 100%;
+  }
+
+  %horizontal-resize {
+    @extend %resize;
+    cursor: ew-resize;
+    width: 4px;
+    position: absolute;
+    height: 100%;
+  }
+
+  .bottom-resize {
+    @extend %vertical-resize;
+    bottom: 0;
+  }
+  .top-resize {
+    @extend %vertical-resize;
+    top: 0;
+  }
+  .left-resize {
+    @extend %horizontal-resize;
+    left: 0;
+  }
+  .right-resize {
+    @extend %horizontal-resize;
+    right: 0;
+  }
+  %corner-resize {
+    width: 8px;
+    height: 8px;
+  }
+  .bottom-left-resize {
+    @extend .bottom-resize;
+    @extend .left-resize;
+    width: 8px;
+    height: 8px;
+    cursor: nesw-resize;
+  }
+  .bottom-right-resize {
+    @extend .bottom-resize;
+    @extend .right-resize;
+    @extend %corner-resize;
+    cursor: nwse-resize;
+  }
+  .top-right-resize {
+    @extend .top-resize;
+    @extend .right-resize;
+    @extend %corner-resize;
+    cursor: nesw-resize;
+  }
+  .top-left-resize {
+    @extend .top-resize;
+    @extend .left-resize;
+    @extend %corner-resize;
+    cursor: nwse-resize;
+  }
+}
