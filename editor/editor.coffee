@@ -1,0 +1,3 @@
+define
+  run: ->
+    alert 'hello'
