@@ -2,7 +2,7 @@ body {
   font: {
     family: Helvetica, Arial, sans-serif;
     size: 14px;
-    weight: normal;
+    weight: lighter;
   }
   color: #111211;
 }
@@ -10,7 +10,7 @@ body {
 .dialog {
   border: {
     color: #999999;
-    width: 2px;
+    width: 1px;
     style: solid;
   }
   -webkit-border-radius: 8px;
@@ -43,6 +43,7 @@ input[type="number"] {
       width: 1px;
       color: rgb(160,160,160);
       style: solid;
+      offset: 3px;
     }
   }
 }
