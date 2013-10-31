@@ -9,8 +9,8 @@
 
 .dialog {
   position: absolute;
-  min-width: 100px;
-  min-height: 50px;
+  min-width: 10em;
+  min-height: 5em;
   left: 0;
   top: 0;
   flex-direction: column;
@@ -25,12 +25,19 @@
 
   .body {
     padding: 5px;
+    table {
+      width: 100%;
+    }
   }
 
   td {
     cursor: default;
     &:first-child {
       padding-right: 10px;
+      white-space: pre;
+    }
+    &:last-child {
+      width: 100%;
     }
   }
 }
