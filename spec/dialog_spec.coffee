@@ -1,7 +1,6 @@
-require ["editor"], (Editor) ->
-  editor.run()
-
-describe 'Dialog', ->
-  it "should foo", ->
-    expect(false).toBe true
+define ["editor/dialog"], (Dialog) ->
+  describe 'Dialog', ->
+    it "can be dragged around the page", ->
+      dialog = new Dialog()
+      expect(false).toBe true
 
