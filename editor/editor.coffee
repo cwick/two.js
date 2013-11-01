@@ -1,4 +1,11 @@
-define ['./dialog', 'jquery'], (Dialog, $) ->
+define (require) ->
+  $ = require "jquery"
+  Dialog = require "./dialog"
+  CanvasRenderer = require "./canvas_renderer"
+  Scene = require "./scene"
+  Camera = require "./camera"
+  Disc = require "./disc"
+
   run: ->
     dialog = new Dialog()
     $("#editor").append dialog.$domElement
@@ -91,3 +98,14 @@ define ['./dialog', 'jquery'], (Dialog, $) ->
           <span class="tab">Tab 3</span>
         </div>
       """)
+
+    renderer = new CanvasRenderer(width: $(".viewport").width(), height: $(".viewport").height())
+    scene = new Scene()
+    camera = new Camera(aspectRatio: renderer.getAspectRatio(), width: 10)
+    scene.add new Disc(radius: 3, color: "#BE0028")
+
+    $(".viewport").append(renderer.domElement)
+
+    renderer.render(scene, camera)
+
+
