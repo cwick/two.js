@@ -1,5 +1,6 @@
 define (require) ->
   $ = require "jquery"
+  require "jquery.mousewheel"
   Dialog = require "./dialog"
   CanvasRenderer = require "./canvas_renderer"
   Scene = require "./scene"
@@ -107,5 +108,19 @@ define (require) ->
     $(".viewport").append(renderer.domElement)
 
     renderer.render(scene, camera)
+
+    maxWidth = 1000
+    minWidth = 1
+    zoomSpeed = 1
+
+    $(document).mousewheel (e, delta) ->
+      e.preventDefault()
+      width = camera.getWidth()
+      width -= delta*zoomSpeed*width*0.006
+      width = Math.min(width, maxWidth)
+      width = Math.max(width, minWidth)
+
+      camera.setWidth(width)
+      renderer.render(scene, camera)
 
 

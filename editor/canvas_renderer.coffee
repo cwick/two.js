@@ -7,25 +7,29 @@ define ["jquery"], ($) ->
       @$domElement.attr width: options.width, height: options.height
       @_context = @domElement.getContext "2d"
 
-    getAspectRatio: -> @$domElement.attr("width") / @$domElement.attr("height")
-    getWidth: -> @$domElement.attr("width")
-    getHeight: -> @$domElement.attr("height")
+    getAspectRatio: -> @domElement.width / @domElement.height
+    getWidth: -> @domElement.width
+    getHeight: -> @domElement.height
 
     render: (scene, camera) ->
       screenWidth = @getWidth()
       screenHeight = @getHeight()
 
+      cameraWidth = camera.getWidth()
+      cameraHeight = camera.getHeight()
+
+      @_context.setTransform(1, 0, 0, 1, 0, 0)
+      @_context.clearRect 0,0, screenWidth, screenHeight
+
       @_context.setTransform(
-        screenWidth/camera.width,
+        screenWidth/cameraWidth,
         0,
         0,
-        -screenHeight/camera.height,
-        screenWidth/2 - ((camera.x*screenWidth)/camera.width),
-        screenHeight/2 + ((camera.y*screenHeight)/camera.height))
+        -screenHeight/cameraHeight,
+        screenWidth/2 - ((camera.x*screenWidth)/cameraWidth),
+        screenHeight/2 + ((camera.y*screenHeight)/cameraHeight))
 
       for object in scene.objects
-        console.log object
-        console.log camera
         @_context.fillStyle = object.color
         @_context.beginPath()
         @_context.arc object.x, object.y, object.radius, 0, 2*Math.PI

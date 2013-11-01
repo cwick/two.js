@@ -3,6 +3,11 @@ define ->
     constructor: (options) ->
       options ?= {}
       @aspectRatio = options.aspectRatio ?= 1
-      @width = options.width ?= 10
-      @height = options.height ?= options.width / options.aspectRatio
+      @setWidth(options.width ?= 10)
       @x = @y = 0
+
+    setWidth: (@_width) ->
+      @_height = @_width / @aspectRatio
+
+    getWidth: -> @_width
+    getHeight: -> @_height
