@@ -15,7 +15,11 @@
     require.config({
       baseUrl: "../build",
       paths: {
-        jquery: '../lib/jquery-2.0.3'
+        jquery: "../lib/jquery-2.0.3",
+        "jquery.simulate": "../lib/jquery.simulate"
+      },
+      shim: {
+        "jquery.simulate": ["jquery"]
       }
     });
   </script>
@@ -23,7 +27,8 @@
   <script type="text/javascript">
     require(
       [
-        "spec/dialog_spec"
+        "spec/dialog_spec",
+        "jquery.simulate"
       ],
       function() {
         var jasmineEnv = jasmine.getEnv();

@@ -1,7 +1,27 @@
 define ["jquery"], ($) ->
   class
     constructor: ->
-      $('.drag-handle').on 'mousedown', (e) ->
+      @$domElement = $("<div/>", class: "dialog draggable resizable")
+      @domElement = @$domElement.get(0)
+
+      @$domElement.width "200px"
+
+      for c in ["bottom-resize"
+                "top-resize",
+                "right-resize",
+                "left-resize",
+                "bottom-left-resize",
+                "bottom-right-resize",
+                "top-left-resize",
+                "top-right-resize",
+                "panel header drag-handle",
+                "body",
+                "footer"]
+        @$domElement.append $("<div/>", class: c)
+
+      # console.log(new XMLSerializer().serializeToString(@$domElement.get(0)).replace(///\s+xmlns="http://www.w3.org/1999/xhtml"///g, ""))
+
+      @$domElement.find('.drag-handle').on 'mousedown', (e) ->
         $handle = $(e.target)
         $draggable = $handle.closest('.draggable')
 
@@ -16,8 +36,7 @@ define ["jquery"], ($) ->
       $(document).mouseup (e) ->
         $(document).off 'mousemove.draggable'
 
-
-      $('.resizable .right-resize').on 'mousedown', (e) ->
+      @$domElement.find('.right-resize').on 'mousedown', (e) ->
         $handle = $(e.target)
         $resizable = $handle.closest('.resizable')
 
@@ -32,3 +51,5 @@ define ["jquery"], ($) ->
         $(document).off 'mousemove.resizable'
 
 
+    setBody: (value) -> @$domElement.find(".body").html(value)
+    setFooter: (value) -> @$domElement.find(".footer").html(value)

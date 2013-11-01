@@ -3,7 +3,7 @@
 <head>
   <title>Two.js</title>
   <link rel="stylesheet" type="text/css" href="build/stylesheets/editor.css">
-  <script data-main="build/main" src="require.js"></script>
+  <script data-main="build/editor/main" src="require.js"></script>
 </head>
 
 <body>
@@ -11,104 +11,6 @@
 <div id="editor" class="panel">
   <div class="panel viewport">
     <canvas></canvas>
-  </div>
-
-  <div class="dialog draggable resizable" style="width:200px">
-    <div class="bottom-resize"></div>
-    <div class="top-resize"></div>
-    <div class="right-resize"></div>
-    <div class="left-resize"></div>
-    <div class="bottom-left-resize"></div>
-    <div class="bottom-right-resize"></div>
-    <div class="top-left-resize"></div>
-    <div class="top-right-resize"></div>
-
-    <div class="panel header drag-handle">
-    </div>
-
-    <div class="body">
-      <table>
-        <tr>
-          <td>Name</td>
-            <td><input></input></td>
-        </tr>
-        <tr>
-          <td>Parent</td>
-          <td><select><option>Scene</option></select></td>
-        </tr>
-        <tr>
-          <td>Position</td>
-          <td>
-            <input type="number" value="3"></input>
-            <input type="number" value="0.0"></input>
-          </td>
-        </tr>
-        <tr>
-          <td>Rotation</td>
-          <td>
-            <input class="format-degrees" type="number" value="3"></input>
-          </td>
-        </tr>
-        <tr>
-          <td>Scale</td>
-          <td>
-            <input type="number" value="99993" />
-            <input type="number" value="0.0" />
-          </td>
-        </tr>
-        <tr>
-          <td>Visible</td>
-          <td><input type="checkbox"/></td>
-        </tr>
-        <tr>
-          <td>User Data</td>
-          <td><textarea></textarea></td>
-        </tr>
-      </table>
-      <table style="display:none">
-        <tr>
-          <td>Foo</td>
-            <td><input></input></td>
-        </tr>
-        <tr>
-          <td>Parent</td>
-          <td><select><option>Scene</option></select></td>
-        </tr>
-        <tr>
-          <td>Position</td>
-          <td>
-            <input type="number" value="3"></input>
-            <input type="number" value="0.0"></input>
-          </td>
-        </tr>
-        <tr>
-          <td>Rotation</td>
-          <td>
-            <input class="format-degrees" type="number" value="3"></input>
-          </td>
-        </tr>
-        <tr>
-          <td>Scale</td>
-          <td>
-            <input type="number" value="99993" />
-            <input type="number" value="0.0" />
-          </td>
-        </tr>
-        <tr>
-          <td>Visible</td>
-          <td><input type="checkbox"/></td>
-        </tr>
-        <tr>
-          <td>User Data</td>
-          <td><textarea></textarea></td>
-        </tr>
-      </table>
-    </div>
-    <div class="panel tabs">
-      <span class="tab active">Tab 1</span>
-      <span class="tab">Tab 2</span>
-      <span class="tab">Tab 3</span>
-    </div>
   </div>
 </div>
 
