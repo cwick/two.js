@@ -17,8 +17,8 @@ define ["jquery", "gl-matrix"], ($, gl) ->
 
       @_context.setTransform(
         viewProjection[0], viewProjection[1]
-        viewProjection[3], viewProjection[4]
-        viewProjection[6], viewProjection[7])
+        viewProjection[2], viewProjection[3]
+        viewProjection[4], viewProjection[5])
 
       for object in scene.objects
         @_context.fillStyle = object.color
@@ -40,9 +40,9 @@ define ["jquery", "gl-matrix"], ($, gl) ->
       @_viewProjectionMatrix ?= @_createViewProjectionMatrix()
 
     _createViewProjectionMatrix: ->
-      view = gl.mat3.create()
-      gl.mat3.invert view, @_camera.getWorldMatrix()
+      view = gl.mat2d.create()
+      gl.mat2d.invert view, @_camera.getWorldMatrix()
 
-      viewProjection = gl.mat3.create()
-      gl.mat3.multiply viewProjection, @_camera.getProjectionMatrix(), view
+      viewProjection = gl.mat2d.create()
+      gl.mat2d.multiply viewProjection, @_camera.getProjectionMatrix(), view
       viewProjection

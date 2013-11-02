@@ -32,26 +32,26 @@ define ["gl-matrix"], (gl) ->
       @_projectionMatrixInverse ?= @_createProjectionMatrixInverse()
 
     unproject: (out, screenPoint) ->
-      viewProjectionInverse = gl.mat3.create()
-      gl.mat3.multiply viewProjectionInverse, @getWorldMatrix(), @getProjectionMatrixInverse()
-      gl.vec2.transformMat3 out, screenPoint, viewProjectionInverse
+      viewProjectionInverse = gl.mat2d.create()
+      gl.mat2d.multiply viewProjectionInverse, @getWorldMatrix(), @getProjectionMatrixInverse()
+      gl.vec2.transformMat2d out, screenPoint, viewProjectionInverse
       out
 
     _createProjectionMatrix: ->
-      m = gl.mat3.create()
+      m = gl.mat2d.create()
       m[0] = @_screenWidth / @_width
-      m[4] = -m[0]
-      m[6] = @_screenWidth / 2
-      m[7] = @_screenHeight / 2
+      m[3] = -m[0]
+      m[4] = @_screenWidth / 2
+      m[5] = @_screenHeight / 2
       m
 
     _createProjectionMatrixInverse: ->
-      projection = gl.mat3.clone(@getProjectionMatrix())
-      gl.mat3.invert projection, projection
+      projection = gl.mat2d.clone(@getProjectionMatrix())
+      gl.mat2d.invert projection, projection
       projection
 
     _createWorldMatrix: ->
-      m = gl.mat3.create()
-      m[6] = @_x
-      m[7] = @_y
+      m = gl.mat2d.create()
+      m[4] = @_x
+      m[5] = @_y
       m
