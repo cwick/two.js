@@ -15,34 +15,34 @@
   top: 0;
   flex-direction: column;
   opacity: 0.95;
+}
 
-  .header {
-    min-height: 15px;
+.dialog-header {
+  min-height: 15px;
+  width: 100%;
+  -webkit-border-top-left-radius: inherit;
+  -webkit-border-top-right-radius: inherit;
+}
+
+.dialog-body {
+  padding: 5px;
+  table {
     width: 100%;
-    -webkit-border-top-left-radius: inherit;
-    -webkit-border-top-right-radius: inherit;
   }
 
-  .body {
-    padding: 5px;
-    table {
-      width: 100%;
+  td {
+    cursor: default;
+
+    &:first-child {
+      padding: {
+        right: 10px;
+        top: 8px;
+        bottom: 8px;
+      }
+      white-space: pre;
     }
-
-    td {
-      cursor: default;
-
-      &:first-child {
-        padding: {
-          right: 10px;
-          top: 8px;
-          bottom: 8px;
-        }
-        white-space: pre;
-      }
-      &:last-child {
-        width: 100%;
-      }
+    &:last-child {
+      width: 100%;
     }
   }
 }
@@ -160,11 +160,9 @@ input::-webkit-inner-spin-button {
   }
 }
 
-.tabs {
-  .tab {
-    cursor: pointer;
-    font-size: 0.8em;
-    display: inline-block;
-    padding: 4px 10px
-  }
+.tab {
+  cursor: pointer;
+  font-size: 0.8em;
+  display: inline-block;
+  padding: 4px 10px
 }

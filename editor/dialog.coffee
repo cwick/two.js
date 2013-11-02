@@ -14,9 +14,9 @@ define ["jquery"], ($) ->
                 "bottom-right-resize",
                 "top-left-resize",
                 "top-right-resize",
-                "panel header drag-handle",
-                "body",
-                "footer"]
+                "panel dialog-header drag-handle",
+                "dialog-body",
+                "dialog-footer"]
         @$domElement.append $("<div/>", class: c)
 
       # console.log(new XMLSerializer().serializeToString(@$domElement.get(0)).replace(///\s+xmlns="http://www.w3.org/1999/xhtml"///g, ""))
@@ -76,6 +76,6 @@ define ["jquery"], ($) ->
       $(document).one "mouseup", ->
         $(document).off 'mousemove.resizable'
 
-    setBody: (value) -> @$domElement.find(".body").html(value)
-    setFooter: (value) -> @$domElement.find(".footer").html(value)
+    setBody: (value) -> @$domElement.find(".dialog-body").html(value)
+    setFooter: (value) -> @$domElement.find(".dialog-footer").html(value)
 
