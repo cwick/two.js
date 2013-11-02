@@ -44,5 +44,5 @@ define ["jquery", "gl-matrix"], ($, gl) ->
       gl.mat2d.invert view, @_camera.getWorldMatrix()
 
       viewProjection = gl.mat2d.create()
-      gl.mat2d.multiply viewProjection, @_camera.getProjectionMatrix(), view
+      gl.mat2d.multiply viewProjection, view, @_camera.getProjectionMatrix()
       viewProjection

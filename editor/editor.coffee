@@ -163,16 +163,23 @@ define (require) ->
   _onBeginGrabbing: (e) ->
     @_grabbing = true
     @_grabAnchor = gl.vec2.fromValues(e.offsetX, e.offsetY)
-    @camera.unproject @_grabAnchor, @_grabAnchor
+    @_initialCameraPosition = @camera.getPosition()
 
     @$viewport.css "cursor", "-webkit-grabbing"
 
   _onGrabbing: (e) ->
     grabPoint = gl.vec2.fromValues(e.offsetX, e.offsetY)
+    grabAnchor = gl.vec2.clone(@_grabAnchor)
     @camera.unproject grabPoint, grabPoint
+    @camera.unproject grabAnchor, grabAnchor
 
     grabVector = gl.vec2.create()
-    gl.vec2.subtract grabVector, grabPoint, @_grabAnchor
+    gl.vec2.subtract grabVector, grabAnchor, grabPoint
+
+    gl.vec2.add grabVector, @_initialCameraPosition, grabVector
+    @camera.setPosition grabVector
+
+    @_render()
 
   _onStopGrabbing: ->
     @_grabbing = false

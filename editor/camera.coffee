@@ -19,7 +19,7 @@ define ["gl-matrix"], (gl) ->
 
     getPosition: -> gl.vec2.fromValues @_x, @_y
     setPosition: (p) ->
-      [@x, @y] = p
+      [@_x, @_y] = p
       @_worldMatrix = null
 
     getWorldMatrix: ->
@@ -33,7 +33,7 @@ define ["gl-matrix"], (gl) ->
 
     unproject: (out, screenPoint) ->
       viewProjectionInverse = gl.mat2d.create()
-      gl.mat2d.multiply viewProjectionInverse, @getWorldMatrix(), @getProjectionMatrixInverse()
+      gl.mat2d.multiply viewProjectionInverse, @getProjectionMatrixInverse(), @getWorldMatrix()
       gl.vec2.transformMat2d out, screenPoint, viewProjectionInverse
       out
 
