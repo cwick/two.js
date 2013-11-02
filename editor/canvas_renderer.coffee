@@ -1,4 +1,4 @@
-define ["jquery"], ($) ->
+define ["jquery", "gl-matrix"], ($, gl) ->
   class CanvasRenderer
     constructor: (options) ->
       @$domElement = $("<canvas/>")
@@ -12,22 +12,13 @@ define ["jquery"], ($) ->
     getHeight: -> @domElement.height
 
     render: (scene, camera) ->
-      screenWidth = @getWidth()
-      screenHeight = @getHeight()
-
-      cameraWidth = camera.getWidth()
-      cameraHeight = camera.getHeight()
-
-      @_context.setTransform(1, 0, 0, 1, 0, 0)
-      @_context.clearRect 0,0, screenWidth, screenHeight
+      @_prepareToRender(camera)
+      viewProjection = @_getViewProjectionMatrix()
 
       @_context.setTransform(
-        screenWidth/cameraWidth,
-        0,
-        0,
-        -screenHeight/cameraHeight,
-        screenWidth/2 - ((camera.x*screenWidth)/cameraWidth),
-        screenHeight/2 + ((camera.y*screenHeight)/cameraHeight))
+        viewProjection[0], viewProjection[1]
+        viewProjection[3], viewProjection[4]
+        viewProjection[6], viewProjection[7])
 
       for object in scene.objects
         @_context.fillStyle = object.color
@@ -36,3 +27,23 @@ define ["jquery"], ($) ->
         @_context.closePath()
         @_context.fill()
 
+    _prepareToRender: (camera) ->
+      @_camera = camera
+      @_viewProjectionMatrix = null
+      @_context.setTransform(1, 0, 0, 1, 0, 0)
+      @_clearScreen()
+
+    _clearScreen: ->
+      @_context.clearRect 0,0, @getWidth(), @getHeight()
+
+    _getViewProjectionMatrix: ->
+      @_viewProjectionMatrix ?= @_createViewProjectionMatrix()
+
+    _createViewProjectionMatrix: ->
+      view = gl.mat3.create()
+      gl.mat3.invert view, @_camera.getWorldMatrix()
+
+      viewProjection = gl.mat3.create()
+      gl.mat3.multiply viewProjection, @_camera.getProjectionMatrix(), view
+      gl.mat3.transpose viewProjection, viewProjection
+      viewProjection

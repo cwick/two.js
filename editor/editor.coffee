@@ -105,7 +105,7 @@ define (require) ->
 
     @renderer = new CanvasRenderer(width: @$viewport.width(), height: @$viewport.height())
     @scene = new Scene()
-    @camera = new Camera(aspectRatio: @renderer.getAspectRatio(), width: 10)
+    @camera = new Camera(screenWidth: @renderer.getWidth(), screenHeight: @renderer.getHeight())
 
     @scene.add new Disc(radius: 3, color: "#BE0028")
 
