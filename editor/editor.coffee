@@ -6,10 +6,13 @@ define (require) ->
   Scene = require "./scene"
   Camera = require "./camera"
   Disc = require "./disc"
+  KeyCodes = require "./key_codes"
+  MouseButtons = require "./mouse_buttons"
 
   run: ->
     dialog = new Dialog()
     $("#editor").append dialog.$domElement
+    @$viewport = $(".viewport")
 
     dialog.setBody(
       """
@@ -100,27 +103,83 @@ define (require) ->
         </div>
       """)
 
-    renderer = new CanvasRenderer(width: $(".viewport").width(), height: $(".viewport").height())
-    scene = new Scene()
-    camera = new Camera(aspectRatio: renderer.getAspectRatio(), width: 10)
-    scene.add new Disc(radius: 3, color: "#BE0028")
+    @renderer = new CanvasRenderer(width: @$viewport.width(), height: @$viewport.height())
+    @scene = new Scene()
+    @camera = new Camera(aspectRatio: @renderer.getAspectRatio(), width: 10)
 
-    $(".viewport").append(renderer.domElement)
+    @scene.add new Disc(radius: 3, color: "#BE0028")
 
-    renderer.render(scene, camera)
+    @$viewport.append(@renderer.domElement)
 
-    maxWidth = 1000
-    minWidth = 1
-    zoomSpeed = 1
+    @maxCameraWidth = 1000
+    @minCameraWidth = 1
+    @zoomSpeed = 1
 
-    $(document).mousewheel (e, delta) ->
+    @_render()
+
+    $(document).on "keydown keyup mousedown mouseup mousemove mousewheel", => @_onUserInput.apply @, arguments
+
+  _render: ->
+    @renderer.render(@scene, @camera)
+
+  _onUserInput: (e) ->
+    handled = @["_on#{e.type.charAt(0).toUpperCase() + e.type.slice(1)}"].apply @, arguments
+    if handled
       e.preventDefault()
-      width = camera.getWidth()
-      width -= delta*zoomSpeed*width*0.006
-      width = Math.min(width, maxWidth)
-      width = Math.max(width, minWidth)
+      e.stopPropagation()
 
-      camera.setWidth(width)
-      renderer.render(scene, camera)
+  _onKeydown: (e) ->
+    if e.keyCode == KeyCodes.SHIFT
+      return @_onGrabToolSelected e && true
 
+  _onKeyup: (e) ->
+    if e.keyCode == KeyCodes.SHIFT
+      return @_onStopGrab(e) || true
+
+  _onMousedown: (e) ->
+    if e.which == MouseButtons.LEFT && @_grabTool
+      return @_onBeginGrabbing(e) || true
+
+  _onMouseup: (e) ->
+    if e.which == MouseButtons.LEFT && @_grabbing
+      return @_onStopGrabbing(e) || true
+
+  _onMousemove: (e) ->
+    if e.which == MouseButtons.LEFT && @_grabbing
+      return @_onGrabbing(e) || true
+
+  _onMousewheel: (e, delta) ->
+    return @_onZoom(delta*0.006)
+
+  _onGrabToolSelected: ->
+    @_grabTool = true
+    @$viewport.css "cursor", "-webkit-grab"
+
+  _onStopGrab: ->
+    @_grabTool = false
+    @$viewport.css "cursor", "auto" unless @_grabbing
+
+  _onBeginGrabbing: ->
+    @_grabbing = true
+
+    @$viewport.css "cursor", "-webkit-grabbing"
+
+  _onGrabbing: ->
+
+  _onStopGrabbing: ->
+    @_grabbing = false
+
+    if @_grabTool
+      @$viewport.css "cursor", "-webkit-grab"
+    else
+      @$viewport.css "cursor", "auto"
+
+  _onZoom: (amount) ->
+    width = @camera.getWidth()
+    width -= amount*@zoomSpeed*width
+    width = Math.min(width, @maxCameraWidth)
+    width = Math.max(width, @minCameraWidth)
+
+    @camera.setWidth(width)
+    @_render()
 

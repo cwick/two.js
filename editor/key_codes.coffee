@@ -1,0 +1,2 @@
+define ->
+  SHIFT: 16

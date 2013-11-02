@@ -1,0 +1,2 @@
+define ->
+  LEFT: 1

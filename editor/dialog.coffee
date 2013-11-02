@@ -22,9 +22,7 @@ define ["jquery"], ($) ->
       # console.log(new XMLSerializer().serializeToString(@$domElement.get(0)).replace(///\s+xmlns="http://www.w3.org/1999/xhtml"///g, ""))
 
       @$domElement.find('.drag-handle').on 'mousedown', @onDrag
-      @$domElement.find('.right-resize').on 'mousedown', @onResize
-      @$domElement.find('.bottom-right-resize').on 'mousedown', @onResize
-      @$domElement.find('.top-right-resize').on 'mousedown', @onResize
+      @$domElement.find('.right-resize, .bottom-right-resize, .top-right-resize').on 'mousedown', @onResize
 
     onDrag: (e) ->
       $handle = $(e.target)
