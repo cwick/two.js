@@ -8,6 +8,7 @@ define (require) ->
   Disc = require "./disc"
   KeyCodes = require "./key_codes"
   MouseButtons = require "./mouse_buttons"
+  gl = require "gl-matrix"
 
   run: ->
     dialog = new Dialog()
@@ -159,12 +160,19 @@ define (require) ->
     @_grabTool = false
     @$viewport.css "cursor", "auto" unless @_grabbing
 
-  _onBeginGrabbing: ->
+  _onBeginGrabbing: (e) ->
     @_grabbing = true
+    @_grabAnchor = gl.vec2.fromValues(e.offsetX, e.offsetY)
+    @camera.unproject @_grabAnchor, @_grabAnchor
 
     @$viewport.css "cursor", "-webkit-grabbing"
 
-  _onGrabbing: ->
+  _onGrabbing: (e) ->
+    grabPoint = gl.vec2.fromValues(e.offsetX, e.offsetY)
+    @camera.unproject grabPoint, grabPoint
+
+    grabVector = gl.vec2.create()
+    gl.vec2.subtract grabVector, grabPoint, @_grabAnchor
 
   _onStopGrabbing: ->
     @_grabbing = false

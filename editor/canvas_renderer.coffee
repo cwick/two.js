@@ -45,5 +45,4 @@ define ["jquery", "gl-matrix"], ($, gl) ->
 
       viewProjection = gl.mat3.create()
       gl.mat3.multiply viewProjection, @_camera.getProjectionMatrix(), view
-      gl.mat3.transpose viewProjection, viewProjection
       viewProjection
