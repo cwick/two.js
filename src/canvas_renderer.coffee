@@ -14,15 +14,6 @@ define ["jquery", "gl-matrix", "./box", "./disc"], ($, gl, Box, Disc) ->
 
     render: (scene, camera) ->
       @_prepareToRender(camera)
-      viewProjection = @_getViewProjectionMatrix()
-
-      @_context.transform(
-        viewProjection[0], viewProjection[1]
-        viewProjection[2], viewProjection[3]
-        viewProjection[4], viewProjection[5])
-
-      # Don't scale line width with projection matrix
-      @_context.lineWidth = 1/viewProjection[0]
 
       for object in scene.objects
         @_renderObject(object)
@@ -34,18 +25,19 @@ define ["jquery", "gl-matrix", "./box", "./disc"], ($, gl, Box, Disc) ->
     _renderObject: (object) ->
       @_context.save()
 
-      viewProjection = @_getViewProjectionMatrix()
+      if object.screenOffsetX != 0 || object.screenOffsetY != 0
+        @_context.translate object.screenOffsetX, object.screenOffsetY
+
+      viewProjection = @_applyViewProjectionMatrix()
+
+      # Don't scale line width with projection matrix
+      @_context.lineWidth = 1/viewProjection[0]
+
       material = object.material
       @_context.fillStyle = material.fillColor?.css()
       @_context.strokeStyle = material.strokeColor?.css()
 
       if material.isFixedSize
-        @_context.setTransform(1, 0, 0, 1, 0, 0)
-        @_context.translate object.screenOffsetX, object.screenOffsetY
-        @_context.transform(
-          viewProjection[0], viewProjection[1]
-          viewProjection[2], viewProjection[3]
-          viewProjection[4], viewProjection[5])
         @_context.translate object.x, object.y
         @_context.scale 1/viewProjection[0], 1/viewProjection[0]
         @_context.translate -object.x, -object.y
@@ -76,7 +68,7 @@ define ["jquery", "gl-matrix", "./box", "./disc"], ($, gl, Box, Disc) ->
       @_viewProjectionMatrix = null
       @_context.setTransform(1, 0, 0, 1, 0, 0)
       # Avoid blurry lines
-      # @_context.translate 0.5, 0.5
+      @_context.translate 0, 0.5
       @clear() if @autoClear
 
     _getViewProjectionMatrix: ->
@@ -88,4 +80,14 @@ define ["jquery", "gl-matrix", "./box", "./disc"], ($, gl, Box, Disc) ->
 
       viewProjection = gl.mat2d.create()
       gl.mat2d.multiply viewProjection, view, @_camera.getProjectionMatrix()
+      viewProjection
+
+    _applyViewProjectionMatrix: ->
+      viewProjection = @_getViewProjectionMatrix()
+
+      @_context.transform(
+        viewProjection[0], viewProjection[1]
+        viewProjection[2], viewProjection[3]
+        viewProjection[4], viewProjection[5])
+
       viewProjection
