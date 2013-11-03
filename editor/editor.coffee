@@ -130,6 +130,15 @@ define (require) ->
     @renderer.render(@scene, @camera)
     @renderer.render(@sceneGizmos, @camera)
 
+  _setCursor: (cursor) ->
+    @$canvas.css "cursor", cursor
+
+  _updateCursorStyle: (x,y) ->
+    if @camera.pick(gl.vec2.fromValues(x,y), @sceneGizmos)
+      @_setCursor "move"
+    else
+      @_setCursor "auto"
+
   _onUserInput: (e) ->
     handled = @["_on#{e.type.charAt(0).toUpperCase() + e.type.slice(1)}"].apply @, arguments
     if handled
@@ -168,10 +177,12 @@ define (require) ->
       return @_onPick(mouseDownPoint) || true
 
   _onMousemove: (e) ->
-    return unless e.which == MouseButtons.LEFT
-
     if @_grabbing
       return @_onGrabbing(e) || true
+
+    return unless e.target == @canvas && !@_grabTool
+
+    @_updateCursorStyle(e.offsetX, e.offsetY)
 
   _onMousewheel: (e, delta, deltaX, deltaY) ->
     return unless e.target == @canvas && deltaY != 0
@@ -180,18 +191,18 @@ define (require) ->
 
   _onGrabToolSelected: ->
     @_grabTool = true
-    @$canvas.css "cursor", "-webkit-grab"
+    @_setCursor "-webkit-grab"
 
   _onStopGrab: ->
     @_grabTool = false
-    @$canvas.css "cursor", "auto" unless @_grabbing
+    @_setCursor "auto" unless @_grabbing
 
   _onBeginGrabbing: (e) ->
     @_grabbing = true
     @_grabAnchor = gl.vec2.fromValues(e.pageX, e.pageY)
     @_initialCameraPosition = @camera.getPosition()
 
-    @$canvas.css "cursor", "-webkit-grabbing"
+    @_setCursor "-webkit-grabbing"
 
   _onGrabbing: (e) ->
     grabPoint = gl.vec2.fromValues(e.pageX, e.pageY)
@@ -211,9 +222,9 @@ define (require) ->
     @_grabbing = false
 
     if @_grabTool
-      @$canvas.css "cursor", "-webkit-grab"
+      @_setCursor "-webkit-grab"
     else
-      @$canvas.css "cursor", "auto"
+      @_setCursor "auto"
 
   _onZoom: (amount, screenPoint) ->
     width = @camera.getWidth()
@@ -231,6 +242,7 @@ define (require) ->
       t = Math.abs(amount) + 0.001
       @camera.setPosition(gl.vec2.lerp worldPoint, @camera.getPosition(), worldPoint, t)
 
+    @_updateCursorStyle(screenPoint[0], screenPoint[1])
     @_render()
 
   _onPick: (screenPoint) ->
@@ -245,6 +257,7 @@ define (require) ->
     else
       @_onUnpick()
 
+    @_updateCursorStyle(screenPoint[0], screenPoint[1])
     @_render()
 
   _onPickObject: (object) ->
