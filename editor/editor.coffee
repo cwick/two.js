@@ -110,10 +110,9 @@ define (require) ->
     @renderer = new CanvasRenderer(width: $viewport.width(), height: $viewport.height(), autoClear: false)
     @scene = new Scene()
     @sceneGizmos = new Scene()
-    @camera = new Camera(screenWidth: @renderer.getWidth(), screenHeight: @renderer.getHeight())
+    @camera = new Camera(width: 15, screenWidth: @renderer.getWidth(), screenHeight: @renderer.getHeight())
 
     @scene.add new Disc(radius: 3, material: new Material(fillColor: "#BE0028"))
-    @scene.add new Disc(radius: 6, material: new Material(fillColor: "blue"), parent: @scene.objects[0], x: -2, y:-5)
 
     @canvas = @renderer.domElement
     @$canvas = $(@canvas)

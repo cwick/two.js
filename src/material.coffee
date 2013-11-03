@@ -7,3 +7,4 @@ define ["./color"], (Color) ->
       @fillColor = new Color(@fillColor) if typeof @fillColor == "string"
       @strokeColor = new Color(@strokeColor) if typeof @fillColor == "string"
 
+      @isFixedSize = options.isFixedSize ?= false

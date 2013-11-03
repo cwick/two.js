@@ -16,3 +16,8 @@ define ["./material"], (Material) ->
       @_children.push object
 
     getChildren: -> @_children
+
+    cloneProperties: ->
+      material: @material
+      x: @x
+      y: @y

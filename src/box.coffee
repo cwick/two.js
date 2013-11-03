@@ -16,3 +16,11 @@ define ["gl-matrix", "./material", "./object2d"], (gl, Material, Object2d) ->
           point[1] >= @y - @height/2 &&
           point[0] <= @x + @width/2 &&
           point[0] >= @x - @width/2
+
+    clone: ->
+      p = @cloneProperties()
+      p.width = @width
+      p.height = @height
+
+      new Box(p)
+

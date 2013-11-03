@@ -16,8 +16,6 @@ define ["jquery", "gl-matrix", "./box", "./disc"], ($, gl, Box, Disc) ->
       @_prepareToRender(camera)
       viewProjection = @_getViewProjectionMatrix()
 
-      # Avoid blurry lines
-      @_context.translate(0.5, 0.5)
       @_context.transform(
         viewProjection[0], viewProjection[1]
         viewProjection[2], viewProjection[3]
@@ -34,9 +32,18 @@ define ["jquery", "gl-matrix", "./box", "./disc"], ($, gl, Box, Disc) ->
       return
 
     _renderObject: (object) ->
+      @_context.save()
+
+      viewProjection = @_getViewProjectionMatrix()
       material = object.material
       @_context.fillStyle = material.fillColor?.css()
       @_context.strokeStyle = material.strokeColor?.css()
+
+      if material.isFixedSize
+        @_context.translate object.x, object.y
+        @_context.scale 1/viewProjection[0], 1/viewProjection[0]
+        @_context.translate -object.x, -object.y
+        @_context.lineWidth = 1
 
       @_context.beginPath()
 
@@ -47,10 +54,12 @@ define ["jquery", "gl-matrix", "./box", "./disc"], ($, gl, Box, Disc) ->
 
       @_context.closePath()
 
-      if material.strokeColor?
-        @_context.stroke()
       if material.fillColor?
         @_context.fill()
+      if material.strokeColor?
+        @_context.stroke()
+
+      @_context.restore()
 
     clear: ->
       @_context.setTransform(1, 0, 0, 1, 0, 0)
@@ -60,6 +69,8 @@ define ["jquery", "gl-matrix", "./box", "./disc"], ($, gl, Box, Disc) ->
       @_camera = camera
       @_viewProjectionMatrix = null
       @_context.setTransform(1, 0, 0, 1, 0, 0)
+      # Avoid blurry lines
+      @_context.translate 0.5, 0.5
       @clear() if @autoClear
 
     _getViewProjectionMatrix: ->
