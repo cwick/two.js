@@ -1,14 +1,16 @@
 define (require) ->
   $ = require "jquery"
   require "jquery.mousewheel"
-  Dialog = require "./dialog"
-  CanvasRenderer = require "./canvas_renderer"
-  Scene = require "./scene"
+  gl = require "gl-matrix"
+  Box = require "./box"
   Camera = require "./camera"
+  CanvasRenderer = require "./canvas_renderer"
+  Dialog = require "./dialog"
   Disc = require "./disc"
   KeyCodes = require "./key_codes"
+  Material = require "./material"
   MouseButtons = require "./mouse_buttons"
-  gl = require "gl-matrix"
+  Scene = require "./scene"
 
   run: ->
     dialog = new Dialog()
@@ -104,11 +106,12 @@ define (require) ->
         </div>
       """)
 
-    @renderer = new CanvasRenderer(width: $viewport.width(), height: $viewport.height())
+    @renderer = new CanvasRenderer(width: $viewport.width(), height: $viewport.height(), autoClear: false)
     @scene = new Scene()
+    @sceneGizmos = new Scene()
     @camera = new Camera(screenWidth: @renderer.getWidth(), screenHeight: @renderer.getHeight())
 
-    @scene.add new Disc(radius: 3, color: "#BE0028")
+    @scene.add new Disc(radius: 3, material: new Material(fillColor: "#BE0028"))
 
     @canvas = @renderer.domElement
     @$canvas = $(@canvas)
@@ -123,7 +126,9 @@ define (require) ->
     $(document).on "keydown keyup mousedown mouseup mousemove mousewheel", => @_onUserInput.apply @, arguments
 
   _render: ->
+    @renderer.clear()
     @renderer.render(@scene, @camera)
+    @renderer.render(@sceneGizmos, @camera)
 
   _onUserInput: (e) ->
     handled = @["_on#{e.type.charAt(0).toUpperCase() + e.type.slice(1)}"].apply @, arguments
@@ -159,8 +164,8 @@ define (require) ->
 
     if @_grabbing
       return @_onStopGrabbing(e) || true
-    else if e.target == @canvas && gl.vec2.squaredDistance(mouseUpPoint, mouseDownPoint) == 0
-      return @_onPickObject(mouseDownPoint) || true
+    else if e.target == @canvas && gl.vec2.squaredDistance(mouseUpPoint, mouseDownPoint) <= 1
+      return @_onPick(mouseDownPoint) || true
 
   _onMousemove: (e) ->
     return unless e.which == MouseButtons.LEFT
@@ -228,5 +233,32 @@ define (require) ->
 
     @_render()
 
-  _onPickObject: (screenPoint) ->
-    console.log "pick", @camera.pick screenPoint, @scene
+  _onPick: (screenPoint) ->
+    return if @camera.pick screenPoint, @sceneGizmos
+
+    selected = @camera.pick screenPoint, @scene
+    return if @_selectedObject is selected
+
+    @_selectedObject = selected
+    if @_selectedObject?
+      @_onPickObject(selected)
+    else
+      @_onUnpick()
+
+    @_render()
+
+  _onPickObject: (object) ->
+    unless @_selectionBox?
+      @_selectionBox = new Box()
+      @sceneGizmos.add @_selectionBox
+
+    @_selectionBox.x = object.x
+    @_selectionBox.y = object.y
+    @_selectionBox.width = object.radius*2
+    @_selectionBox.height = object.radius*2
+    @_selectionBox.material = new Material(strokeColor: "#1400E5", fillColor: "rgba(20,0,229,0.1)")
+
+  _onUnpick: ->
+    @sceneGizmos.remove @_selectionBox
+    @_selectionBox = null
+

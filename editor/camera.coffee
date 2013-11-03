@@ -38,12 +38,13 @@ define ["gl-matrix"], (gl) ->
       out
 
     pick: (screenPoint, scene) ->
-      worldPoint = screenPoint
+      worldPoint = gl.vec2.create()
       @unproject worldPoint, screenPoint
 
       for object in scene.objects
         if object.getBoundingDisc().intersectsWith worldPoint
-          return object
+          if object.getBoundingBox().intersectsWith worldPoint
+            return object
 
       return null
 

@@ -1,11 +1,18 @@
-define ["gl-matrix"], (gl) ->
+define ["gl-matrix", "./material"], (gl, Material) ->
   class Disc
     constructor: (options) ->
       @radius = options.radius ?= 5
-      @color = options.color ?= "black"
+      @material = options.material ?= new Material()
       @x = options.x ?= 0
       @y = options.y ?= 0
 
+
+    getBoundingBox: ->
+      intersectsWith: (point) =>
+        point[1] <= @y + @radius &&
+          point[1] >= @y - @radius &&
+          point[0] <= @x + @radius &&
+          point[0] >= @x - @radius
 
     getBoundingDisc: ->
       intersectsWith: (point) =>

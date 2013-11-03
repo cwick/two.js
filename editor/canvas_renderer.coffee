@@ -1,4 +1,4 @@
-define ["jquery", "gl-matrix"], ($, gl) ->
+define ["jquery", "gl-matrix", "./box", "./disc"], ($, gl, Box, Disc) ->
   class CanvasRenderer
     constructor: (options) ->
       @$domElement = $("<canvas/>")
@@ -6,6 +6,7 @@ define ["jquery", "gl-matrix"], ($, gl) ->
 
       @$domElement.attr width: options.width, height: options.height
       @_context = @domElement.getContext "2d"
+      @autoClear = options.autoClear ?= true
 
     getAspectRatio: -> @domElement.width / @domElement.height
     getWidth: -> @domElement.width
@@ -15,26 +16,42 @@ define ["jquery", "gl-matrix"], ($, gl) ->
       @_prepareToRender(camera)
       viewProjection = @_getViewProjectionMatrix()
 
-      @_context.setTransform(
+      # Avoid blurry lines
+      @_context.translate(0.5, 0.5)
+      @_context.transform(
         viewProjection[0], viewProjection[1]
         viewProjection[2], viewProjection[3]
         viewProjection[4], viewProjection[5])
 
+      # Don't scale line width with projection matrix
+      @_context.lineWidth = 1/viewProjection[0]
+
       for object in scene.objects
-        @_context.fillStyle = object.color
+        material = object.material
+        @_context.fillStyle = material.fillColor
+        @_context.strokeStyle = material.strokeColor
+
         @_context.beginPath()
-        @_context.arc object.x, object.y, object.radius, 0, 2*Math.PI
+        if object instanceof Disc
+          @_context.arc object.x, object.y, object.radius, 0, 2*Math.PI
+        else if object instanceof Box
+          @_context.rect object.x-object.width/2, object.y-object.height/2, object.width, object.height
         @_context.closePath()
-        @_context.fill()
+
+        if material.strokeColor?
+          @_context.stroke()
+        if material.fillColor?
+          @_context.fill()
+
+    clear: ->
+      @_context.setTransform(1, 0, 0, 1, 0, 0)
+      @_context.clearRect 0,0, @getWidth(), @getHeight()
 
     _prepareToRender: (camera) ->
       @_camera = camera
       @_viewProjectionMatrix = null
       @_context.setTransform(1, 0, 0, 1, 0, 0)
-      @_clearScreen()
-
-    _clearScreen: ->
-      @_context.clearRect 0,0, @getWidth(), @getHeight()
+      @clear() if @autoClear
 
     _getViewProjectionMatrix: ->
       @_viewProjectionMatrix ?= @_createViewProjectionMatrix()
