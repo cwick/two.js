@@ -17,7 +17,7 @@ define ["jquery", "gl-matrix", "./box", "./disc"], ($, gl, Box, Disc) ->
     render: (scene, camera) ->
       @_prepareToRender(camera)
 
-      for object in scene.objects
+      for object in scene.getChildren()
         @_renderObject(object)
         @_renderObject(child) for child in object.getChildren()
 

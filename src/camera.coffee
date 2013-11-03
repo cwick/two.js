@@ -41,10 +41,13 @@ define ["gl-matrix"], (gl) ->
     pick: (screenPoint, scene, renderer) ->
       worldPoint = @unproject screenPoint, renderer
 
-      for object in scene.objects
+      for object in scene.getChildren()
         if object.getBoundingDisc().intersectsWith worldPoint
           if object.getBoundingBox().intersectsWith worldPoint
             return object
+
+        # picked = @pick screenPoint, object, renderer
+        # return picked if picked?
 
       return null
 

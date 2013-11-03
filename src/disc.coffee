@@ -1,5 +1,6 @@
 define ["./object2d", "./bounding_box", "./bounding_disc"], \
        (Object2d, BoundingBox, BoundingDisc) ->
+
   class Disc extends Object2d
     constructor: (options) ->
       super options
