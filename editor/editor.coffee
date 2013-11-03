@@ -240,7 +240,7 @@ define (require) ->
     if @minCameraWidth < width < @maxCameraWidth
       worldPoint = @camera.unproject screenPoint, @renderer
 
-      t = Math.abs(amount) + 0.001
+      t = amount + 0.001
       @camera.setPosition(gl.vec2.lerp worldPoint, @camera.getPosition(), worldPoint, t)
 
     @_updateCursorStyle(screenPoint[0], screenPoint[1])
