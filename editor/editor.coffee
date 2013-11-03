@@ -110,7 +110,7 @@ define (require) ->
     @renderer = new CanvasRenderer(width: $viewport.width(), height: $viewport.height(), autoClear: false)
     @scene = new Scene()
     @sceneGizmos = new Scene()
-    @camera = new Camera(width: 15, screenWidth: @renderer.getWidth(), screenHeight: @renderer.getHeight())
+    @camera = new Camera(width: 15, aspectRatio: @renderer.getWidth() / @renderer.getHeight())
 
     @scene.add new Disc(radius: 3, material: new Material(fillColor: "#BE0028"))
 
@@ -135,7 +135,7 @@ define (require) ->
     @$canvas.css "cursor", cursor
 
   _updateCursorStyle: (x,y) ->
-    if @camera.pick(gl.vec2.fromValues(x,y), @sceneGizmos)
+    if @camera.pick(gl.vec2.fromValues(x,y), @sceneGizmos, @renderer)
       @_setCursor "move"
     else
       @_setCursor "auto"
@@ -208,8 +208,8 @@ define (require) ->
   _onGrabbing: (e) ->
     grabPoint = gl.vec2.fromValues(e.pageX, e.pageY)
     grabAnchor = gl.vec2.clone(@_grabAnchor)
-    @camera.unproject grabPoint, grabPoint
-    @camera.unproject grabAnchor, grabAnchor
+    grabPoint = @camera.unproject grabPoint, @renderer
+    grabAnchor = @camera.unproject grabAnchor, @renderer
 
     grabVector = gl.vec2.create()
     gl.vec2.subtract grabVector, grabAnchor, grabPoint
@@ -234,12 +234,12 @@ define (require) ->
     width = Math.min(width, @maxCameraWidth)
     width = Math.max(width, @minCameraWidth)
 
-    worldPoint = gl.vec2.create()
-    @camera.unproject worldPoint, screenPoint
     @camera.setWidth(width)
 
     # Zoom in on mouse cursor
     if @minCameraWidth < width < @maxCameraWidth
+      worldPoint = @camera.unproject screenPoint, @renderer
+
       t = Math.abs(amount) + 0.001
       @camera.setPosition(gl.vec2.lerp worldPoint, @camera.getPosition(), worldPoint, t)
 
@@ -247,9 +247,9 @@ define (require) ->
     @_render()
 
   _onPick: (screenPoint) ->
-    return if @camera.pick screenPoint, @sceneGizmos
+    return if @camera.pick screenPoint, @sceneGizmos, @renderer
 
-    selected = @camera.pick screenPoint, @scene
+    selected = @camera.pick screenPoint, @scene, @renderer
     return if @_selectedObject is selected
 
     @_selectedObject = selected

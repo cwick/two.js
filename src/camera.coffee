@@ -2,9 +2,7 @@ define ["gl-matrix"], (gl) ->
   class Camera
     constructor: (options) ->
       options ?= {}
-      @_screenWidth = options.screenWidth ?= 500
-      @_screenHeight = options.screenHeight ?= 500
-      @_aspectRatio = @_screenWidth / @_screenHeight
+      @_aspectRatio = options.aspectRatio ?= 1
       @setWidth(options.width ?= 10)
       @_x = options.x ?= 0
       @_y = options.y ?= 0
@@ -31,15 +29,17 @@ define ["gl-matrix"], (gl) ->
     getProjectionMatrixInverse: ->
       @_projectionMatrixInverse ?= @_createProjectionMatrixInverse()
 
-    unproject: (out, screenPoint) ->
+    unproject: (screenPoint, renderer) ->
+      normalizedScreenPoint = [
+         (screenPoint[0] / renderer.getWidth())*2 - 1,
+        -(screenPoint[1] / renderer.getHeight())*2 + 1]
+
       viewProjectionInverse = gl.mat2d.create()
       gl.mat2d.multiply viewProjectionInverse, @getProjectionMatrixInverse(), @getWorldMatrix()
-      gl.vec2.transformMat2d out, screenPoint, viewProjectionInverse
-      out
+      gl.vec2.transformMat2d normalizedScreenPoint, normalizedScreenPoint, viewProjectionInverse
 
-    pick: (screenPoint, scene) ->
-      worldPoint = gl.vec2.create()
-      @unproject worldPoint, screenPoint
+    pick: (screenPoint, scene, renderer) ->
+      worldPoint = @unproject screenPoint, renderer
 
       for object in scene.objects
         if object.getBoundingDisc().intersectsWith worldPoint
@@ -50,10 +50,8 @@ define ["gl-matrix"], (gl) ->
 
     _createProjectionMatrix: ->
       m = gl.mat2d.create()
-      m[0] = @_screenWidth / @_width
-      m[3] = -m[0]
-      m[4] = @_screenWidth / 2
-      m[5] = @_screenHeight / 2
+      m[0] = 2 / @_width
+      m[3] = 2 / @_height
       m
 
     _createProjectionMatrixInverse: ->

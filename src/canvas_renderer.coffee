@@ -80,6 +80,15 @@ define ["jquery", "gl-matrix", "./box", "./disc"], ($, gl, Box, Disc) ->
 
       viewProjection = gl.mat2d.create()
       gl.mat2d.multiply viewProjection, view, @_camera.getProjectionMatrix()
+
+      deviceMap = gl.mat2d.create()
+      deviceMap[0] =  @domElement.width / 2
+      deviceMap[3] = -@domElement.height / 2
+      deviceMap[4] =  @domElement.width / 2
+      deviceMap[5] =  @domElement.height / 2
+
+      gl.mat2d.multiply viewProjection, viewProjection, deviceMap
+
       viewProjection
 
     _applyViewProjectionMatrix: ->
