@@ -13,7 +13,7 @@ define (require) ->
   run: ->
     dialog = new Dialog()
     $("#editor").append dialog.$domElement
-    @$viewport = $(".viewport")
+    $viewport = $(".viewport")
 
     dialog.setBody(
       """
@@ -104,13 +104,15 @@ define (require) ->
         </div>
       """)
 
-    @renderer = new CanvasRenderer(width: @$viewport.width(), height: @$viewport.height())
+    @renderer = new CanvasRenderer(width: $viewport.width(), height: $viewport.height())
     @scene = new Scene()
     @camera = new Camera(screenWidth: @renderer.getWidth(), screenHeight: @renderer.getHeight())
 
     @scene.add new Disc(radius: 3, color: "#BE0028")
 
-    @$viewport.append(@renderer.domElement)
+    @canvas = @renderer.domElement
+    @$canvas = $(@canvas)
+    $viewport.append(@$canvas)
 
     @maxCameraWidth = 1000
     @minCameraWidth = 1
@@ -138,15 +140,32 @@ define (require) ->
       return @_onStopGrab(e) || true
 
   _onMousedown: (e) ->
-    if e.which == MouseButtons.LEFT && @_grabTool
+    return unless e.which == MouseButtons.LEFT
+
+    if e.target == @canvas
+      @_mouseDownPoint = gl.vec2.fromValues e.offsetX, e.offsetY
+
+    if @_grabTool
       return @_onBeginGrabbing(e) || true
 
   _onMouseup: (e) ->
-    if e.which == MouseButtons.LEFT && @_grabbing
+    return unless e.which == MouseButtons.LEFT
+
+    if e.target == @canvas
+      mouseUpPoint = gl.vec2.fromValues e.offsetX, e.offsetY
+
+    mouseDownPoint = @_mouseDownPoint
+    @_mouseDownPoint == null
+
+    if @_grabbing
       return @_onStopGrabbing(e) || true
+    else if e.target == @canvas && gl.vec2.squaredDistance(mouseUpPoint, mouseDownPoint) == 0
+      return @_onPickObject(mouseDownPoint) || true
 
   _onMousemove: (e) ->
-    if e.which == MouseButtons.LEFT && @_grabbing
+    return unless e.which == MouseButtons.LEFT
+
+    if @_grabbing
       return @_onGrabbing(e) || true
 
   _onMousewheel: (e, delta) ->
@@ -154,18 +173,18 @@ define (require) ->
 
   _onGrabToolSelected: ->
     @_grabTool = true
-    @$viewport.css "cursor", "-webkit-grab"
+    @$canvas.css "cursor", "-webkit-grab"
 
   _onStopGrab: ->
     @_grabTool = false
-    @$viewport.css "cursor", "auto" unless @_grabbing
+    @$canvas.css "cursor", "auto" unless @_grabbing
 
   _onBeginGrabbing: (e) ->
     @_grabbing = true
     @_grabAnchor = gl.vec2.fromValues(e.pageX, e.pageY)
     @_initialCameraPosition = @camera.getPosition()
 
-    @$viewport.css "cursor", "-webkit-grabbing"
+    @$canvas.css "cursor", "-webkit-grabbing"
 
   _onGrabbing: (e) ->
     grabPoint = gl.vec2.fromValues(e.pageX, e.pageY)
@@ -185,9 +204,9 @@ define (require) ->
     @_grabbing = false
 
     if @_grabTool
-      @$viewport.css "cursor", "-webkit-grab"
+      @$canvas.css "cursor", "-webkit-grab"
     else
-      @$viewport.css "cursor", "auto"
+      @$canvas.css "cursor", "auto"
 
   _onZoom: (amount) ->
     width = @camera.getWidth()
@@ -198,3 +217,5 @@ define (require) ->
     @camera.setWidth(width)
     @_render()
 
+  _onPickObject: (screenPoint) ->
+    console.log "pick", @camera.pick screenPoint, @scene

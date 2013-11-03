@@ -16,7 +16,8 @@
       baseUrl: "../build",
       paths: {
         jquery: "../lib/jquery-2.0.3",
-        "jquery.simulate": "../lib/jquery.simulate"
+        "jquery.simulate": "../lib/jquery.simulate",
+        "gl-matrix": "../lib/gl-matrix"
       },
       shim: {
         "jquery.simulate": ["jquery"]
@@ -28,6 +29,7 @@
     require(
       [
         "spec/dialog_spec",
+        "spec/picking_spec",
         "jquery.simulate"
       ],
       function() {

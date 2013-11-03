@@ -37,6 +37,16 @@ define ["gl-matrix"], (gl) ->
       gl.vec2.transformMat2d out, screenPoint, viewProjectionInverse
       out
 
+    pick: (screenPoint, scene) ->
+      worldPoint = screenPoint
+      @unproject worldPoint, screenPoint
+
+      for object in scene.objects
+        if object.getBoundingDisc().intersectsWith worldPoint
+          return object
+
+      return null
+
     _createProjectionMatrix: ->
       m = gl.mat2d.create()
       m[0] = @_screenWidth / @_width
