@@ -230,7 +230,7 @@ define (require) ->
   _onZoom: (amount, screenPoint) ->
     width = @camera.getWidth()
     # Zoom speed gets faster the more zoomed out we are
-    width -= amount*@zoomSpeed*width
+    width -= amount*@zoomSpeed*width*0.6
     width = Math.min(width, @maxCameraWidth)
     width = Math.max(width, @minCameraWidth)
 
