@@ -168,8 +168,10 @@ define (require) ->
     if @_grabbing
       return @_onGrabbing(e) || true
 
-  _onMousewheel: (e, delta) ->
-    return @_onZoom(delta*0.006)
+  _onMousewheel: (e, delta, deltaX, deltaY) ->
+    return unless e.target == @canvas && deltaY != 0
+
+    return @_onZoom(deltaY*0.006, gl.vec2.fromValues e.offsetX, e.offsetY) || true
 
   _onGrabToolSelected: ->
     @_grabTool = true
@@ -208,13 +210,22 @@ define (require) ->
     else
       @$canvas.css "cursor", "auto"
 
-  _onZoom: (amount) ->
+  _onZoom: (amount, screenPoint) ->
     width = @camera.getWidth()
+    # Zoom speed gets faster the more zoomed out we are
     width -= amount*@zoomSpeed*width
     width = Math.min(width, @maxCameraWidth)
     width = Math.max(width, @minCameraWidth)
 
+    worldPoint = gl.vec2.create()
+    @camera.unproject worldPoint, screenPoint
     @camera.setWidth(width)
+
+    # Zoom in on mouse cursor
+    if @minCameraWidth < width < @maxCameraWidth
+      t = Math.abs(amount) + 0.001
+      @camera.setPosition(gl.vec2.lerp worldPoint, @camera.getPosition(), worldPoint, t)
+
     @_render()
 
   _onPickObject: (screenPoint) ->
