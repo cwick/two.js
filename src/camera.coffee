@@ -29,17 +29,15 @@ define ["gl-matrix"], (gl) ->
     getProjectionMatrixInverse: ->
       @_projectionMatrixInverse ?= @_createProjectionMatrixInverse()
 
-    unproject: (screenPoint, renderer) ->
-      normalizedScreenPoint = [
-         (screenPoint[0] / renderer.getWidth())*2 - 1,
-        -(screenPoint[1] / renderer.getHeight())*2 + 1]
+    unproject: (normalizedScreenPoint) ->
+      worldPoint = gl.vec2.create()
 
       viewProjectionInverse = gl.mat2d.create()
       gl.mat2d.multiply viewProjectionInverse, @getProjectionMatrixInverse(), @getWorldMatrix()
-      gl.vec2.transformMat2d normalizedScreenPoint, normalizedScreenPoint, viewProjectionInverse
+      gl.vec2.transformMat2d worldPoint, normalizedScreenPoint, viewProjectionInverse
 
-    pick: (screenPoint, scene, renderer) ->
-      worldPoint = @unproject screenPoint, renderer
+    pick: (normalizedScreenPoint, scene) ->
+      worldPoint = @unproject normalizedScreenPoint
 
       for object in scene.getChildren()
         if object.getBoundingDisc().intersectsWith worldPoint

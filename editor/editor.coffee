@@ -10,6 +10,7 @@ define (require) ->
   KeyCodes = require "./key_codes"
   Material = require "two/material"
   MouseButtons = require "./mouse_buttons"
+  Projector = require "two/projector"
   Scene = require "two/scene"
   SelectionBox = require "./selection_box"
 
@@ -111,6 +112,7 @@ define (require) ->
     @scene = new Scene()
     @sceneGizmos = new Scene()
     @camera = new Camera(width: 15, aspectRatio: @renderer.getWidth() / @renderer.getHeight())
+    @projector = new Projector(@camera, @renderer)
 
     @scene.add new Disc(radius: 3, material: new Material(fillColor: "#BE0028"))
 
@@ -135,7 +137,7 @@ define (require) ->
     @$canvas.css "cursor", cursor
 
   _updateCursorStyle: (x,y) ->
-    if @camera.pick(gl.vec2.fromValues(x,y), @sceneGizmos, @renderer)
+    if @projector.pick(gl.vec2.fromValues(x,y), @sceneGizmos)
       @_setCursor "move"
     else
       @_setCursor "auto"
@@ -208,8 +210,8 @@ define (require) ->
   _onGrabbing: (e) ->
     grabPoint = gl.vec2.fromValues(e.pageX, e.pageY)
     grabAnchor = gl.vec2.clone(@_grabAnchor)
-    grabPoint = @camera.unproject grabPoint, @renderer
-    grabAnchor = @camera.unproject grabAnchor, @renderer
+    grabPoint = @projector.unproject grabPoint
+    grabAnchor = @projector.unproject grabAnchor
 
     grabVector = gl.vec2.create()
     gl.vec2.subtract grabVector, grabAnchor, grabPoint
@@ -238,7 +240,7 @@ define (require) ->
 
     # Zoom in on mouse cursor
     if @minCameraWidth < width < @maxCameraWidth
-      worldPoint = @camera.unproject screenPoint, @renderer
+      worldPoint = @projector.unproject screenPoint
 
       t = amount + 0.001
       @camera.setPosition(gl.vec2.lerp worldPoint, @camera.getPosition(), worldPoint, t)
@@ -247,9 +249,9 @@ define (require) ->
     @_render()
 
   _onPick: (screenPoint) ->
-    return if @camera.pick screenPoint, @sceneGizmos, @renderer
+    return if @projector.pick screenPoint, @sceneGizmos
 
-    selected = @camera.pick screenPoint, @scene, @renderer
+    selected = @projector.pick screenPoint, @scene
     return if @_selectedObject is selected
 
     @_selectedObject = selected

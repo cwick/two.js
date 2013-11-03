@@ -3,8 +3,9 @@ define (require) ->
   Camera = require "camera"
   Disc = require "disc"
   Box = require "box"
+  Projector = require "projector"
 
-  scene = camera = renderer = null
+  projector = scene = camera = renderer = null
 
   describe 'Picking an object from a scene', ->
     beforeEach ->
@@ -13,18 +14,19 @@ define (require) ->
       renderer =
         getWidth: -> 500
         getHeight: -> 500
+      projector = new Projector(camera, renderer)
 
     it "can pick a disc object", ->
       disc = new Disc(radius: 5)
       scene.add(disc)
 
-      expect(camera.pick([0, 0], scene, renderer)).toBe null
-      expect(camera.pick([260, 245], scene, renderer)).toBe disc
+      expect(projector.pick([0, 0], scene)).toBe null
+      expect(projector.pick([260, 245], scene)).toBe disc
 
     it "can pick a box object", ->
       box = new Box(width: 10, height: 20)
       scene.add(box)
 
-      expect(camera.pick([0,0], scene, renderer)).toBe null
-      expect(camera.pick([260, 235], scene, renderer)).toBe box
+      expect(projector.pick([0,0], scene)).toBe null
+      expect(projector.pick([260, 235], scene)).toBe box
 
