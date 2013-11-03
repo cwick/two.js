@@ -11,6 +11,7 @@ define (require) ->
   Material = require "two/material"
   MouseButtons = require "./mouse_buttons"
   Scene = require "two/scene"
+  SelectionBox = require "./selection_box"
 
   run: ->
     dialog = new Dialog()
@@ -112,6 +113,7 @@ define (require) ->
     @camera = new Camera(screenWidth: @renderer.getWidth(), screenHeight: @renderer.getHeight())
 
     @scene.add new Disc(radius: 3, material: new Material(fillColor: "#BE0028"))
+    @scene.add new Disc(radius: 6, material: new Material(fillColor: "blue"), parent: @scene.objects[0], x: -2, y:-5)
 
     @canvas = @renderer.domElement
     @$canvas = $(@canvas)
@@ -262,14 +264,10 @@ define (require) ->
 
   _onPickObject: (object) ->
     unless @_selectionBox?
-      @_selectionBox = new Box()
+      @_selectionBox = new SelectionBox()
       @sceneGizmos.add @_selectionBox
 
-    @_selectionBox.x = object.x
-    @_selectionBox.y = object.y
-    @_selectionBox.width = object.radius*2
-    @_selectionBox.height = object.radius*2
-    @_selectionBox.material = new Material(strokeColor: "#1400E5", fillColor: "rgba(20,0,229,0.1)")
+    @_selectionBox.attachTo object
 
   _onUnpick: ->
     @sceneGizmos.remove @_selectionBox

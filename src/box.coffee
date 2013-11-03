@@ -1,7 +1,7 @@
 define ["gl-matrix", "./material", "./object2d"], (gl, Material, Object2d) ->
   class Box extends Object2d
     constructor: (options={}) ->
-      super
+      super options
       @width = options.width ?= 5
       @height = options.height ?= 5
 

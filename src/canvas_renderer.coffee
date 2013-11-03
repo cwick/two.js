@@ -28,8 +28,8 @@ define ["jquery", "gl-matrix", "./box", "./disc"], ($, gl, Box, Disc) ->
 
       for object in scene.objects
         material = object.material
-        @_context.fillStyle = material.fillColor
-        @_context.strokeStyle = material.strokeColor
+        @_context.fillStyle = material.fillColor?.css()
+        @_context.strokeStyle = material.strokeColor?.css()
 
         @_context.beginPath()
         if object instanceof Disc
