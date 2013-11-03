@@ -26,32 +26,32 @@ define ["two/box", "two/material", "two/color"], (Box, Material, Color) ->
       smallHandle.width = smallHandle.height = SMALL_HANDLE_SIZE
 
       @add(@_NEResizeHandle = largeHandle.clone(
-        screenOffsetX: LARGE_HANDLE_PADDING
-        screenOffsetY: -LARGE_HANDLE_PADDING))
+        pixelOffsetX: LARGE_HANDLE_PADDING
+        pixelOffsetY: -LARGE_HANDLE_PADDING))
 
       @add(@_NWResizeHandle = largeHandle.clone(
-        screenOffsetX: -LARGE_HANDLE_PADDING
-        screenOffsetY: -LARGE_HANDLE_PADDING))
+        pixelOffsetX: -LARGE_HANDLE_PADDING
+        pixelOffsetY: -LARGE_HANDLE_PADDING))
 
       @add(@_SEResizeHandle = largeHandle.clone(
-        screenOffsetX: LARGE_HANDLE_PADDING
-        screenOffsetY: LARGE_HANDLE_PADDING))
+        pixelOffsetX: LARGE_HANDLE_PADDING
+        pixelOffsetY: LARGE_HANDLE_PADDING))
 
       @add(@_SWResizeHandle = largeHandle.clone(
-        screenOffsetX: -LARGE_HANDLE_PADDING
-        screenOffsetY: LARGE_HANDLE_PADDING))
+        pixelOffsetX: -LARGE_HANDLE_PADDING
+        pixelOffsetY: LARGE_HANDLE_PADDING))
 
       @add(@_NResizeHandle = smallHandle.clone(
-        screenOffsetY: -SMALL_HANDLE_PADDING))
+        pixelOffsetY: -SMALL_HANDLE_PADDING))
 
       @add(@_EResizeHandle = smallHandle.clone(
-        screenOffsetX: SMALL_HANDLE_PADDING))
+        pixelOffsetX: SMALL_HANDLE_PADDING))
 
       @add(@_SResizeHandle = smallHandle.clone(
-        screenOffsetY: SMALL_HANDLE_PADDING))
+        pixelOffsetY: SMALL_HANDLE_PADDING))
 
       @add(@_WResizeHandle = smallHandle.clone(
-        screenOffsetX: -SMALL_HANDLE_PADDING))
+        pixelOffsetX: -SMALL_HANDLE_PADDING))
 
     attachTo: (object) ->
       bounds = object.getBoundingBox()

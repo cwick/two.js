@@ -27,8 +27,8 @@ define ["jquery", "gl-matrix", "./box", "./disc"], ($, gl, Box, Disc) ->
     _renderObject: (object) ->
       @_context.save()
 
-      if object.screenOffsetX != 0 || object.screenOffsetY != 0
-        @_context.translate object.screenOffsetX, object.screenOffsetY
+      if object.pixelOffsetX != 0 || object.pixelOffsetY != 0
+        @_context.translate object.pixelOffsetX, object.pixelOffsetY
 
       viewProjection = @_applyViewProjectionMatrix()
 
@@ -77,21 +77,17 @@ define ["jquery", "gl-matrix", "./box", "./disc"], ($, gl, Box, Disc) ->
       @_viewProjectionMatrix ?= @_createViewProjectionMatrix()
 
     _createViewProjectionMatrix: ->
-      view = gl.mat2d.create()
-      gl.mat2d.invert view, @_camera.getWorldMatrix()
+      viewProjection = @_camera.getViewProjectionMatrix()
 
-      viewProjection = gl.mat2d.create()
-      gl.mat2d.multiply viewProjection, view, @_camera.getProjectionMatrix()
-
+      # Map from normalized device coordinates to physical screen pixel coordinates
       deviceMap = gl.mat2d.create()
       deviceMap[0] =  @domElement.width / 2
       deviceMap[3] = -@domElement.height / 2
       deviceMap[4] =  @domElement.width / 2
       deviceMap[5] =  @domElement.height / 2
 
-      gl.mat2d.multiply viewProjection, viewProjection, deviceMap
-
-      viewProjection
+      gl.mat2d.multiply deviceMap, viewProjection, deviceMap
+      deviceMap
 
     _applyViewProjectionMatrix: ->
       viewProjection = @_getViewProjectionMatrix()

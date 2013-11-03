@@ -11,6 +11,7 @@ define ["gl-matrix"], (gl) ->
       @_height = @_width / @_aspectRatio
       @_projectionMatrix = null
       @_projectionMatrixInverse = null
+      @_viewProjectionMatrix = null
 
     getWidth: -> @_width
     getHeight: -> @_height
@@ -19,15 +20,29 @@ define ["gl-matrix"], (gl) ->
     setPosition: (p) ->
       [@_x, @_y] = p
       @_worldMatrix = null
+      @_viewMatrix = null
+      @_viewProjectionMatrix = null
 
     getWorldMatrix: ->
       @_worldMatrix ?= @_createWorldMatrix()
+
+    getViewMatrix: ->
+      @_viewMatrix ?= @_createViewMatrix()
+
+    getViewProjectionMatrix: ->
+      @_viewProjectionMatrix ?= @_createViewProjectionMatrix()
 
     getProjectionMatrix: ->
       @_projectionMatrix ?= @_createProjectionMatrix()
 
     getProjectionMatrixInverse: ->
       @_projectionMatrixInverse ?= @_createProjectionMatrixInverse()
+
+    project: (worldPoint) ->
+      normalizedScreenPoint = gl.vec2.create()
+      viewProjection = @getViewProjectionMatrix()
+
+      gl.vec2.transformMat2d normalizedScreenPoint, worldPoint, viewProjection
 
     unproject: (normalizedScreenPoint) ->
       worldPoint = gl.vec2.create()
@@ -40,12 +55,13 @@ define ["gl-matrix"], (gl) ->
       worldPoint = @unproject normalizedScreenPoint
 
       for object in scene.getChildren()
-        if object.getBoundingDisc().intersectsWith worldPoint
-          if object.getBoundingBox().intersectsWith worldPoint
-            return object
+        if !object.material.isFixedSize &&
+            object.getBoundingDisc().intersectsWith(worldPoint) &&
+            object.getBoundingBox().intersectsWith(worldPoint)
+          return object
 
-        # picked = @pick screenPoint, object, renderer
-        # return picked if picked?
+        picked = @pick normalizedScreenPoint, object
+        return picked if picked?
 
       return null
 
@@ -65,3 +81,18 @@ define ["gl-matrix"], (gl) ->
       m[4] = @_x
       m[5] = @_y
       m
+
+    _createViewMatrix: ->
+      view = gl.mat2d.create()
+      world = @getWorldMatrix()
+
+      gl.mat2d.invert view, world
+
+    _createViewProjectionMatrix: ->
+      viewProjection = gl.mat2d.create()
+      view = @getViewMatrix()
+      projection = @getProjectionMatrix()
+
+      gl.mat2d.multiply viewProjection, view, projection
+      viewProjection
+

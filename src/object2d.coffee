@@ -4,8 +4,8 @@ define ["./material", "./utils"], (Material, Utils) ->
       @material = options.material ?= new Material()
       @x = options.x ?= 0
       @y = options.y ?= 0
-      @screenOffsetX = options.screenOffsetX ?= 0
-      @screenOffsetY = options.screenOffsetY ?= 0
+      @pixelOffsetX = options.pixelOffsetX ?= 0
+      @pixelOffsetY = options.pixelOffsetY ?= 0
       @_children = []
 
     getBoundingBox: ->
@@ -24,6 +24,6 @@ define ["./material", "./utils"], (Material, Utils) ->
         x: @x
         y: @y
         material: @material
-        screenOffsetX: @screenOffsetX
-        screenOffsetY: @screenOffsetY, overrides
+        pixelOffsetX: @pixelOffsetX
+        pixelOffsetY: @pixelOffsetY, overrides
 
