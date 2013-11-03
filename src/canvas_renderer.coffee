@@ -4,15 +4,21 @@ define ["jquery", "gl-matrix", "./box", "./disc"], ($, gl, Box, Disc) ->
       @$domElement = $("<canvas/>")
       @domElement = @$domElement.get(0)
 
-      @$domElement.attr width: options.width*2, height: options.height*2
+      @_devicePixelRatio = window.devicePixelRatio
+      @$domElement.attr
+        width: options.width*@_devicePixelRatio
+        height: options.height*@_devicePixelRatio
       @_context = @domElement.getContext "2d"
       @autoClear = options.autoClear ?= true
+
       @_width = options.width
       @_height = options.height
 
     getAspectRatio: -> @domElement.width / @domElement.height
     getWidth: -> @_width
     getHeight: -> @_height
+
+    getDevicePixelRatio: -> @_devicePixelRatio
 
     render: (scene, camera) ->
       @_prepareToRender(camera)
@@ -28,7 +34,7 @@ define ["jquery", "gl-matrix", "./box", "./disc"], ($, gl, Box, Disc) ->
       @_context.save()
 
       if object.pixelOffsetX != 0 || object.pixelOffsetY != 0
-        @_context.translate object.pixelOffsetX, object.pixelOffsetY
+        @_context.translate object.pixelOffsetX*@_devicePixelRatio, object.pixelOffsetY*@_devicePixelRatio
 
       viewProjection = @_applyViewProjectionMatrix()
 
@@ -41,7 +47,7 @@ define ["jquery", "gl-matrix", "./box", "./disc"], ($, gl, Box, Disc) ->
 
       if material.isFixedSize
         @_context.translate object.x, object.y
-        @_context.scale 1/viewProjection[0], 1/viewProjection[0]
+        @_context.scale @_devicePixelRatio/viewProjection[0], @_devicePixelRatio/viewProjection[0]
         @_context.translate -object.x, -object.y
         @_context.lineWidth = 1
 

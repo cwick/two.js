@@ -1,10 +1,10 @@
 define ["two/box", "two/material", "two/color"], (Box, Material, Color) ->
   SELECTION_COLOR = new Color(r: 20, g: 0, b: 229)
   SELECTION_FILL_COLOR = SELECTION_COLOR.clone(a: 0.1)
-  LARGE_HANDLE_SIZE = 12
-  LARGE_HANDLE_PADDING = 14
+  LARGE_HANDLE_SIZE = 10
+  LARGE_HANDLE_PADDING = 12
   SMALL_HANDLE_SIZE = LARGE_HANDLE_SIZE / 2 + 2
-  SMALL_HANDLE_PADDING = LARGE_HANDLE_PADDING + SMALL_HANDLE_SIZE/2
+  SMALL_HANDLE_PADDING = LARGE_HANDLE_PADDING - SMALL_HANDLE_SIZE/2 + 2
 
   class SelectionBox extends Box
     constructor: (options={}) ->
@@ -57,22 +57,22 @@ define ["two/box", "two/material", "two/color"], (Box, Material, Color) ->
       bounds = object.getBoundingBox()
       @x = object.x
       @y = object.y
-      @width = bounds.width
-      @height = bounds.height
+      @width = bounds.getWidth()
+      @height = bounds.getHeight()
 
-      @_NEResizeHandle.x = bounds.width/2
-      @_NEResizeHandle.y = bounds.height/2
+      @_NEResizeHandle.x = bounds.getWidth()/2
+      @_NEResizeHandle.y = bounds.getHeight()/2
 
-      @_NWResizeHandle.x = -bounds.width/2
-      @_NWResizeHandle.y = bounds.height/2
+      @_NWResizeHandle.x = -bounds.getWidth()/2
+      @_NWResizeHandle.y = bounds.getHeight()/2
 
-      @_SEResizeHandle.x = bounds.width/2
-      @_SEResizeHandle.y = -bounds.height/2
+      @_SEResizeHandle.x = bounds.getWidth()/2
+      @_SEResizeHandle.y = -bounds.getHeight()/2
 
-      @_SWResizeHandle.x = -bounds.width/2
-      @_SWResizeHandle.y = -bounds.height/2
+      @_SWResizeHandle.x = -bounds.getWidth()/2
+      @_SWResizeHandle.y = -bounds.getHeight()/2
 
-      @_NResizeHandle.y = bounds.height/2
-      @_EResizeHandle.x = bounds.width/2
-      @_SResizeHandle.y = -bounds.height/2
-      @_WResizeHandle.x = -bounds.width/2
+      @_NResizeHandle.y = bounds.getHeight()/2
+      @_EResizeHandle.x = bounds.getWidth()/2
+      @_SResizeHandle.y = -bounds.getHeight()/2
+      @_WResizeHandle.x = -bounds.getWidth()/2
