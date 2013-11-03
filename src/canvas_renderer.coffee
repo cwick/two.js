@@ -4,13 +4,15 @@ define ["jquery", "gl-matrix", "./box", "./disc"], ($, gl, Box, Disc) ->
       @$domElement = $("<canvas/>")
       @domElement = @$domElement.get(0)
 
-      @$domElement.attr width: options.width, height: options.height
+      @$domElement.attr width: options.width*2, height: options.height*2
       @_context = @domElement.getContext "2d"
       @autoClear = options.autoClear ?= true
+      @_width = options.width
+      @_height = options.height
 
     getAspectRatio: -> @domElement.width / @domElement.height
-    getWidth: -> @domElement.width
-    getHeight: -> @domElement.height
+    getWidth: -> @_width
+    getHeight: -> @_height
 
     render: (scene, camera) ->
       @_prepareToRender(camera)
@@ -61,14 +63,14 @@ define ["jquery", "gl-matrix", "./box", "./disc"], ($, gl, Box, Disc) ->
 
     clear: ->
       @_context.setTransform(1, 0, 0, 1, 0, 0)
-      @_context.clearRect 0,0, @getWidth(), @getHeight()
+      @_context.clearRect 0,0, @domElement.width, @domElement.height
 
     _prepareToRender: (camera) ->
       @_camera = camera
       @_viewProjectionMatrix = null
       @_context.setTransform(1, 0, 0, 1, 0, 0)
       # Avoid blurry lines
-      @_context.translate 0, 0.5
+      @_context.translate 0.5, 0.5
       @clear() if @autoClear
 
     _getViewProjectionMatrix: ->
