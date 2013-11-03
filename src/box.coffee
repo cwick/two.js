@@ -1,11 +1,9 @@
-define ["./material", "gl-matrix"], (Material, gl) ->
-  class Box
+define ["gl-matrix", "./material", "./object2d"], (gl, Material, Object2d) ->
+  class Box extends Object2d
     constructor: (options={}) ->
+      super
       @width = options.width ?= 5
       @height = options.height ?= 5
-      @material = options.material ?= new Material()
-      @x = options.x ?= 0
-      @y = options.y ?= 0
 
     getBoundingDisc: ->
       intersectsWith: (point) =>
