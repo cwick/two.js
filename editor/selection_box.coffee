@@ -7,7 +7,13 @@ define ["two/box", "two/material", "two/color"], (Box, Material, Color) ->
       options.material ?= new Material(strokeColor: SELECTION_COLOR, fillColor: SELECTION_FILL_COLOR)
       super options
 
-      resize = new Box(material: new Material(strokeColor: SELECTION_COLOR, fillColor: "white"))
+      @_resizeHandle = new Box
+        y: 0
+        width: 5
+        height: 5
+        material: new Material(strokeColor: SELECTION_COLOR, fillColor: "white")
+
+      @add @_resizeHandle
 
     attachTo: (object) ->
       bounds = object.getBoundingBox()
@@ -15,3 +21,4 @@ define ["two/box", "two/material", "two/color"], (Box, Material, Color) ->
       @y = object.y
       @width = bounds.width
       @height = bounds.height
+      @_resizeHandle.x = bounds.width/2

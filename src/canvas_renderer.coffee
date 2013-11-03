@@ -27,21 +27,30 @@ define ["jquery", "gl-matrix", "./box", "./disc"], ($, gl, Box, Disc) ->
       @_context.lineWidth = 1/viewProjection[0]
 
       for object in scene.objects
-        material = object.material
-        @_context.fillStyle = material.fillColor?.css()
-        @_context.strokeStyle = material.strokeColor?.css()
+        @_renderObject(object)
+        @_renderObject(child) for child in object.getChildren()
 
-        @_context.beginPath()
-        if object instanceof Disc
-          @_context.arc object.x, object.y, object.radius, 0, 2*Math.PI
-        else if object instanceof Box
-          @_context.rect object.x-object.width/2, object.y-object.height/2, object.width, object.height
-        @_context.closePath()
+      # Don't collect results into an array
+      return
 
-        if material.strokeColor?
-          @_context.stroke()
-        if material.fillColor?
-          @_context.fill()
+    _renderObject: (object) ->
+      material = object.material
+      @_context.fillStyle = material.fillColor?.css()
+      @_context.strokeStyle = material.strokeColor?.css()
+
+      @_context.beginPath()
+
+      if object instanceof Disc
+        @_context.arc object.x, object.y, object.radius, 0, 2*Math.PI
+      else if object instanceof Box
+        @_context.rect object.x-object.width/2, object.y-object.height/2, object.width, object.height
+
+      @_context.closePath()
+
+      if material.strokeColor?
+        @_context.stroke()
+      if material.fillColor?
+        @_context.fill()
 
     clear: ->
       @_context.setTransform(1, 0, 0, 1, 0, 0)
