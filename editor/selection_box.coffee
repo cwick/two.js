@@ -2,8 +2,9 @@ define ["two/box", "two/material", "two/color"], (Box, Material, Color) ->
   SELECTION_COLOR = new Color(r: 20, g: 0, b: 229)
   SELECTION_FILL_COLOR = SELECTION_COLOR.clone(a: 0.1)
   LARGE_HANDLE_SIZE = 10
-  SMALL_HANDLE_SIZE = 5
-  HANDLE_PADDING = 0.5
+  LARGE_HANDLE_PADDING = 10
+  SMALL_HANDLE_SIZE = LARGE_HANDLE_SIZE / 2
+  SMALL_HANDLE_PADDING = LARGE_HANDLE_PADDING - SMALL_HANDLE_SIZE/2
 
   class SelectionBox extends Box
     constructor: (options={}) ->
@@ -21,13 +22,36 @@ define ["two/box", "two/material", "two/color"], (Box, Material, Color) ->
         height: LARGE_HANDLE_SIZE
         material: handleMaterial
 
-      # smallHandle = largeHandle.clone()
-      # smallHandle.width = smallHandle.height = SMALL_HANDLE_SIZE
+      smallHandle = largeHandle.clone()
+      smallHandle.width = smallHandle.height = SMALL_HANDLE_SIZE
 
-      @add(@_NEResizeHandle = largeHandle.clone())
-      @add(@_NWResizeHandle = largeHandle.clone())
-      @add(@_SEResizeHandle = largeHandle.clone())
-      @add(@_SWResizeHandle = largeHandle.clone())
+      @add(@_NEResizeHandle = largeHandle.clone(
+        screenOffsetX: LARGE_HANDLE_PADDING
+        screenOffsetY: -LARGE_HANDLE_PADDING))
+
+      @add(@_NWResizeHandle = largeHandle.clone(
+        screenOffsetX: -LARGE_HANDLE_PADDING
+        screenOffsetY: -LARGE_HANDLE_PADDING))
+
+      @add(@_SEResizeHandle = largeHandle.clone(
+        screenOffsetX: LARGE_HANDLE_PADDING
+        screenOffsetY: LARGE_HANDLE_PADDING))
+
+      @add(@_SWResizeHandle = largeHandle.clone(
+        screenOffsetX: -LARGE_HANDLE_PADDING
+        screenOffsetY: LARGE_HANDLE_PADDING))
+
+      @add(@_NResizeHandle = smallHandle.clone(
+        screenOffsetY: -SMALL_HANDLE_PADDING))
+
+      @add(@_EResizeHandle = smallHandle.clone(
+        screenOffsetX: SMALL_HANDLE_PADDING))
+
+      @add(@_SResizeHandle = smallHandle.clone(
+        screenOffsetY: SMALL_HANDLE_PADDING))
+
+      @add(@_WResizeHandle = smallHandle.clone(
+        screenOffsetX: -SMALL_HANDLE_PADDING))
 
     attachTo: (object) ->
       bounds = object.getBoundingBox()
@@ -36,14 +60,19 @@ define ["two/box", "two/material", "two/color"], (Box, Material, Color) ->
       @width = bounds.width
       @height = bounds.height
 
-      @_NEResizeHandle.x = bounds.width/2 + HANDLE_PADDING
-      @_NEResizeHandle.y = bounds.height/2 + HANDLE_PADDING
+      @_NEResizeHandle.x = bounds.width/2
+      @_NEResizeHandle.y = bounds.height/2
 
-      @_NWResizeHandle.x = -bounds.width/2 - HANDLE_PADDING
-      @_NWResizeHandle.y = bounds.height/2 + HANDLE_PADDING
+      @_NWResizeHandle.x = -bounds.width/2
+      @_NWResizeHandle.y = bounds.height/2
 
-      @_SEResizeHandle.x = bounds.width/2 + HANDLE_PADDING
-      @_SEResizeHandle.y = -bounds.height/2 - HANDLE_PADDING
+      @_SEResizeHandle.x = bounds.width/2
+      @_SEResizeHandle.y = -bounds.height/2
 
-      @_SWResizeHandle.x = -bounds.width/2 - HANDLE_PADDING
-      @_SWResizeHandle.y = -bounds.height/2 - HANDLE_PADDING
+      @_SWResizeHandle.x = -bounds.width/2
+      @_SWResizeHandle.y = -bounds.height/2
+
+      @_NResizeHandle.y = bounds.height/2
+      @_EResizeHandle.x = bounds.width/2
+      @_SResizeHandle.y = -bounds.height/2
+      @_WResizeHandle.x = -bounds.width/2

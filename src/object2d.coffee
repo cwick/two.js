@@ -1,9 +1,11 @@
-define ["./material"], (Material) ->
+define ["./material", "./utils"], (Material, Utils) ->
   class Object2d
     constructor: (options={}) ->
       @material = options.material ?= new Material()
       @x = options.x ?= 0
       @y = options.y ?= 0
+      @screenOffsetX = options.screenOffsetX ?= 0
+      @screenOffsetY = options.screenOffsetY ?= 0
       @_children = []
 
     getBoundingBox: ->
@@ -17,7 +19,11 @@ define ["./material"], (Material) ->
 
     getChildren: -> @_children
 
-    cloneProperties: ->
-      material: @material
-      x: @x
-      y: @y
+    cloneProperties: (overrides) ->
+      Utils.merge
+        x: @x
+        y: @y
+        material: @material
+        screenOffsetX: @screenOffsetX
+        screenOffsetY: @screenOffsetY, overrides
+

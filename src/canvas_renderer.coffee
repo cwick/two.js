@@ -40,6 +40,12 @@ define ["jquery", "gl-matrix", "./box", "./disc"], ($, gl, Box, Disc) ->
       @_context.strokeStyle = material.strokeColor?.css()
 
       if material.isFixedSize
+        @_context.setTransform(1, 0, 0, 1, 0, 0)
+        @_context.translate object.screenOffsetX, object.screenOffsetY
+        @_context.transform(
+          viewProjection[0], viewProjection[1]
+          viewProjection[2], viewProjection[3]
+          viewProjection[4], viewProjection[5])
         @_context.translate object.x, object.y
         @_context.scale 1/viewProjection[0], 1/viewProjection[0]
         @_context.translate -object.x, -object.y
@@ -70,7 +76,7 @@ define ["jquery", "gl-matrix", "./box", "./disc"], ($, gl, Box, Disc) ->
       @_viewProjectionMatrix = null
       @_context.setTransform(1, 0, 0, 1, 0, 0)
       # Avoid blurry lines
-      @_context.translate 0.5, 0.5
+      # @_context.translate 0.5, 0.5
       @clear() if @autoClear
 
     _getViewProjectionMatrix: ->

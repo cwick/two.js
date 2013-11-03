@@ -1,4 +1,4 @@
-define ["gl-matrix", "./material", "./object2d"], (gl, Material, Object2d) ->
+define ["gl-matrix", "./material", "./object2d", "./utils"], (gl, Material, Object2d, Utils) ->
   class Box extends Object2d
     constructor: (options={}) ->
       super options
@@ -17,10 +17,8 @@ define ["gl-matrix", "./material", "./object2d"], (gl, Material, Object2d) ->
           point[0] <= @x + @width/2 &&
           point[0] >= @x - @width/2
 
-    clone: ->
-      p = @cloneProperties()
-      p.width = @width
-      p.height = @height
-
-      new Box(p)
+    clone: (overrides) ->
+      new Box(@cloneProperties Utils.merge(
+        width: @width
+        height: @height, overrides))
 
