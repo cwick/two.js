@@ -6,6 +6,7 @@ define ["./material", "./utils"], (Material, Utils) ->
       @y = options.y ?= 0
       @pixelOffsetX = options.pixelOffsetX ?= 0
       @pixelOffsetY = options.pixelOffsetY ?= 0
+      @_name = options.name ?= ""
       @_children = []
 
     getBoundingBox: ->
@@ -18,6 +19,7 @@ define ["./material", "./utils"], (Material, Utils) ->
       @_children.push object
 
     getChildren: -> @_children
+    getName: -> @_name
 
     cloneProperties: (overrides) ->
       Utils.merge

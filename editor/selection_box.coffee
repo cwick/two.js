@@ -6,51 +6,68 @@ define ["two/box", "two/material", "two/color"], (Box, Material, Color) ->
   SMALL_HANDLE_SIZE = LARGE_HANDLE_SIZE / 2 + 2
   SMALL_HANDLE_PADDING = LARGE_HANDLE_PADDING - SMALL_HANDLE_SIZE/2 + 2
 
-  class SelectionBox extends Box
-    constructor: (options={}) ->
-      options.material ?= new Material(strokeColor: SELECTION_COLOR, fillColor: SELECTION_FILL_COLOR)
-      super options
-
-      handleMaterial =
+  class ResizeHandle extends Box
+    constructor: (options) ->
+      options.material =
         new Material
           strokeColor: SELECTION_COLOR
           fillColor: "white"
           isFixedSize: true
 
-      largeHandle = new Box
+      super options
+
+    clone: (overrides) ->
+      new ResizeHandle(@cloneProperties overrides)
+
+    getBoundingWidth: -> @width * 1.5
+    getBoundingHeight: -> @height * 1.5
+
+  class SelectionBox extends Box
+    constructor: (options={}) ->
+      options.material ?= new Material(strokeColor: SELECTION_COLOR, fillColor: SELECTION_FILL_COLOR)
+      super options
+
+      largeHandle = new ResizeHandle
         width: LARGE_HANDLE_SIZE
         height: LARGE_HANDLE_SIZE
-        material: handleMaterial
 
       smallHandle = largeHandle.clone()
       smallHandle.width = smallHandle.height = SMALL_HANDLE_SIZE
 
       @add(@_NEResizeHandle = largeHandle.clone(
+        name: "nesw-resize"
         pixelOffsetX: LARGE_HANDLE_PADDING
         pixelOffsetY: -LARGE_HANDLE_PADDING))
 
       @add(@_NWResizeHandle = largeHandle.clone(
+        name: "nwse-resize"
         pixelOffsetX: -LARGE_HANDLE_PADDING
         pixelOffsetY: -LARGE_HANDLE_PADDING))
 
       @add(@_SEResizeHandle = largeHandle.clone(
+        name: "nwse-resize"
         pixelOffsetX: LARGE_HANDLE_PADDING
         pixelOffsetY: LARGE_HANDLE_PADDING))
 
       @add(@_SWResizeHandle = largeHandle.clone(
+        name: "nesw-resize"
         pixelOffsetX: -LARGE_HANDLE_PADDING
         pixelOffsetY: LARGE_HANDLE_PADDING))
 
       @add(@_NResizeHandle = smallHandle.clone(
+        name: "ns-resize"
         pixelOffsetY: -SMALL_HANDLE_PADDING))
 
       @add(@_EResizeHandle = smallHandle.clone(
+        name: "ew-resize"
         pixelOffsetX: SMALL_HANDLE_PADDING))
 
       @add(@_SResizeHandle = smallHandle.clone(
+        name: "ns-resize"
         pixelOffsetY: SMALL_HANDLE_PADDING))
 
       @add(@_WResizeHandle = smallHandle.clone(
+        name: "ew-resize"
         pixelOffsetX: -SMALL_HANDLE_PADDING))
 
     attachTo: (object) ->

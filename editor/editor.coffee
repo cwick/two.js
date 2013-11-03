@@ -137,8 +137,9 @@ define (require) ->
     @$canvas.css "cursor", cursor
 
   _updateCursorStyle: (x,y) ->
-    if @projector.pick(gl.vec2.fromValues(x,y), @sceneGizmos)
-      @_setCursor "move"
+    gizmo = @projector.pick(gl.vec2.fromValues(x,y), @sceneGizmos)
+    if gizmo?
+      @_setCursor gizmo.getName()
     else
       @_setCursor "auto"
 
