@@ -2,15 +2,15 @@ define (require) ->
   $ = require "jquery"
   require "jquery.mousewheel"
   gl = require "gl-matrix"
-  Box = require "./box"
-  Camera = require "./camera"
-  CanvasRenderer = require "./canvas_renderer"
+  Box = require "two/box"
+  Camera = require "two/camera"
+  CanvasRenderer = require "two/canvas_renderer"
   Dialog = require "./dialog"
-  Disc = require "./disc"
+  Disc = require "two/disc"
   KeyCodes = require "./key_codes"
-  Material = require "./material"
+  Material = require "two/material"
   MouseButtons = require "./mouse_buttons"
-  Scene = require "./scene"
+  Scene = require "two/scene"
 
   run: ->
     dialog = new Dialog()

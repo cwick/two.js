@@ -6,7 +6,6 @@ define ["gl-matrix", "./material"], (gl, Material) ->
       @x = options.x ?= 0
       @y = options.y ?= 0
 
-
     getBoundingBox: ->
       intersectsWith: (point) =>
         point[1] <= @y + @radius &&

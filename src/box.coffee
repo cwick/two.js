@@ -7,7 +7,6 @@ define ["./material", "gl-matrix"], (Material, gl) ->
       @x = options.x ?= 0
       @y = options.y ?= 0
 
-
     getBoundingDisc: ->
       intersectsWith: (point) =>
         center = gl.vec2.fromValues(@x, @y)
