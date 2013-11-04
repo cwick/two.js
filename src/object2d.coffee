@@ -53,7 +53,8 @@ define ["gl-matrix", "./material", "./utils"], (gl, Material, Utils) ->
     getName: -> @_name
 
     getWorldMatrix: ->
-      @_worldMatrix ?= @_createWorldMatrix()
+      @_updateWorldMatrix() unless @_isWorldMatrixValid
+      @_worldMatrix
 
     cloneProperties: (overrides) ->
       Utils.merge
@@ -63,18 +64,19 @@ define ["gl-matrix", "./material", "./utils"], (gl, Material, Utils) ->
         pixelOffsetX: @pixelOffsetX
         pixelOffsetY: @pixelOffsetY, overrides
 
-    _createWorldMatrix: ->
-      m = gl.mat2d.create()
-      m[4] = @_x
-      m[5] = @_y
+    _updateWorldMatrix: ->
+      unless @_worldMatrix?
+        @_worldMatrix = gl.mat2d.create()
+      @_worldMatrix[4] = @_x
+      @_worldMatrix[5] = @_y
 
       if @_parent?
-        gl.mat2d.multiply m, @_parent.getWorldMatrix(), m
+        gl.mat2d.multiply @_worldMatrix, @_parent.getWorldMatrix(), @_worldMatrix
 
-      m
+      @_isWorldMatrixValid = true
 
     _invalidateWorldTransform: ->
-      @_worldMatrix = null
+      @_isWorldMatrixValid = false
       @_invalidateBoundingGeometry()
 
       child._invalidateWorldTransform() for child in @_children

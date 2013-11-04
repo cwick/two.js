@@ -43,6 +43,7 @@ define (require) ->
         object.getWorldMatrix()
         object.setPosition [9,10]
         expect(object.getWorldMatrix()).toEqual [1,0,0,1,9,10]
+        expect(object._isWorldMatrixValid).toBe true
 
       it "updates its bounding box", ->
         object._createBoundingBox = -> new MockBoundingBox()
