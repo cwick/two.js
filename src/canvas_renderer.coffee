@@ -36,7 +36,7 @@ define ["jquery", "gl-matrix", "./box", "./disc"], ($, gl, Box, Disc) ->
       if object.pixelOffsetX != 0 || object.pixelOffsetY != 0
         @_context.translate object.pixelOffsetX*@_devicePixelRatio, object.pixelOffsetY*@_devicePixelRatio
 
-      viewProjection = @_applyViewProjectionMatrix()
+      viewProjection = @_applyMatrix(@_getViewProjectionMatrix())
       objectPosition = object.getPosition()
 
       # Don't scale line width with projection matrix
@@ -60,25 +60,6 @@ define ["jquery", "gl-matrix", "./box", "./disc"], ($, gl, Box, Disc) ->
         @_context.stroke()
 
       @_context.restore()
-
-    _drawObjectShape: (object, position, material) ->
-      @_context.beginPath()
-
-      if object instanceof Disc
-        @_context.arc(
-          position[0],
-          position[1],
-          object.radius,
-          0,
-          2*Math.PI)
-      else if object instanceof Box
-        @_context.rect(
-          position[0]-object.width/2,
-          position[1]-object.height/2,
-          object.width,
-          object.height)
-
-      @_context.closePath()
 
     clear: ->
       @_context.setTransform(1, 0, 0, 1, 0, 0)
@@ -108,12 +89,34 @@ define ["jquery", "gl-matrix", "./box", "./disc"], ($, gl, Box, Disc) ->
       gl.mat2d.multiply deviceMap, viewProjection, deviceMap
       deviceMap
 
-    _applyViewProjectionMatrix: ->
-      viewProjection = @_getViewProjectionMatrix()
-
+    _applyMatrix: (m) ->
       @_context.transform(
-        viewProjection[0], viewProjection[1]
-        viewProjection[2], viewProjection[3]
-        viewProjection[4], viewProjection[5])
+        m[0], m[1]
+        m[2], m[3]
+        m[4], m[5])
 
-      viewProjection
+      return m
+
+    _drawObjectShape: (object, position, material) ->
+      @_context.beginPath()
+
+      @_applyMatrix object.getWorldMatrix()
+      # console.log object.getWorldMatrix()
+      # @_context.translate position[0], position[1]
+
+      if object instanceof Disc
+        @_context.arc(
+          0,
+          0,
+          object.radius,
+          0,
+          2*Math.PI)
+      else if object instanceof Box
+        @_context.rect(
+          -object.width/2,
+          -object.height/2,
+          object.width,
+          object.height)
+
+      @_context.closePath()
+

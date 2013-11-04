@@ -11,16 +11,16 @@ define ["gl-matrix", "./material", "./utils"], (gl, Material, Utils) ->
 
     setY: (value) ->
       @_y = value
-      @_invalidateBoundingGeometry()
+      @_invalidateWorldTransform
     setX: (value) ->
       @_x = value
-      @_invalidateBoundingGeometry()
+      @_invalidateWorldTransform()
 
     getPosition: -> gl.vec2.fromValues @_x, @_y
     setPosition: (value) ->
       @_x = value[0]
       @_y = value[1]
-      @_invalidateBoundingGeometry()
+      @_invalidateWorldTransform()
 
     getBoundingBox: ->
       @_boundingBox ?= @_createBoundingBox()
@@ -34,6 +34,9 @@ define ["gl-matrix", "./material", "./utils"], (gl, Material, Utils) ->
     getChildren: -> @_children
     getName: -> @_name
 
+    getWorldMatrix: ->
+      @_worldMatrix ?= @_createWorldMatrix()
+
     cloneProperties: (overrides) ->
       Utils.merge
         x: @_x
@@ -42,5 +45,16 @@ define ["gl-matrix", "./material", "./utils"], (gl, Material, Utils) ->
         pixelOffsetX: @pixelOffsetX
         pixelOffsetY: @pixelOffsetY, overrides
 
+    _createWorldMatrix: ->
+      m = gl.mat2d.create()
+      m[4] = @_x
+      m[5] = @_y
+      m
+
+    _invalidateWorldTransform: ->
+      @_worldMatrix = null
+      @_invalidateBoundingGeometry()
+
     _invalidateBoundingGeometry: ->
       @_boundingBox = @_boundingDisc = null
+
