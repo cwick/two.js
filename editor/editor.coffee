@@ -140,11 +140,11 @@ define (require) ->
       e.stopPropagation()
 
   _onKeydown: (e) ->
-    if e.keyCode == KeyCodes.SHIFT && !@_resizing
-      return @_onGrabToolSelected e && true
+    if e.keyCode == KeyCodes.SHIFT
+      return @_onGrabToolSelected e || true
 
   _onKeyup: (e) ->
-    if e.keyCode == KeyCodes.SHIFT && !@_resizing
+    if e.keyCode == KeyCodes.SHIFT
       return @_onStopGrab(e) || true
 
   _onMousedown: (e) ->
@@ -155,10 +155,6 @@ define (require) ->
 
     @_mouseDownPoint = gl.vec2.fromValues e.offsetX, e.offsetY
 
-    gizmo = @projector.pick @_mouseDownPoint, @sceneGizmos
-    if gizmo? && gizmo.getName().indexOf("resize") != -1
-      @_resizing = true
-
   _onMouseup: (e) ->
     return unless e.which == MouseButtons.LEFT
 
@@ -167,11 +163,6 @@ define (require) ->
 
     if @_grabbing
       return @_onStopGrabbing(e) || true
-
-    if @_resizing
-      @_resizing = false
-      @_updateCursorStyle(mouseUpPoint[0], mouseUpPoint[1]) if mouseUpPoint?
-      return
 
     return unless e.target == @canvas && @_mouseDownPoint?
 
@@ -191,7 +182,6 @@ define (require) ->
 
   _onMousewheel: (e, delta, deltaX, deltaY) ->
     return unless e.target == @canvas && deltaY != 0
-    return true if @_resizing
 
     return @_onZoom(deltaY*0.006, gl.vec2.fromValues e.offsetX, e.offsetY) || true
 
@@ -278,8 +268,6 @@ define (require) ->
     @_selectionBox = null
 
   _updateCursorStyle: (x,y) ->
-    return if @_resizing
-
     gizmo = @projector.pick(gl.vec2.fromValues(x,y), @sceneGizmos)
     if gizmo?
       if gizmo.getName() == "selection-box"
