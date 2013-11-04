@@ -28,3 +28,5 @@ define ->
 
     getY: -> @_y
     setY: (value) -> @_y = value
+
+    applyMatrix: (m) ->

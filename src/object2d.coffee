@@ -23,10 +23,18 @@ define ["gl-matrix", "./material", "./utils"], (gl, Material, Utils) ->
       @_invalidateWorldTransform()
 
     getBoundingBox: ->
-      @_boundingBox ?= @_createBoundingBox()
+      unless @_boundingBox?
+        @_boundingBox = @_createBoundingBox()
+        @_boundingBox.applyMatrix @getWorldMatrix()
+
+      @_boundingBox
 
     getBoundingDisc: ->
-      @_boundingDisc ?= @_createBoundingDisc()
+      unless @_boundingDisc?
+        @_boundingDisc = @_createBoundingDisc()
+        @_boundingDisc.applyMatrix @getWorldMatrix()
+
+      @_boundingDisc
 
     add: (child) ->
       child._parent = @

@@ -31,3 +31,4 @@ define ["gl-matrix"], (gl) ->
     setY: (value) ->
       @_center[1] = value
 
+    applyMatrix: (m) ->

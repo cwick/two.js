@@ -1,6 +1,10 @@
 define (require) ->
   Object2d = require "object2d"
 
+  MockBoundingBox = MockBoundingDisc = class
+    constructor: -> spyOn @, "applyMatrix"
+    applyMatrix: ->
+
   describe "Object2d", ->
     it "is positioned at (0,0) by default", ->
       object = new Object2d()
@@ -12,7 +16,7 @@ define (require) ->
 
     it "caches its bounding box", ->
       object = new Object2d()
-      object._createBoundingBox = -> {}
+      object._createBoundingBox = -> new MockBoundingBox()
       spyOn(object, "_createBoundingBox").andCallThrough()
 
       object.getBoundingBox()
@@ -22,7 +26,7 @@ define (require) ->
 
     it "caches its bounding disc", ->
       object = new Object2d()
-      object._createBoundingDisc = -> {}
+      object._createBoundingDisc = -> new MockBoundingDisc()
       spyOn(object, "_createBoundingDisc").andCallThrough()
 
       object.getBoundingDisc()
@@ -41,7 +45,7 @@ define (require) ->
         expect(object.getWorldMatrix()).toEqual [1,0,0,1,9,10]
 
       it "updates its bounding box", ->
-        object._createBoundingBox = -> {}
+        object._createBoundingBox = -> new MockBoundingBox()
         spyOn(object, "_createBoundingBox").andCallThrough()
 
         object.getBoundingBox()
@@ -51,7 +55,7 @@ define (require) ->
         expect(object._createBoundingBox.callCount).toEqual 2
 
       it "updates its bounding disc", ->
-        object._createBoundingDisc = -> {}
+        object._createBoundingDisc = -> new MockBoundingDisc()
         spyOn(object, "_createBoundingDisc").andCallThrough()
 
         object.getBoundingDisc()
@@ -77,6 +81,42 @@ define (require) ->
         parent.setPosition [10, 10]
         expect(child1.getWorldMatrix()).toEqual [1,0,0,1,11,12]
         expect(child2.getWorldMatrix()).toEqual [1,0,0,1,13,14]
+
+      it "the children's bounding boxes get updated", ->
+        box1 = new MockBoundingBox()
+        box2 = new MockBoundingBox()
+
+        child1._createBoundingBox = -> box1
+        child2._createBoundingBox = -> box2
+
+        child1.getBoundingBox()
+        child2.getBoundingBox()
+
+        parent.setPosition [10, 10]
+
+        child1.getBoundingBox()
+        child2.getBoundingBox()
+
+        expect(box1.applyMatrix.callCount).toEqual 2
+        expect(box2.applyMatrix.callCount).toEqual 2
+
+      it "the children's bounding discs get updated", ->
+        disc1 = new MockBoundingDisc()
+        disc2 = new MockBoundingDisc()
+
+        child1._createBoundingDisc = -> disc1
+        child2._createBoundingDisc = -> disc2
+
+        child1.getBoundingDisc()
+        child2.getBoundingDisc()
+
+        parent.setPosition [10, 10]
+
+        child1.getBoundingDisc()
+        child2.getBoundingDisc()
+
+        expect(disc1.applyMatrix.callCount).toEqual 2
+        expect(disc2.applyMatrix.callCount).toEqual 2
 
     describe "when adding children", ->
       parent = child = null
