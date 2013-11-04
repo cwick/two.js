@@ -119,7 +119,8 @@ define ["two/box", "two/material", "two/color"], (Box, Material, Color) ->
         pixelOffsetX: -SMALL_HANDLE_PADDING))
 
     _onMouseMoved: (e, gizmo) ->
-      console.log arguments
-      return unless gizmo is @
-      @_signals.cursorStyleChanged.dispatch "move"
+      if gizmo is @
+        @_signals.cursorStyleChanged.dispatch "move"
+      else if gizmo in @getChildren()
+        @_signals.cursorStyleChanged.dispatch gizmo.getName()
 
