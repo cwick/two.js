@@ -5,7 +5,7 @@ define ["gl-matrix"], (gl) ->
       @_width = options.width ?= 10
       @_height = options.height ?= 10
 
-    intersectsWith: (point) =>
+    containsPoint: (point) =>
       point[1] <= @_position[1] + @_height/2 &&
       point[1] >= @_position[1] - @_height/2 &&
       point[0] <= @_position[0] + @_width/2 &&

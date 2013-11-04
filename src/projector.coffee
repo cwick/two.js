@@ -63,8 +63,8 @@ define ["gl-matrix", "./bounding_disc", "./bounding_box"], (gl, BoundingDisc, Bo
 
       for object in scene.getChildren()
         if object.material.isFixedSize
-          if @getScreenBoundingDisc(object).intersectsWith(screenPoint) &&
-             @getScreenBoundingBox(object).intersectsWith(screenPoint)
+          if @getScreenBoundingDisc(object).containsPoint(screenPoint) &&
+             @getScreenBoundingBox(object).containsPoint(screenPoint)
             return object
 
         picked = @_pickScreenObjects screenPoint, object

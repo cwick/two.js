@@ -4,7 +4,7 @@ define ["gl-matrix"], (gl) ->
       @_position = gl.vec2.fromValues(options.x ?= 0 , options.y ?= 0)
       @setRadius(options.radius ?= 5)
 
-    intersectsWith: (point) ->
+    containsPoint: (point) ->
       gl.vec2.squaredDistance(@_position, point) <= @_squaredRadius
 
     getRadius: ->
