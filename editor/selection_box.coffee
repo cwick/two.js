@@ -1,4 +1,4 @@
-define ["two/box", "two/material", "two/color"], (Box, Material, Color) ->
+define ["two/box", "two/material", "two/color", "./mouse_buttons"], (Box, Material, Color, MouseButtons) ->
   SELECTION_COLOR = new Color(r: 20, g: 0, b: 229)
   SELECTION_FILL_COLOR = SELECTION_COLOR.clone(a: 0.1)
   LARGE_HANDLE_SIZE = 10
@@ -69,7 +69,12 @@ define ["two/box", "two/material", "two/color"], (Box, Material, Color) ->
       @_object?
 
     _attachSignalHandlers: ->
-      @_signalBindings.push @_signals.mouseMoved.add(@_onMouseMoved, @, 1)
+      priority = 1
+      @_signalBindings.push @_signals.mouseMoved.add(@_onMouseMoved, @, priority)
+      @_signalBindings.push @_signals.mouseButtonPressed.add(@_onMouseButtonPressed, @ , priority)
+      @_signalBindings.push @_signals.mouseButtonReleased.add(@_onMouseButtonReleased, @ , priority)
+      @_signalBindings.push @_signals.keyPressed.add(@_onKeyPressed, @ , priority)
+      @_signalBindings.push @_signals.keyReleased.add(@_onKeyReleased, @ , priority)
 
     _detachSignalHandlers: ->
       binding.detach() for binding in @_signalBindings
@@ -118,14 +123,33 @@ define ["two/box", "two/material", "two/color"], (Box, Material, Color) ->
         name: "ew-resize"
         pixelOffsetX: -SMALL_HANDLE_PADDING))
 
+    _onMouseButtonPressed: (e, gizmo) ->
+      if e.which == MouseButtons.LEFT && gizmo is @
+        @_moving = true
+        return false
+      else
+        return true
+
+    _onMouseButtonReleased: (e, gizmo) ->
+      if e.which == MouseButtons.LEFT
+        @_moving = false
+
+      return true
+
     _onMouseMoved: (e, gizmo) ->
-      propagateSignal = true
+      return false if @_moving
 
       if gizmo is @
         @_signals.cursorStyleChanged.dispatch "move"
-        propagateSignal = false
+        return false
       else if gizmo in @getChildren()
         @_signals.cursorStyleChanged.dispatch gizmo.getName()
-        propagateSignal = false
+        return false
+      else
+        return true
 
-      propagateSignal
+    _onKeyPressed: (e) ->
+      return false if @_moving
+
+    _onKeyReleased: (e) ->
+      return false if @_moving

@@ -130,13 +130,25 @@ define (require) ->
 
     $(document).on "keydown keyup mousedown mouseup mousemove mousewheel", => @_onUserInput.apply @, arguments
     @on.cursorStyleChanged.add @_onCursorStyleChanged, @
+
     @on.mouseMoved.add @_onMouseMoveDefault, @
-    @on.mouseMoved.add @_onGrabToolMove, @, 2
+    @on.mouseButtonReleased.add @_onMouseUpDefault, @
+
+    @on.mouseButtonPressed.add @_onSelectionStarted, @
+    @on.mouseButtonReleased.add @_onSelectionFinished, @
+
+    @on.mouseMoved.add @_onGrabToolMoved, @, 2
+    @on.mouseButtonPressed.add @_onGrabStarted, @, 2
+    @on.mouseButtonReleased.add @_onGrabStopped, @, 2
+    @on.keyPressed.add @_onGrabToolSelected, @
+    @on.keyReleased.add @_onGrabToolDeselected, @
 
   on:
     keyPressed: new Signal()
     keyReleased: new Signal()
     mouseMoved: new Signal()
+    mouseButtonPressed: new Signal()
+    mouseButtonReleased: new Signal()
     cursorStyleChanged: new Signal()
 
   _render: ->
@@ -151,37 +163,26 @@ define (require) ->
       e.stopPropagation()
 
   _onKeydown: (e) ->
-    if e.keyCode == KeyCodes.SHIFT
-      return @_onGrabToolSelected e || true
+    @on.keyPressed.dispatch e
+    return e.target == @canvas
 
   _onKeyup: (e) ->
-    if e.keyCode == KeyCodes.SHIFT
-      return @_onStopGrab(e) || true
+    @on.keyReleased.dispatch e
+    return e.target == @canvas
 
   _onMousedown: (e) ->
-    return unless e.which == MouseButtons.LEFT && e.target == @canvas
+    if e.target == @canvas
+      gizmo = @projector.pick(gl.vec2.fromValues(e.offsetX, e.offsetY), @sceneGizmos)
 
-    if @_grabTool
-      return @_onBeginGrabbing(e) || true
-
-    @_mouseDownPoint = gl.vec2.fromValues e.offsetX, e.offsetY
+    @on.mouseButtonPressed.dispatch e, gizmo
+    return e.target == @canvas
 
   _onMouseup: (e) ->
-    return unless e.which == MouseButtons.LEFT
-
     if e.target == @canvas
-      mouseUpPoint = gl.vec2.fromValues e.offsetX, e.offsetY
+      gizmo = @projector.pick(gl.vec2.fromValues(e.offsetX, e.offsetY), @sceneGizmos)
 
-    if @_grabbing
-      return @_onStopGrabbing(e) || true
-
-    return unless e.target == @canvas && @_mouseDownPoint?
-
-    mouseDownPoint = @_mouseDownPoint
-    @_mouseDownPoint == null
-
-    if gl.vec2.squaredDistance(mouseUpPoint, mouseDownPoint) <= 1
-      return @_onPick(mouseDownPoint) || true
+    @on.mouseButtonReleased.dispatch e, gizmo
+    return e.target == @canvas
 
   _onMousemove: (e) ->
     if e.target == @canvas
@@ -190,38 +191,48 @@ define (require) ->
     @on.mouseMoved.dispatch e, gizmo
     e.target == @canvas
 
-  _onGrabToolMove: (e) ->
-    if @_grabbing
-      @_onGrabbing(e)
-      return false
+  _onSelectionStarted: (e, gizmo) ->
+    return unless e.target == @canvas && e.which == MouseButtons.LEFT
 
-    if @_grabTool
-      return false
+    @_mouseDownPoint = gl.vec2.fromValues e.offsetX, e.offsetY
 
-  _onMouseMoveDefault: (e) ->
-    @_setCursor "auto"
+  _onSelectionFinished: (e, gizmo) ->
+    mouseDownPoint = @_mouseDownPoint
+    @_mouseDownPoint = null
 
-  _onMousewheel: (e, delta, deltaX, deltaY) ->
-    return unless e.target == @canvas && deltaY != 0
+    return unless e.target == @canvas && mouseDownPoint?
 
-    return @_onZoom(deltaY*0.006, gl.vec2.fromValues e.offsetX, e.offsetY) || true
+    mouseUpPoint = gl.vec2.fromValues e.offsetX, e.offsetY
 
-  _onGrabToolSelected: ->
+    if gl.vec2.squaredDistance(mouseUpPoint, mouseDownPoint) <= 1
+      @_onPick(mouseDownPoint)
+
+  _onGrabToolSelected: (e) ->
+    return unless e.keyCode == KeyCodes.SHIFT
+
     @_grabTool = true
     @_setCursor "-webkit-grab" unless @_grabbing
 
-  _onStopGrab: ->
+  _onGrabToolDeselected: (e) ->
+    return unless e.keyCode == KeyCodes.SHIFT
+
     @_grabTool = false
     @_setCursor "auto" unless @_grabbing
 
-  _onBeginGrabbing: (e) ->
+  _onGrabStarted: (e) ->
+    return unless @_grabTool && e.which == MouseButtons.LEFT
+
     @_grabbing = true
     @_grabAnchor = gl.vec2.fromValues(e.pageX, e.pageY)
     @_initialCameraPosition = @camera.getPosition()
 
     @_setCursor "-webkit-grabbing"
+    return false
 
-  _onGrabbing: (e) ->
+  _onGrabToolMoved: (e) ->
+    unless @_grabbing
+      return !@_grabTool
+
     grabPoint = gl.vec2.fromValues(e.pageX, e.pageY)
     grabAnchor = gl.vec2.clone(@_grabAnchor)
     grabPoint = @projector.unproject grabPoint
@@ -234,14 +245,30 @@ define (require) ->
     @camera.setPosition grabVector
 
     @_render()
+    return false
 
-  _onStopGrabbing: ->
+  _onGrabStopped: (e) ->
+    return unless e.which == MouseButtons.LEFT && @_grabbing
+
     @_grabbing = false
 
     if @_grabTool
       @_setCursor "-webkit-grab"
     else
       @_setCursor "auto"
+
+    return false
+
+  _onMouseMoveDefault: (e) ->
+    @_setCursor "auto"
+
+  _onMouseUpDefault: (e, gizmo) ->
+    @_setCursor "auto" unless gizmo?
+
+  _onMousewheel: (e, delta, deltaX, deltaY) ->
+    return unless e.target == @canvas && deltaY != 0
+
+    return @_onZoom(deltaY*0.006, gl.vec2.fromValues e.offsetX, e.offsetY) || true
 
   _onZoom: (amount, screenPoint) ->
     width = @camera.getWidth()
