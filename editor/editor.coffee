@@ -133,16 +133,6 @@ define (require) ->
     @renderer.render(@scene, @camera)
     @renderer.render(@sceneGizmos, @camera)
 
-  _setCursor: (cursor) ->
-    @$canvas.css "cursor", cursor
-
-  _updateCursorStyle: (x,y) ->
-    gizmo = @projector.pick(gl.vec2.fromValues(x,y), @sceneGizmos)
-    if gizmo?
-      @_setCursor gizmo.getName()
-    else
-      @_setCursor "auto"
-
   _onUserInput: (e) ->
     handled = @["_on#{e.type.charAt(0).toUpperCase() + e.type.slice(1)}"].apply @, arguments
     if handled
@@ -150,21 +140,24 @@ define (require) ->
       e.stopPropagation()
 
   _onKeydown: (e) ->
-    if e.keyCode == KeyCodes.SHIFT
+    if e.keyCode == KeyCodes.SHIFT && !@_resizing
       return @_onGrabToolSelected e && true
 
   _onKeyup: (e) ->
-    if e.keyCode == KeyCodes.SHIFT
+    if e.keyCode == KeyCodes.SHIFT && !@_resizing
       return @_onStopGrab(e) || true
 
   _onMousedown: (e) ->
-    return unless e.which == MouseButtons.LEFT
-
-    if e.target == @canvas
-      @_mouseDownPoint = gl.vec2.fromValues e.offsetX, e.offsetY
+    return unless e.which == MouseButtons.LEFT && e.target == @canvas
 
     if @_grabTool
       return @_onBeginGrabbing(e) || true
+
+    @_mouseDownPoint = gl.vec2.fromValues e.offsetX, e.offsetY
+
+    gizmo = @projector.pick @_mouseDownPoint, @sceneGizmos
+    if gizmo? && gizmo.getName().indexOf("resize") != -1
+      @_resizing = true
 
   _onMouseup: (e) ->
     return unless e.which == MouseButtons.LEFT
@@ -172,12 +165,20 @@ define (require) ->
     if e.target == @canvas
       mouseUpPoint = gl.vec2.fromValues e.offsetX, e.offsetY
 
+    if @_grabbing
+      return @_onStopGrabbing(e) || true
+
+    if @_resizing
+      @_resizing = false
+      @_updateCursorStyle(mouseUpPoint[0], mouseUpPoint[1]) if mouseUpPoint?
+      return
+
+    return unless e.target == @canvas && @_mouseDownPoint?
+
     mouseDownPoint = @_mouseDownPoint
     @_mouseDownPoint == null
 
-    if @_grabbing
-      return @_onStopGrabbing(e) || true
-    else if e.target == @canvas && gl.vec2.squaredDistance(mouseUpPoint, mouseDownPoint) <= 1
+    if gl.vec2.squaredDistance(mouseUpPoint, mouseDownPoint) <= 1
       return @_onPick(mouseDownPoint) || true
 
   _onMousemove: (e) ->
@@ -190,6 +191,7 @@ define (require) ->
 
   _onMousewheel: (e, delta, deltaX, deltaY) ->
     return unless e.target == @canvas && deltaY != 0
+    return true if @_resizing
 
     return @_onZoom(deltaY*0.006, gl.vec2.fromValues e.offsetX, e.offsetY) || true
 
@@ -274,4 +276,19 @@ define (require) ->
   _onUnpick: ->
     @sceneGizmos.remove @_selectionBox
     @_selectionBox = null
+
+  _updateCursorStyle: (x,y) ->
+    return if @_resizing
+
+    gizmo = @projector.pick(gl.vec2.fromValues(x,y), @sceneGizmos)
+    if gizmo?
+      if gizmo.getName() == "selection-box"
+        @_setCursor "move"
+      else
+        @_setCursor gizmo.getName()
+    else
+      @_setCursor "auto"
+
+  _setCursor: (cursor) ->
+    @$canvas.css "cursor", cursor
 

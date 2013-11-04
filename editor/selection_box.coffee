@@ -19,12 +19,13 @@ define ["two/box", "two/material", "two/color"], (Box, Material, Color) ->
     clone: (overrides) ->
       new ResizeHandle(@cloneProperties overrides)
 
-    getBoundingWidth: -> @width * 1.5
-    getBoundingHeight: -> @height * 1.5
+    getBoundingWidth: -> @width * 2
+    getBoundingHeight: -> @height * 2
 
   class SelectionBox extends Box
     constructor: (options={}) ->
       options.material ?= new Material(strokeColor: SELECTION_COLOR, fillColor: SELECTION_FILL_COLOR)
+      options.name = "selection-box"
       super options
 
       largeHandle = new ResizeHandle
