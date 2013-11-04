@@ -28,10 +28,18 @@ define ["gl-matrix", "./material", "./utils"], (gl, Material, Utils) ->
     getBoundingDisc: ->
       @_boundingDisc ?= @_createBoundingDisc()
 
-    add: (object) ->
-      @_children.push object
+    add: (child) ->
+      child._parent = @
+      @_children.push child
+
+    remove: (child) ->
+      idx = @_children.indexOf child
+      if idx != -1
+        @_children.splice(idx, 1)
+        child._parent = null
 
     getChildren: -> @_children
+    getParent: -> @_parent
     getName: -> @_name
 
     getWorldMatrix: ->
@@ -49,11 +57,17 @@ define ["gl-matrix", "./material", "./utils"], (gl, Material, Utils) ->
       m = gl.mat2d.create()
       m[4] = @_x
       m[5] = @_y
+
+      if @_parent?
+        gl.mat2d.multiply m, @_parent.getWorldMatrix(), m
+
       m
 
     _invalidateWorldTransform: ->
       @_worldMatrix = null
       @_invalidateBoundingGeometry()
+
+      child._invalidateWorldTransform() for child in @_children
 
     _invalidateBoundingGeometry: ->
       @_boundingBox = @_boundingDisc = null

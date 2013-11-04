@@ -46,13 +46,8 @@ define ["jquery", "gl-matrix", "./box", "./disc"], ($, gl, Box, Disc) ->
       @_context.fillStyle = material.fillColor?.css()
       @_context.strokeStyle = material.strokeColor?.css()
 
-      if material.isFixedSize
-        @_context.translate objectPosition[0], objectPosition[1]
-        @_context.scale @_devicePixelRatio/viewProjection[0], @_devicePixelRatio/viewProjection[0]
-        @_context.translate -objectPosition[0], -objectPosition[1]
-        @_context.lineWidth = 1
-
-      @_drawObjectShape object, objectPosition, material
+      @_setWorldTransform object, material, viewProjection[0]
+      @_drawObjectShape object, material
 
       if material.fillColor?
         @_context.fill()
@@ -97,12 +92,15 @@ define ["jquery", "gl-matrix", "./box", "./disc"], ($, gl, Box, Disc) ->
 
       return m
 
-    _drawObjectShape: (object, position, material) ->
-      @_context.beginPath()
-
+    _setWorldTransform: (object, material, viewScaleFactor) ->
       @_applyMatrix object.getWorldMatrix()
-      # console.log object.getWorldMatrix()
-      # @_context.translate position[0], position[1]
+
+      if material.isFixedSize
+        @_context.scale @_devicePixelRatio/viewScaleFactor, @_devicePixelRatio/viewScaleFactor
+        @_context.lineWidth = 1
+
+    _drawObjectShape: (object, material) ->
+      @_context.beginPath()
 
       if object instanceof Disc
         @_context.arc(
