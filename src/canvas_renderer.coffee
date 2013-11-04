@@ -52,23 +52,7 @@ define ["jquery", "gl-matrix", "./box", "./disc"], ($, gl, Box, Disc) ->
         @_context.translate -objectPosition[0], -objectPosition[1]
         @_context.lineWidth = 1
 
-      @_context.beginPath()
-
-      if object instanceof Disc
-        @_context.arc(
-          objectPosition[0],
-          objectPosition[1],
-          object.radius,
-          0,
-          2*Math.PI)
-      else if object instanceof Box
-        @_context.rect(
-          objectPosition[0]-object.width/2,
-          objectPosition[1]-object.height/2,
-          object.width,
-          object.height)
-
-      @_context.closePath()
+      @_drawObjectShape object, objectPosition, material
 
       if material.fillColor?
         @_context.fill()
@@ -76,6 +60,25 @@ define ["jquery", "gl-matrix", "./box", "./disc"], ($, gl, Box, Disc) ->
         @_context.stroke()
 
       @_context.restore()
+
+    _drawObjectShape: (object, position, material) ->
+      @_context.beginPath()
+
+      if object instanceof Disc
+        @_context.arc(
+          position[0],
+          position[1],
+          object.radius,
+          0,
+          2*Math.PI)
+      else if object instanceof Box
+        @_context.rect(
+          position[0]-object.width/2,
+          position[1]-object.height/2,
+          object.width,
+          object.height)
+
+      @_context.closePath()
 
     clear: ->
       @_context.setTransform(1, 0, 0, 1, 0, 0)
