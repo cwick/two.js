@@ -69,7 +69,7 @@ define ["two/box", "two/material", "two/color"], (Box, Material, Color) ->
       @_object?
 
     _attachSignalHandlers: ->
-      @_signalBindings.push @_signals.mouseMoved.add(@_onMouseMoved, @)
+      @_signalBindings.push @_signals.mouseMoved.add(@_onMouseMoved, @, 1)
 
     _detachSignalHandlers: ->
       binding.detach() for binding in @_signalBindings
@@ -119,8 +119,13 @@ define ["two/box", "two/material", "two/color"], (Box, Material, Color) ->
         pixelOffsetX: -SMALL_HANDLE_PADDING))
 
     _onMouseMoved: (e, gizmo) ->
+      propagateSignal = true
+
       if gizmo is @
         @_signals.cursorStyleChanged.dispatch "move"
+        propagateSignal = false
       else if gizmo in @getChildren()
         @_signals.cursorStyleChanged.dispatch gizmo.getName()
+        propagateSignal = false
 
+      propagateSignal

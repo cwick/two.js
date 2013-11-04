@@ -130,6 +130,8 @@ define (require) ->
 
     $(document).on "keydown keyup mousedown mouseup mousemove mousewheel", => @_onUserInput.apply @, arguments
     @on.cursorStyleChanged.add @_onCursorStyleChanged, @
+    @on.mouseMoved.add @_onMouseMoveDefault, @
+    @on.mouseMoved.add @_onGrabToolMove, @, 2
 
   on:
     keyPressed: new Signal()
@@ -182,14 +184,22 @@ define (require) ->
       return @_onPick(mouseDownPoint) || true
 
   _onMousemove: (e) ->
-    if @_grabbing
-      return @_onGrabbing(e) || true
+    if e.target == @canvas
+      gizmo = @projector.pick(gl.vec2.fromValues(e.offsetX, e.offsetY), @sceneGizmos)
 
-    return unless e.target == @canvas && !@_grabTool
-
-    gizmo = @projector.pick(gl.vec2.fromValues(e.offsetX, e.offsetY), @sceneGizmos)
     @on.mouseMoved.dispatch e, gizmo
-    @_setCursor "auto" unless gizmo?
+    e.target == @canvas
+
+  _onGrabToolMove: (e) ->
+    if @_grabbing
+      @_onGrabbing(e)
+      return false
+
+    if @_grabTool
+      return false
+
+  _onMouseMoveDefault: (e) ->
+    @_setCursor "auto"
 
   _onMousewheel: (e, delta, deltaX, deltaY) ->
     return unless e.target == @canvas && deltaY != 0
@@ -198,7 +208,7 @@ define (require) ->
 
   _onGrabToolSelected: ->
     @_grabTool = true
-    @_setCursor "-webkit-grab"
+    @_setCursor "-webkit-grab" unless @_grabbing
 
   _onStopGrab: ->
     @_grabTool = false
