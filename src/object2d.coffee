@@ -1,4 +1,4 @@
-define ["./material", "./utils"], (Material, Utils) ->
+define ["gl-matrix", "./material", "./utils"], (gl, Material, Utils) ->
   class Object2d
     constructor: (options={}) ->
       @material = options.material ?= new Material()
@@ -8,6 +8,11 @@ define ["./material", "./utils"], (Material, Utils) ->
       @pixelOffsetY = options.pixelOffsetY ?= 0
       @_name = options.name ?= ""
       @_children = []
+
+    getPosition: -> gl.vec2.fromValues @x, @y
+    setPosition: (value) ->
+      @x = value[0]
+      @y = value[1]
 
     getBoundingBox: ->
       @_boundingBox ?= @_createBoundingBox()

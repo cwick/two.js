@@ -125,11 +125,12 @@ define (require) ->
     @minCameraWidth = 1
     @zoomSpeed = 1
 
-    @_selectionBox = new SelectionBox(@on)
+    @_selectionBox = new SelectionBox(@on, @projector)
     @_render()
 
     $(document).on "keydown keyup mousedown mouseup mousemove mousewheel", => @_onUserInput.apply @, arguments
     @on.cursorStyleChanged.add @_onCursorStyleChanged, @
+    @on.gizmoChanged.add @_onGizmoChanged, @
 
     @on.mouseMoved.add @_onMouseMoveDefault, @
     @on.mouseButtonReleased.add @_onMouseUpDefault, @
@@ -144,12 +145,13 @@ define (require) ->
     @on.keyReleased.add @_onGrabToolDeselected, @
 
   on:
+    cursorStyleChanged: new Signal()
+    gizmoChanged: new Signal()
     keyPressed: new Signal()
     keyReleased: new Signal()
-    mouseMoved: new Signal()
     mouseButtonPressed: new Signal()
     mouseButtonReleased: new Signal()
-    cursorStyleChanged: new Signal()
+    mouseMoved: new Signal()
 
   _render: ->
     @renderer.clear()
@@ -318,6 +320,9 @@ define (require) ->
 
   _onCursorStyleChanged: (newStyle) ->
     @_setCursor newStyle
+
+  _onGizmoChanged: ->
+    @_render()
 
   _setCursor: (cursor) ->
     @$canvas.css "cursor", cursor

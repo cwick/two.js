@@ -1,4 +1,6 @@
-define ["two/box", "two/material", "two/color", "./mouse_buttons"], (Box, Material, Color, MouseButtons) ->
+define ["gl-matrix", "two/box", "two/material", "two/color", "./mouse_buttons"], \
+       (gl, Box, Material, Color, MouseButtons) ->
+
   SELECTION_COLOR = new Color(r: 20, g: 0, b: 229)
   SELECTION_FILL_COLOR = SELECTION_COLOR.clone(a: 0.1)
   LARGE_HANDLE_SIZE = 10
@@ -24,7 +26,7 @@ define ["two/box", "two/material", "two/color", "./mouse_buttons"], (Box, Materi
 
 
   class SelectionBox extends Box
-    constructor: (@_signals) ->
+    constructor: (@_signals, @_projector) ->
       options =
         material: new Material(strokeColor: SELECTION_COLOR, fillColor: SELECTION_FILL_COLOR)
         name: "selection-box"
@@ -126,6 +128,8 @@ define ["two/box", "two/material", "two/color", "./mouse_buttons"], (Box, Materi
     _onMouseButtonPressed: (e, gizmo) ->
       if e.which == MouseButtons.LEFT && gizmo is @
         @_moving = true
+        @_moveAnchor = @_projector.unproject gl.vec2.fromValues(e.pageX, e.pageY)
+        @_initialPosition = @getPosition()
         return false
       else
         return true
@@ -133,11 +137,20 @@ define ["two/box", "two/material", "two/color", "./mouse_buttons"], (Box, Materi
     _onMouseButtonReleased: (e, gizmo) ->
       if e.which == MouseButtons.LEFT
         @_moving = false
+        @_moveAnchor = null
 
       return true
 
     _onMouseMoved: (e, gizmo) ->
-      return false if @_moving
+      if @_moving
+        movePoint = @_projector.unproject gl.vec2.fromValues(e.pageX, e.pageY)
+        moveVector = gl.vec2.create()
+        newPosition = gl.vec2.create()
+        gl.vec2.subtract moveVector, movePoint, @_moveAnchor
+        gl.vec2.add newPosition, moveVector, @_initialPosition
+        @setPosition newPosition
+        @_signals.gizmoChanged.dispatch @
+        return false
 
       if gizmo is @
         @_signals.cursorStyleChanged.dispatch "move"
