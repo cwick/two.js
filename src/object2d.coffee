@@ -25,14 +25,16 @@ define ["gl-matrix", "./material", "./utils"], (gl, Material, Utils) ->
     getBoundingBox: ->
       unless @_boundingBox?
         @_boundingBox = @_createBoundingBox()
-        @_boundingBox.applyMatrix @getWorldMatrix()
+        if @_parent?
+          @_boundingBox.applyMatrix @_parent.getWorldMatrix()
 
       @_boundingBox
 
     getBoundingDisc: ->
       unless @_boundingDisc?
         @_boundingDisc = @_createBoundingDisc()
-        @_boundingDisc.applyMatrix @getWorldMatrix()
+        if @_parent?
+          @_boundingDisc.applyMatrix @_parent.getWorldMatrix()
 
       @_boundingDisc
 

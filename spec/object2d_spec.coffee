@@ -98,7 +98,9 @@ define (require) ->
         child2.getBoundingBox()
 
         expect(box1.applyMatrix.callCount).toEqual 2
+        expect(box1.applyMatrix).toHaveBeenCalledWith(parent.getWorldMatrix())
         expect(box2.applyMatrix.callCount).toEqual 2
+        expect(box2.applyMatrix).toHaveBeenCalledWith(parent.getWorldMatrix())
 
       it "the children's bounding discs get updated", ->
         disc1 = new MockBoundingDisc()
