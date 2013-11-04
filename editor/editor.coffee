@@ -13,6 +13,7 @@ define (require) ->
   Projector = require "two/projector"
   Scene = require "two/scene"
   SelectionBox = require "./selection_box"
+  Signal = require "signals"
 
   run: ->
     dialog = new Dialog()
@@ -124,9 +125,17 @@ define (require) ->
     @minCameraWidth = 1
     @zoomSpeed = 1
 
+    @_selectionBox = new SelectionBox(@on)
     @_render()
 
     $(document).on "keydown keyup mousedown mouseup mousemove mousewheel", => @_onUserInput.apply @, arguments
+    @on.cursorStyleChanged.add @_onCursorStyleChanged, @
+
+  on:
+    keyPressed: new Signal()
+    keyReleased: new Signal()
+    mouseMoved: new Signal()
+    cursorStyleChanged: new Signal()
 
   _render: ->
     @renderer.clear()
@@ -178,7 +187,9 @@ define (require) ->
 
     return unless e.target == @canvas && !@_grabTool
 
-    @_updateCursorStyle(e.offsetX, e.offsetY)
+    gizmo = @projector.pick(gl.vec2.fromValues(e.offsetX, e.offsetY), @sceneGizmos)
+    @on.mouseMoved.dispatch e, gizmo
+    @_setCursor "auto" unless gizmo?
 
   _onMousewheel: (e, delta, deltaX, deltaY) ->
     return unless e.target == @canvas && deltaY != 0
@@ -238,7 +249,6 @@ define (require) ->
       t = amount + 0.001
       @camera.setPosition(gl.vec2.lerp worldPoint, @camera.getPosition(), worldPoint, t)
 
-    @_updateCursorStyle(screenPoint[0], screenPoint[1])
     @_render()
 
   _onPick: (screenPoint) ->
@@ -249,33 +259,28 @@ define (require) ->
 
     @_selectedObject = selected
     if @_selectedObject?
-      @_onPickObject(selected)
+      @_onPickObject(selected, screenPoint)
     else
       @_onUnpick()
 
-    @_updateCursorStyle(screenPoint[0], screenPoint[1])
     @_render()
 
-  _onPickObject: (object) ->
-    unless @_selectionBox?
-      @_selectionBox = new SelectionBox()
+  _onPickObject: (object, screenPoint) ->
+    unless @_selectionBox.isAttached()
       @sceneGizmos.add @_selectionBox
 
     @_selectionBox.attachTo object
 
+    @on.mouseMoved.dispatch(
+      {x: screenPoint[0], y: screenPoint[1]},
+      @projector.pick screenPoint, @sceneGizmos)
+
   _onUnpick: ->
     @sceneGizmos.remove @_selectionBox
-    @_selectionBox = null
+    @_selectionBox.detach()
 
-  _updateCursorStyle: (x,y) ->
-    gizmo = @projector.pick(gl.vec2.fromValues(x,y), @sceneGizmos)
-    if gizmo?
-      if gizmo.getName() == "selection-box"
-        @_setCursor "move"
-      else
-        @_setCursor gizmo.getName()
-    else
-      @_setCursor "auto"
+  _onCursorStyleChanged: (newStyle) ->
+    @_setCursor newStyle
 
   _setCursor: (cursor) ->
     @$canvas.css "cursor", cursor

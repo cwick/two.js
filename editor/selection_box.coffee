@@ -22,12 +22,59 @@ define ["two/box", "two/material", "two/color"], (Box, Material, Color) ->
     getBoundingWidth: -> @width * 2
     getBoundingHeight: -> @height * 2
 
+
   class SelectionBox extends Box
-    constructor: (options={}) ->
-      options.material ?= new Material(strokeColor: SELECTION_COLOR, fillColor: SELECTION_FILL_COLOR)
-      options.name = "selection-box"
+    constructor: (@_signals) ->
+      options =
+        material: new Material(strokeColor: SELECTION_COLOR, fillColor: SELECTION_FILL_COLOR)
+        name: "selection-box"
       super options
 
+      @_signalBindings = []
+      @_buildResizeHandles()
+
+    attachTo: (object) ->
+      @detach()
+      @_object = object
+      @_attachSignalHandlers()
+
+      bounds = @_object.getBoundingBox()
+      @x = @_object.x
+      @y = @_object.y
+      @width = bounds.getWidth()
+      @height = bounds.getHeight()
+
+      @_NEResizeHandle.x = bounds.getWidth()/2
+      @_NEResizeHandle.y = bounds.getHeight()/2
+
+      @_NWResizeHandle.x = -bounds.getWidth()/2
+      @_NWResizeHandle.y = bounds.getHeight()/2
+
+      @_SEResizeHandle.x = bounds.getWidth()/2
+      @_SEResizeHandle.y = -bounds.getHeight()/2
+
+      @_SWResizeHandle.x = -bounds.getWidth()/2
+      @_SWResizeHandle.y = -bounds.getHeight()/2
+
+      @_NResizeHandle.y = bounds.getHeight()/2
+      @_EResizeHandle.x = bounds.getWidth()/2
+      @_SResizeHandle.y = -bounds.getHeight()/2
+      @_WResizeHandle.x = -bounds.getWidth()/2
+
+    detach: ->
+      @_object = null
+      @_detachSignalHandlers()
+
+    isAttached: ->
+      @_object?
+
+    _attachSignalHandlers: ->
+      @_signalBindings.push @_signals.mouseMoved.add(@_onMouseMoved, @)
+
+    _detachSignalHandlers: ->
+      binding.detach() for binding in @_signalBindings
+
+    _buildResizeHandles: ->
       largeHandle = new ResizeHandle
         width: LARGE_HANDLE_SIZE
         height: LARGE_HANDLE_SIZE
@@ -71,26 +118,8 @@ define ["two/box", "two/material", "two/color"], (Box, Material, Color) ->
         name: "ew-resize"
         pixelOffsetX: -SMALL_HANDLE_PADDING))
 
-    attachTo: (object) ->
-      bounds = object.getBoundingBox()
-      @x = object.x
-      @y = object.y
-      @width = bounds.getWidth()
-      @height = bounds.getHeight()
+    _onMouseMoved: (e, gizmo) ->
+      console.log arguments
+      return unless gizmo is @
+      @_signals.cursorStyleChanged.dispatch "move"
 
-      @_NEResizeHandle.x = bounds.getWidth()/2
-      @_NEResizeHandle.y = bounds.getHeight()/2
-
-      @_NWResizeHandle.x = -bounds.getWidth()/2
-      @_NWResizeHandle.y = bounds.getHeight()/2
-
-      @_SEResizeHandle.x = bounds.getWidth()/2
-      @_SEResizeHandle.y = -bounds.getHeight()/2
-
-      @_SWResizeHandle.x = -bounds.getWidth()/2
-      @_SWResizeHandle.y = -bounds.getHeight()/2
-
-      @_NResizeHandle.y = bounds.getHeight()/2
-      @_EResizeHandle.x = bounds.getWidth()/2
-      @_SResizeHandle.y = -bounds.getHeight()/2
-      @_WResizeHandle.x = -bounds.getWidth()/2
