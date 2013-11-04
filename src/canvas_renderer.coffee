@@ -37,6 +37,7 @@ define ["jquery", "gl-matrix", "./box", "./disc"], ($, gl, Box, Disc) ->
         @_context.translate object.pixelOffsetX*@_devicePixelRatio, object.pixelOffsetY*@_devicePixelRatio
 
       viewProjection = @_applyViewProjectionMatrix()
+      objectPosition = object.getPosition()
 
       # Don't scale line width with projection matrix
       @_context.lineWidth = 1/viewProjection[0]
@@ -46,17 +47,26 @@ define ["jquery", "gl-matrix", "./box", "./disc"], ($, gl, Box, Disc) ->
       @_context.strokeStyle = material.strokeColor?.css()
 
       if material.isFixedSize
-        @_context.translate object.x, object.y
+        @_context.translate objectPosition[0], objectPosition[1]
         @_context.scale @_devicePixelRatio/viewProjection[0], @_devicePixelRatio/viewProjection[0]
-        @_context.translate -object.x, -object.y
+        @_context.translate -objectPosition[0], -objectPosition[1]
         @_context.lineWidth = 1
 
       @_context.beginPath()
 
       if object instanceof Disc
-        @_context.arc object.x, object.y, object.radius, 0, 2*Math.PI
+        @_context.arc(
+          objectPosition[0],
+          objectPosition[1],
+          object.radius,
+          0,
+          2*Math.PI)
       else if object instanceof Box
-        @_context.rect object.x-object.width/2, object.y-object.height/2, object.width, object.height
+        @_context.rect(
+          objectPosition[0]-object.width/2,
+          objectPosition[1]-object.height/2,
+          object.width,
+          object.height)
 
       @_context.closePath()
 

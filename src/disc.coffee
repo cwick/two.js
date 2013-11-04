@@ -7,8 +7,8 @@ define ["./object2d", "./bounding_box", "./bounding_disc"], \
       @radius = options.radius ?= 5
 
     _createBoundingDisc: ->
-      new BoundingDisc(x: @x, y: @y, radius: @radius)
+      new BoundingDisc(x: @_x, y: @_y, radius: @radius)
 
     _createBoundingBox: ->
-      new BoundingBox(x: @x, y: @y, width: @radius*2, height: @radius*2)
+      new BoundingBox(x: @_x, y: @_y, width: @radius*2, height: @radius*2)
 

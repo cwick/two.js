@@ -41,27 +41,19 @@ define ["gl-matrix", "two/box", "two/material", "two/color", "./mouse_buttons"],
       @_attachSignalHandlers()
 
       bounds = @_object.getBoundingBox()
-      @x = @_object.x
-      @y = @_object.y
+      @setPosition @_object.getPosition()
       @width = bounds.getWidth()
       @height = bounds.getHeight()
 
-      @_NEResizeHandle.x = bounds.getWidth()/2
-      @_NEResizeHandle.y = bounds.getHeight()/2
+      @_NEResizeHandle.setPosition [bounds.getWidth()/2, bounds.getHeight()/2]
+      @_NWResizeHandle.setPosition [-bounds.getWidth()/2, bounds.getHeight()/2]
+      @_SEResizeHandle.setPosition [bounds.getWidth()/2, -bounds.getHeight()/2]
+      @_SWResizeHandle.setPosition [-bounds.getWidth()/2, -bounds.getHeight()/2]
 
-      @_NWResizeHandle.x = -bounds.getWidth()/2
-      @_NWResizeHandle.y = bounds.getHeight()/2
-
-      @_SEResizeHandle.x = bounds.getWidth()/2
-      @_SEResizeHandle.y = -bounds.getHeight()/2
-
-      @_SWResizeHandle.x = -bounds.getWidth()/2
-      @_SWResizeHandle.y = -bounds.getHeight()/2
-
-      @_NResizeHandle.y = bounds.getHeight()/2
-      @_EResizeHandle.x = bounds.getWidth()/2
-      @_SResizeHandle.y = -bounds.getHeight()/2
-      @_WResizeHandle.x = -bounds.getWidth()/2
+      @_NResizeHandle.setY(bounds.getHeight()/2)
+      @_EResizeHandle.setX(bounds.getWidth()/2)
+      @_SResizeHandle.setY(-bounds.getHeight()/2)
+      @_WResizeHandle.setX(-bounds.getWidth()/2)
 
     detach: ->
       @_object = null

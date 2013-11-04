@@ -20,14 +20,14 @@ define ["gl-matrix", "./material", "./object2d", "./utils", "./bounding_box", ".
 
     _createBoundingDisc: ->
       new BoundingDisc
-        x: @x
-        y: @y
+        x: @_x
+        y: @_y
         radius: gl.vec2.length(gl.vec2.fromValues(@getBoundingWidth()/2, @getBoundingHeight()/2))
 
     _createBoundingBox: ->
       new BoundingBox
-        x: @x
-        y: @y
+        x: @_x
+        y: @_y
         width: @getBoundingWidth()
         height: @getBoundingHeight()
 
