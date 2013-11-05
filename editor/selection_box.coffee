@@ -134,15 +134,7 @@ define ["gl-matrix", "two/box", "two/material", "two/color", "./mouse_buttons"],
       return true
 
     _onMouseMoved: (e, gizmo) ->
-      if @_moving
-        movePoint = @_projector.unproject gl.vec2.fromValues(e.pageX, e.pageY)
-        moveVector = gl.vec2.create()
-        newPosition = gl.vec2.create()
-        gl.vec2.subtract moveVector, movePoint, @_moveAnchor
-        gl.vec2.add newPosition, moveVector, @_initialPosition
-        @setPosition newPosition
-        @_signals.gizmoChanged.dispatch @
-        return false
+      return @_moveSelectionBox(e) if @_moving
 
       if gizmo is @
         @_signals.cursorStyleChanged.dispatch "move"
@@ -158,3 +150,15 @@ define ["gl-matrix", "two/box", "two/material", "two/color", "./mouse_buttons"],
 
     _onKeyReleased: (e) ->
       return false if @_moving
+
+    _moveSelectionBox: (e) ->
+      movePoint = @_projector.unproject gl.vec2.fromValues(e.pageX, e.pageY)
+      moveVector = gl.vec2.create()
+      newPosition = gl.vec2.create()
+      gl.vec2.subtract moveVector, movePoint, @_moveAnchor
+      gl.vec2.add newPosition, moveVector, @_initialPosition
+      @setPosition newPosition
+      @_object.setPosition newPosition
+      @_signals.gizmoChanged.dispatch @
+      return false
+
