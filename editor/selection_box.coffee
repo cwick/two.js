@@ -120,7 +120,7 @@ define ["gl-matrix", "two/box", "two/material", "two/color", "./mouse_buttons"],
     _onMouseButtonPressed: (e, gizmo) ->
       if e.which == MouseButtons.LEFT && gizmo is @
         @_moving = true
-        @_moveAnchor = @_projector.unproject gl.vec2.fromValues(e.pageX, e.pageY)
+        @_anchorPoint = @_projector.unproject gl.vec2.fromValues(e.pageX, e.pageY)
         @_initialPosition = @getPosition()
         return false
       else
@@ -129,7 +129,7 @@ define ["gl-matrix", "two/box", "two/material", "two/color", "./mouse_buttons"],
     _onMouseButtonReleased: (e, gizmo) ->
       if e.which == MouseButtons.LEFT
         @_moving = false
-        @_moveAnchor = null
+        @_anchorPoint = null
 
       return true
 
@@ -155,7 +155,7 @@ define ["gl-matrix", "two/box", "two/material", "two/color", "./mouse_buttons"],
       movePoint = @_projector.unproject gl.vec2.fromValues(e.pageX, e.pageY)
       moveVector = gl.vec2.create()
       newPosition = gl.vec2.create()
-      gl.vec2.subtract moveVector, movePoint, @_moveAnchor
+      gl.vec2.subtract moveVector, movePoint, @_anchorPoint
       gl.vec2.add newPosition, moveVector, @_initialPosition
       @setPosition newPosition
       @_object.setPosition newPosition

@@ -8,6 +8,7 @@ define ["gl-matrix", "./material", "./utils", "./bounding_box", "./bounding_disc
       @pixelOffsetX = options.pixelOffsetX ?= 0
       @pixelOffsetY = options.pixelOffsetY ?= 0
       @_name = options.name ?= ""
+      @_scale = options.scale ?= 1
       @_children = []
 
     setY: (value) ->
@@ -22,6 +23,8 @@ define ["gl-matrix", "./material", "./utils", "./bounding_box", "./bounding_disc
       @_x = value[0]
       @_y = value[1]
       @_invalidateWorldTransform()
+
+    getScale: -> @_scale
 
     getBoundingBox: ->
       unless @_isBoundingBoxValid
@@ -71,6 +74,9 @@ define ["gl-matrix", "./material", "./utils", "./bounding_box", "./bounding_disc
     _updateWorldMatrix: ->
       unless @_worldMatrix?
         @_worldMatrix = gl.mat2d.create()
+
+      @_worldMatrix[0] = @_scale
+      @_worldMatrix[3] = @_scale
       @_worldMatrix[4] = @_x
       @_worldMatrix[5] = @_y
 

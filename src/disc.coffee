@@ -8,10 +8,10 @@ define ["./object2d", "./bounding_box", "./bounding_disc"], \
 
     updateBoundingDisc: (disc) ->
       disc.setPosition @getPosition()
-      disc.setRadius @radius
+      disc.setRadius @radius * @getScale()
 
     updateBoundingBox: (box) ->
       box.setPosition @getPosition()
-      box.setWidth @radius*2
-      box.setHeight @radius*2
+      box.setWidth @getScale()*@radius*2
+      box.setHeight @getScale()*@radius*2
 
