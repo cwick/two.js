@@ -6,9 +6,12 @@ define ["./object2d", "./bounding_box", "./bounding_disc"], \
       super options
       @radius = options.radius ?= 5
 
-    _createBoundingDisc: ->
-      new BoundingDisc(x: @_x, y: @_y, radius: @radius)
+    updateBoundingDisc: (disc) ->
+      disc.setPosition @getPosition()
+      disc.setRadius @radius
 
-    _createBoundingBox: ->
-      new BoundingBox(x: @_x, y: @_y, width: @radius*2, height: @radius*2)
+    updateBoundingBox: (box) ->
+      box.setPosition @getPosition()
+      box.setWidth @radius*2
+      box.setHeight @radius*2
 

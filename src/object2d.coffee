@@ -1,4 +1,5 @@
-define ["gl-matrix", "./material", "./utils"], (gl, Material, Utils) ->
+define ["gl-matrix", "./material", "./utils", "./bounding_box", "./bounding_disc"], \
+       (gl, Material, Utils, BoundingBox, BoundingDisc) ->
   class Object2d
     constructor: (options={}) ->
       @material = options.material ?= new Material()
@@ -23,20 +24,17 @@ define ["gl-matrix", "./material", "./utils"], (gl, Material, Utils) ->
       @_invalidateWorldTransform()
 
     getBoundingBox: ->
-      unless @_boundingBox?
-        @_boundingBox = @_createBoundingBox()
-        if @_parent?
-          @_boundingBox.applyMatrix @_parent.getWorldMatrix()
+      unless @_isBoundingBoxValid
+        @_recomputeBoundingBox()
 
       @_boundingBox
 
     getBoundingDisc: ->
-      unless @_boundingDisc?
-        @_boundingDisc = @_createBoundingDisc()
-        if @_parent?
-          @_boundingDisc.applyMatrix @_parent.getWorldMatrix()
+      unless @_isBoundingDiscValid
+        @_recomputeBoundingDisc()
 
       @_boundingDisc
+
 
     add: (child) ->
       child._parent = @
@@ -64,6 +62,12 @@ define ["gl-matrix", "./material", "./utils"], (gl, Material, Utils) ->
         pixelOffsetX: @pixelOffsetX
         pixelOffsetY: @pixelOffsetY, overrides
 
+    # Override this in derived classes
+    updateBoundingBox: ->
+
+    # Override this in derived classes
+    updateBoundingDisc: ->
+
     _updateWorldMatrix: ->
       unless @_worldMatrix?
         @_worldMatrix = gl.mat2d.create()
@@ -82,5 +86,26 @@ define ["gl-matrix", "./material", "./utils"], (gl, Material, Utils) ->
       child._invalidateWorldTransform() for child in @_children
 
     _invalidateBoundingGeometry: ->
-      @_boundingBox = @_boundingDisc = null
+      @_isBoundingBoxValid = @_isBoundingDiscValid = false
 
+    _recomputeBoundingBox: ->
+      unless @_boundingBox?
+        @_boundingBox = new BoundingBox()
+
+      @updateBoundingBox @_boundingBox
+
+      if @_parent?
+        @_boundingBox.applyMatrix @_parent.getWorldMatrix()
+
+      @_isBoundingBoxValid = true
+
+    _recomputeBoundingDisc: ->
+      unless @_boundingDisc?
+        @_boundingDisc = new BoundingDisc()
+
+      @updateBoundingDisc @_boundingDisc
+
+      if @_parent?
+        @_boundingDisc.applyMatrix @_parent.getWorldMatrix()
+
+      @_isBoundingDiscValid = true
