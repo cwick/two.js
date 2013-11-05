@@ -25,6 +25,9 @@ define ["gl-matrix", "./material", "./utils", "./bounding_box", "./bounding_disc
       @invalidateWorldTransform()
 
     getScale: -> @_scale
+    setScale: (value) ->
+      @_scale = value
+      @invalidateWorldTransform()
 
     getBoundingBox: ->
       unless @_isBoundingBoxValid

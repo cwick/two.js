@@ -1,5 +1,5 @@
-define ["gl-matrix", "two/box", "two/material", "two/color", "./mouse_buttons"], \
-       (gl, Box, Material, Color, MouseButtons) ->
+define ["gl-matrix", "two/box", "two/material", "two/color", "./mouse_buttons", "two/utils"], \
+       (gl, Box, Material, Color, MouseButtons, Utils) ->
 
   SELECTION_COLOR = new Color(r: 20, g: 0, b: 229)
   SELECTION_FILL_COLOR = SELECTION_COLOR.clone(a: 0.1)
@@ -16,6 +16,7 @@ define ["gl-matrix", "two/box", "two/material", "two/color", "./mouse_buttons"],
           fillColor: "white"
           isFixedSize: true
 
+      @_signalBindings = []
       @_projector = options.projector
       @_signals = options.signals
       delete options.projector
@@ -26,9 +27,72 @@ define ["gl-matrix", "two/box", "two/material", "two/color", "./mouse_buttons"],
     clone: (overrides) ->
       new ResizeHandle(@cloneProperties overrides)
 
+    cloneProperties: (overrides) ->
+      super Utils.merge(
+        projector: @_projector
+        signals: @_signals, overrides)
+
     getBoundingWidth: -> @width * 2
     getBoundingHeight: -> @height * 2
 
+    attachTo: (object) ->
+      @detach()
+      @_object = object
+      @_attachSignalHandlers()
+
+    detach: ->
+      @_object = null
+      @_detachSignalHandlers()
+
+    _attachSignalHandlers: ->
+      priority = 1
+      @_signalBindings.push @_signals.mouseMoved.add(@_onMouseMoved, @, priority)
+      @_signalBindings.push @_signals.mouseButtonPressed.add(@_onMouseButtonPressed, @ , priority)
+      @_signalBindings.push @_signals.mouseButtonReleased.add(@_onMouseButtonReleased, @ , priority)
+      @_signalBindings.push @_signals.keyPressed.add(@_onKeyPressed, @ , priority)
+      @_signalBindings.push @_signals.keyReleased.add(@_onKeyReleased, @ , priority)
+
+    _detachSignalHandlers: ->
+      binding.detach() for binding in @_signalBindings
+
+    _onMouseButtonPressed: (e, gizmo) ->
+      if e.which == MouseButtons.LEFT && gizmo is @
+        @_moving = true
+        @_anchorPoint = @_projector.unproject gl.vec2.fromValues(e.pageX, e.pageY)
+        @_initialScale = @_object.getScale()
+        return false
+      else
+        return true
+
+    _onMouseButtonReleased: (e, gizmo) ->
+      if e.which == MouseButtons.LEFT
+        @_moving = false
+        @_anchorPoint = null
+
+      return true
+
+    _onMouseMoved: (e, gizmo) ->
+      if @_moving
+        movePoint = @_projector.unproject gl.vec2.fromValues(e.pageX, e.pageY)
+        moveVector = gl.vec2.create()
+        newPosition = gl.vec2.create()
+        gl.vec2.subtract moveVector, movePoint, @_anchorPoint
+
+        newScale = @_initialScale * (1 - moveVector[0]/4.2)
+        @_object.setScale newScale
+
+        @getParent().shrinkWrap @_object
+        @_signals.gizmoChanged.dispatch @
+        return false
+
+      if gizmo is @
+        @_signals.cursorStyleChanged.dispatch gizmo.getName()
+        return false
+      else
+        return true
+
+    _onKeyPressed: (e) ->
+    _onKeyReleased: (e) ->
 
   class SelectionBox extends Box
     constructor: (@_signals, @_projector) ->
@@ -44,11 +108,15 @@ define ["gl-matrix", "two/box", "two/material", "two/color", "./mouse_buttons"],
       @detach()
       @_object = object
       @_attachSignalHandlers()
+      child.attachTo object for child in @getChildren()
 
-      bounds = @_object.getBoundingBox()
-      @setPosition @_object.getPosition()
-      @width = bounds.getWidth()
-      @height = bounds.getHeight()
+      @shrinkWrap object
+
+    shrinkWrap: (object) ->
+      bounds = object.getBoundingBox()
+      @setPosition object.getPosition()
+      @setWidth bounds.getWidth()
+      @setHeight bounds.getHeight()
 
       @_NEResizeHandle.setPosition [bounds.getWidth()/2, bounds.getHeight()/2]
       @_NWResizeHandle.setPosition [-bounds.getWidth()/2, bounds.getHeight()/2]
@@ -63,6 +131,7 @@ define ["gl-matrix", "two/box", "two/material", "two/color", "./mouse_buttons"],
     detach: ->
       @_object = null
       @_detachSignalHandlers()
+      child.detach() for child in @getChildren()
 
     isAttached: ->
       @_object?
@@ -75,13 +144,18 @@ define ["gl-matrix", "two/box", "two/material", "two/color", "./mouse_buttons"],
       @_signalBindings.push @_signals.keyPressed.add(@_onKeyPressed, @ , priority)
       @_signalBindings.push @_signals.keyReleased.add(@_onKeyReleased, @ , priority)
 
+      child._attachSignalHandlers() for child in @getChildren()
+
     _detachSignalHandlers: ->
       binding.detach() for binding in @_signalBindings
+      child._detachSignalHandlers() for child in @getChildren()
 
     _buildResizeHandles: ->
       largeHandle = new ResizeHandle
         width: LARGE_HANDLE_SIZE
         height: LARGE_HANDLE_SIZE
+        signals: @_signals
+        projector: @_projector
 
       smallHandle = largeHandle.clone(width: SMALL_HANDLE_SIZE, height: SMALL_HANDLE_SIZE)
 
@@ -142,9 +216,6 @@ define ["gl-matrix", "two/box", "two/material", "two/color", "./mouse_buttons"],
 
       if gizmo is @
         @_signals.cursorStyleChanged.dispatch "move"
-        return false
-      else if gizmo in @getChildren()
-        @_signals.cursorStyleChanged.dispatch gizmo.getName()
         return false
       else
         return true
