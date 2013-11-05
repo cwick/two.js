@@ -13,16 +13,16 @@ define ["gl-matrix", "./material", "./utils", "./bounding_box", "./bounding_disc
 
     setY: (value) ->
       @_y = value
-      @_invalidateWorldTransform
+      @invalidateWorldTransform()
     setX: (value) ->
       @_x = value
-      @_invalidateWorldTransform()
+      @invalidateWorldTransform()
 
     getPosition: -> gl.vec2.fromValues @_x, @_y
     setPosition: (value) ->
       @_x = value[0]
       @_y = value[1]
-      @_invalidateWorldTransform()
+      @invalidateWorldTransform()
 
     getScale: -> @_scale
 
@@ -71,6 +71,15 @@ define ["gl-matrix", "./material", "./utils", "./bounding_box", "./bounding_disc
     # Override this in derived classes
     updateBoundingDisc: ->
 
+    invalidateWorldTransform: ->
+      @_isWorldMatrixValid = false
+      @invalidateBoundingGeometry()
+
+      child.invalidateWorldTransform() for child in @_children
+
+    invalidateBoundingGeometry: ->
+      @_isBoundingBoxValid = @_isBoundingDiscValid = false
+
     _updateWorldMatrix: ->
       unless @_worldMatrix?
         @_worldMatrix = gl.mat2d.create()
@@ -84,15 +93,6 @@ define ["gl-matrix", "./material", "./utils", "./bounding_box", "./bounding_disc
         gl.mat2d.multiply @_worldMatrix, @_parent.getWorldMatrix(), @_worldMatrix
 
       @_isWorldMatrixValid = true
-
-    _invalidateWorldTransform: ->
-      @_isWorldMatrixValid = false
-      @_invalidateBoundingGeometry()
-
-      child._invalidateWorldTransform() for child in @_children
-
-    _invalidateBoundingGeometry: ->
-      @_isBoundingBoxValid = @_isBoundingDiscValid = false
 
     _recomputeBoundingBox: ->
       unless @_boundingBox?

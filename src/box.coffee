@@ -15,6 +15,14 @@ define ["gl-matrix", "./material", "./object2d", "./utils", "./bounding_box", ".
     clone: (overrides) ->
       new Box(@cloneProperties overrides)
 
+    setWidth: (value) ->
+      @width = value
+      @invalidateBoundingGeometry()
+
+    setHeight: (value) ->
+      @height = value
+      @invalidateBoundingGeometry()
+
     getBoundingWidth: -> @width
     getBoundingHeight: -> @height
 

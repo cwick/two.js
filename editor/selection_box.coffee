@@ -16,6 +16,11 @@ define ["gl-matrix", "two/box", "two/material", "two/color", "./mouse_buttons"],
           fillColor: "white"
           isFixedSize: true
 
+      @_projector = options.projector
+      @_signals = options.signals
+      delete options.projector
+      delete options.signals
+
       super options
 
     clone: (overrides) ->
@@ -78,8 +83,7 @@ define ["gl-matrix", "two/box", "two/material", "two/color", "./mouse_buttons"],
         width: LARGE_HANDLE_SIZE
         height: LARGE_HANDLE_SIZE
 
-      smallHandle = largeHandle.clone()
-      smallHandle.width = smallHandle.height = SMALL_HANDLE_SIZE
+      smallHandle = largeHandle.clone(width: SMALL_HANDLE_SIZE, height: SMALL_HANDLE_SIZE)
 
       @add(@_NEResizeHandle = largeHandle.clone(
         name: "nesw-resize"
