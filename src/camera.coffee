@@ -54,7 +54,7 @@ define ["gl-matrix"], (gl) ->
     pick: (normalizedScreenPoint, scene) ->
       worldPoint = @unproject normalizedScreenPoint
 
-      for object in scene.getChildren()
+      for object in scene.getChildren() by -1
         if !object.material.isFixedSize &&
             object.getBoundingDisc().containsPoint(worldPoint) &&
             object.getBoundingBox().containsPoint(worldPoint)

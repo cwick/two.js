@@ -116,6 +116,8 @@ define (require) ->
     @projector = new Projector(@camera, @renderer)
 
     @scene.add new Disc(radius: 3, material: new Material(fillColor: "#BE0028"))
+    @scene.add new Disc(x:6, y:-3, radius: 2, material: new Material(fillColor: "green"))
+    @scene.add new Box(x:-6, y:3, width: 4, height: 10, material: new Material(fillColor: "yellow", strokeColor: "red"))
 
     @canvas = @renderer.domElement
     @$canvas = $(@canvas)
