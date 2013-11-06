@@ -45,7 +45,7 @@ define ["gl-matrix", "two/box", "two/material", "two/color", "./mouse_buttons", 
       @_detachSignalHandlers()
 
     _attachSignalHandlers: ->
-      priority = 1
+      priority = 2
       @_signalBindings.push @_signals.mouseMoved.add(@_onMouseMoved, @, priority)
       @_signalBindings.push @_signals.mouseButtonPressed.add(@_onMouseButtonPressed, @ , priority)
       @_signalBindings.push @_signals.mouseButtonReleased.add(@_onMouseButtonReleased, @ , priority)
@@ -93,8 +93,8 @@ define ["gl-matrix", "two/box", "two/material", "two/color", "./mouse_buttons", 
       else
         return true
 
-    _onKeyPressed: (e) ->
-    _onKeyReleased: (e) ->
+    _onKeyPressed: (e) -> !@_moving
+    _onKeyReleased: (e) -> !@_moving
 
   class SelectionBox extends Box
     constructor: (@_signals, @_projector) ->
