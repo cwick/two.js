@@ -81,7 +81,7 @@ define ["gl-matrix", "two/box", "two/material", "two/color", "./mouse_buttons", 
 
         newScale = @_initialScale * (1 - moveVector[0]/@_initialWidth)
         @_object.setScale newScale
-        @_object.setX(@_initialPosition[0] + moveVector[0]/2)
+        @_object.setPosition [@_initialPosition[0] + moveVector[0]/2, @_initialPosition[1] - moveVector[0]/2]
 
         @getParent().shrinkWrap @_object
         @_signals.gizmoChanged.dispatch @
