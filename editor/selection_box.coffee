@@ -60,6 +60,8 @@ define ["gl-matrix", "two/box", "two/material", "two/color", "./mouse_buttons", 
         @_moving = true
         @_anchorPoint = @_projector.unproject gl.vec2.fromValues(e.pageX, e.pageY)
         @_initialScale = @_object.getScale()
+        @_initialWidth = @getParent().getWidth()
+        @_initialPosition = @getParent().getPosition()
         return false
       else
         return true
@@ -75,11 +77,11 @@ define ["gl-matrix", "two/box", "two/material", "two/color", "./mouse_buttons", 
       if @_moving
         movePoint = @_projector.unproject gl.vec2.fromValues(e.pageX, e.pageY)
         moveVector = gl.vec2.create()
-        newPosition = gl.vec2.create()
         gl.vec2.subtract moveVector, movePoint, @_anchorPoint
 
-        newScale = @_initialScale * (1 - moveVector[0]/4.2)
+        newScale = @_initialScale * (1 - moveVector[0]/@_initialWidth)
         @_object.setScale newScale
+        @_object.setX(@_initialPosition[0] + moveVector[0]/2)
 
         @getParent().shrinkWrap @_object
         @_signals.gizmoChanged.dispatch @

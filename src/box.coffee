@@ -26,15 +26,21 @@ define ["gl-matrix", "./material", "./object2d", "./utils", "./bounding_box", ".
       @height = value
       @invalidateBoundingGeometry()
 
+    # Override these to provide different bounding box dimensions
     getBoundingWidth: -> @width
     getBoundingHeight: -> @height
 
     updateBoundingDisc: (disc) ->
+      scale = @getScale()
+
       disc.setPosition @getPosition()
-      disc.setRadius gl.vec2.length(gl.vec2.fromValues(@getBoundingWidth()/2, @getBoundingHeight()/2))
+      disc.setRadius(
+        gl.vec2.length(
+          gl.vec2.fromValues(
+            @getBoundingWidth()*scale/2, @getBoundingHeight()*scale/2)))
 
     updateBoundingBox: (box) ->
       box.setPosition @getPosition()
-      box.setWidth @getBoundingWidth()
-      box.setHeight @getBoundingHeight()
+      box.setWidth @getScale()*@getBoundingWidth()
+      box.setHeight @getScale()*@getBoundingHeight()
 
