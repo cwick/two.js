@@ -45,7 +45,7 @@ define ["gl-matrix", "two/box", "two/material", "two/color", "./mouse_buttons", 
       @_detachSignalHandlers()
 
     _attachSignalHandlers: ->
-      priority = 2
+      priority = 1
       @_signalBindings.push @_signals.mouseMoved.add(@_onMouseMoved, @, priority)
       @_signalBindings.push @_signals.mouseButtonPressed.add(@_onMouseButtonPressed, @ , priority)
       @_signalBindings.push @_signals.mouseButtonReleased.add(@_onMouseButtonReleased, @ , priority)
@@ -55,9 +55,8 @@ define ["gl-matrix", "two/box", "two/material", "two/color", "./mouse_buttons", 
     _detachSignalHandlers: ->
       binding.detach() for binding in @_signalBindings
 
-    _onMouseButtonPressed: (e, gizmo) ->
-      if e.which == MouseButtons.LEFT && gizmo is @
-        @_moving = true
+    _onMouseButtonPressed: (e) ->
+      if e.which == MouseButtons.LEFT && e.gizmo is @
         @_anchorPoint = @_projector.unproject gl.vec2.fromValues(e.pageX, e.pageY)
         @_initialScale = @_object.getScale()
         @_initialWidth = @getParent().getWidth()
@@ -66,15 +65,16 @@ define ["gl-matrix", "two/box", "two/material", "two/color", "./mouse_buttons", 
       else
         return true
 
-    _onMouseButtonReleased: (e, gizmo) ->
+    _onMouseButtonReleased: (e) ->
       if e.which == MouseButtons.LEFT
-        @_moving = false
         @_anchorPoint = null
 
       return true
 
-    _onMouseMoved: (e, gizmo) ->
-      if @_moving
+    _onMouseMoved: (e) ->
+      return true if e.activeGizmo? and e.activeGizmo isnt @
+
+      if e.activeGizmo is @
         movePoint = @_projector.unproject gl.vec2.fromValues(e.pageX, e.pageY)
         moveVector = gl.vec2.create()
         gl.vec2.subtract moveVector, movePoint, @_anchorPoint
@@ -87,14 +87,15 @@ define ["gl-matrix", "two/box", "two/material", "two/color", "./mouse_buttons", 
         @_signals.gizmoChanged.dispatch @
         return false
 
-      if gizmo is @
-        @_signals.cursorStyleChanged.dispatch gizmo.getName()
+      else if e.gizmo is @
+        @_signals.cursorStyleChanged.dispatch e.gizmo.getName()
         return false
+
       else
         return true
 
-    _onKeyPressed: (e) -> !@_moving
-    _onKeyReleased: (e) -> !@_moving
+    _onKeyPressed: (e) -> return false if e.activeGizmo is @
+    _onKeyReleased: (e) -> return false if e.activeGizmo is @
 
   class SelectionBox extends Box
     constructor: (@_signals, @_projector) ->
@@ -197,36 +198,38 @@ define ["gl-matrix", "two/box", "two/material", "two/color", "./mouse_buttons", 
         name: "ew-resize"
         pixelOffsetX: -SMALL_HANDLE_PADDING))
 
-    _onMouseButtonPressed: (e, gizmo) ->
-      if e.which == MouseButtons.LEFT && gizmo is @
-        @_moving = true
+    _onMouseButtonPressed: (e) ->
+      if e.which == MouseButtons.LEFT && e.gizmo is @
         @_anchorPoint = @_projector.unproject gl.vec2.fromValues(e.pageX, e.pageY)
         @_initialPosition = @getPosition()
         return false
       else
         return true
 
-    _onMouseButtonReleased: (e, gizmo) ->
+    _onMouseButtonReleased: (e) ->
       if e.which == MouseButtons.LEFT
-        @_moving = false
         @_anchorPoint = null
 
       return true
 
-    _onMouseMoved: (e, gizmo) ->
-      return @_moveSelectionBox(e) if @_moving
+    _onMouseMoved: (e) ->
+      return if e.activeGizmo? and e.activeGizmo isnt @
 
-      if gizmo is @
+      if e.activeGizmo is @
+        @_moveSelectionBox(e)
+        return false
+
+      if e.gizmo is @
         @_signals.cursorStyleChanged.dispatch "move"
         return false
       else
         return true
 
     _onKeyPressed: (e) ->
-      return false if @_moving
+      return false if e.activeGizmo is @
 
     _onKeyReleased: (e) ->
-      return false if @_moving
+      return false if e.activeGizmo is @
 
     _moveSelectionBox: (e) ->
       movePoint = @_projector.unproject gl.vec2.fromValues(e.pageX, e.pageY)
@@ -237,5 +240,4 @@ define ["gl-matrix", "two/box", "two/material", "two/color", "./mouse_buttons", 
       @setPosition newPosition
       @_object.setPosition newPosition
       @_signals.gizmoChanged.dispatch @
-      return false
 

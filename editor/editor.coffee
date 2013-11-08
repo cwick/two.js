@@ -14,6 +14,7 @@ define (require) ->
   Scene = require "two/scene"
   SelectionBox = require "./selection_box"
   Signal = require "signals"
+  Utils = require "two/utils"
 
   run: ->
     dialog = new Dialog()
@@ -167,40 +168,41 @@ define (require) ->
       e.stopPropagation()
 
   _onKeydown: (e) ->
-    @on.keyPressed.dispatch e
+    @on.keyPressed.dispatch @_createInputEvent(e, null, @_activeGizmo)
     return e.target == @canvas
 
   _onKeyup: (e) ->
-    @on.keyReleased.dispatch e
+    @on.keyReleased.dispatch @_createInputEvent(e, null, @_activeGizmo)
     return e.target == @canvas
 
   _onMousedown: (e) ->
     if e.target == @canvas
-      gizmo = @projector.pick(gl.vec2.fromValues(e.offsetX, e.offsetY), @sceneGizmos)
+      @_activeGizmo = @projector.pick(gl.vec2.fromValues(e.offsetX, e.offsetY), @sceneGizmos)
 
-    @on.mouseButtonPressed.dispatch e, gizmo
+    @on.mouseButtonPressed.dispatch @_createInputEvent(e, @_activeGizmo, @_activeGizmo)
     return e.target == @canvas
 
   _onMouseup: (e) ->
     if e.target == @canvas
       gizmo = @projector.pick(gl.vec2.fromValues(e.offsetX, e.offsetY), @sceneGizmos)
 
-    @on.mouseButtonReleased.dispatch e, gizmo
+    @_activeGizmo = null
+    @on.mouseButtonReleased.dispatch @_createInputEvent(e, gizmo, @_activeGizmo)
     return e.target == @canvas
 
   _onMousemove: (e) ->
     if e.target == @canvas
       gizmo = @projector.pick(gl.vec2.fromValues(e.offsetX, e.offsetY), @sceneGizmos)
 
-    @on.mouseMoved.dispatch e, gizmo
+    @on.mouseMoved.dispatch @_createInputEvent(e, gizmo, @_activeGizmo)
     e.target == @canvas
 
-  _onSelectionStarted: (e, gizmo) ->
+  _onSelectionStarted: (e) ->
     return unless e.target == @canvas && e.which == MouseButtons.LEFT
 
     @_mouseDownPoint = gl.vec2.fromValues e.offsetX, e.offsetY
 
-  _onSelectionFinished: (e, gizmo) ->
+  _onSelectionFinished: (e) ->
     mouseDownPoint = @_mouseDownPoint
     @_mouseDownPoint = null
 
@@ -263,11 +265,11 @@ define (require) ->
 
     return false
 
-  _onMouseMoveDefault: (e) ->
+  _onMouseMoveDefault: ->
     @_setCursor "auto"
 
-  _onMouseUpDefault: (e, gizmo) ->
-    @_setCursor "auto" unless gizmo?
+  _onMouseUpDefault: (e) ->
+    @_setCursor "auto" unless e.gizmo?
 
   _onMousewheel: (e, delta, deltaX, deltaY) ->
     return unless e.target == @canvas && deltaY != 0
@@ -312,9 +314,14 @@ define (require) ->
 
     @_selectionBox.attachTo object
 
-    @on.mouseMoved.dispatch(
-      {x: screenPoint[0], y: screenPoint[1]},
-      @projector.pick screenPoint, @sceneGizmos)
+    event =
+      offsetX: screenPoint[0]
+      offsetY: screenPoint[1]
+      target: @canvas
+
+    gizmo = @projector.pick(screenPoint, @sceneGizmos)
+
+    @on.mouseMoved.dispatch @_createInputEvent(event, gizmo, null)
 
   _onUnpick: ->
     @sceneGizmos.remove @_selectionBox
@@ -329,3 +336,6 @@ define (require) ->
   _setCursor: (cursor) ->
     @$canvas.css "cursor", cursor
 
+  _createInputEvent: (e, gizmo, activeGizmo) ->
+    event = Utils.merge {}, e
+    Utils.merge event, gizmo: gizmo, activeGizmo: activeGizmo
