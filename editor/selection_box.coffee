@@ -19,8 +19,13 @@ define ["gl-matrix", "two/box", "two/material", "two/color", "./mouse_buttons", 
       @_signalBindings = []
       @_projector = options.projector
       @_signals = options.signals
+      @_scaleDirectionY = options.scaleDirectionY
+      @_scaleDirectionX = options.scaleDirectionX
+
       delete options.projector
       delete options.signals
+      delete options.scaleDirectionX
+      delete options.scaleDirectionY
 
       super options
 
@@ -29,6 +34,8 @@ define ["gl-matrix", "two/box", "two/material", "two/color", "./mouse_buttons", 
 
     cloneProperties: (overrides) ->
       super Utils.merge(
+        scaleDirectionX: @_scaleDirectionX
+        scaleDirectionY: @_scaleDirectionY
         projector: @_projector
         signals: @_signals, overrides)
 
@@ -79,9 +86,14 @@ define ["gl-matrix", "two/box", "two/material", "two/color", "./mouse_buttons", 
         moveVector = gl.vec2.create()
         gl.vec2.subtract moveVector, movePoint, @_anchorPoint
 
+        moveVector[0] *= @_scaleDirectionX
+
         newScale = @_initialScale * (1 - moveVector[0]/@_initialWidth)
         @_object.setScale newScale
-        @_object.setPosition [@_initialPosition[0] + moveVector[0]/2, @_initialPosition[1] - moveVector[0]/2]
+        @_object.setPosition [
+          @_initialPosition[0] + @_scaleDirectionX*moveVector[0]/2,
+          @_initialPosition[1] + @_scaleDirectionY*moveVector[0]/2
+        ]
 
         @getParent().shrinkWrap @_object
         @_signals.gizmoChanged.dispatch @
@@ -164,21 +176,29 @@ define ["gl-matrix", "two/box", "two/material", "two/color", "./mouse_buttons", 
 
       @add(@_NEResizeHandle = largeHandle.clone(
         name: "nesw-resize"
+        scaleDirectionX: -1
+        scaleDirectionY: -1
         pixelOffsetX: LARGE_HANDLE_PADDING
         pixelOffsetY: -LARGE_HANDLE_PADDING))
 
       @add(@_NWResizeHandle = largeHandle.clone(
         name: "nwse-resize"
+        scaleDirectionX: 1
+        scaleDirectionY: -1
         pixelOffsetX: -LARGE_HANDLE_PADDING
         pixelOffsetY: -LARGE_HANDLE_PADDING))
 
       @add(@_SEResizeHandle = largeHandle.clone(
         name: "nwse-resize"
+        scaleDirectionX: -1
+        scaleDirectionY: 1
         pixelOffsetX: LARGE_HANDLE_PADDING
         pixelOffsetY: LARGE_HANDLE_PADDING))
 
       @add(@_SWResizeHandle = largeHandle.clone(
         name: "nesw-resize"
+        scaleDirectionX: 1
+        scaleDirectionY: 1
         pixelOffsetX: -LARGE_HANDLE_PADDING
         pixelOffsetY: LARGE_HANDLE_PADDING))
 
