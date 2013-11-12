@@ -285,13 +285,6 @@ define (require) ->
 
     @camera.setWidth(width)
 
-    # Zoom in on mouse cursor
-    if @minCameraWidth < width < @maxCameraWidth
-      worldPoint = @projector.unproject screenPoint
-
-      t = amount + 0.001
-      @camera.setPosition(gl.vec2.lerp worldPoint, @camera.getPosition(), worldPoint, t)
-
     @_render()
 
   _onPick: (screenPoint) ->
