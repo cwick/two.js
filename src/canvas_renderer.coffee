@@ -37,7 +37,6 @@ define ["jquery", "gl-matrix", "./box", "./disc"], ($, gl, Box, Disc) ->
         @_context.translate object.pixelOffsetX*@_devicePixelRatio, object.pixelOffsetY*@_devicePixelRatio
 
       viewProjection = @_applyMatrix(@_getViewProjectionMatrix())
-      objectPosition = object.getPosition()
 
       # Don't scale line width with projection matrix
       @_context.lineWidth = 1/viewProjection[0]
@@ -46,7 +45,7 @@ define ["jquery", "gl-matrix", "./box", "./disc"], ($, gl, Box, Disc) ->
       @_context.fillStyle = material.fillColor?.css()
       @_context.strokeStyle = material.strokeColor?.css()
 
-      @_setWorldTransform object, material, viewProjection[0]
+      @_applyWorldTransform object, material, viewProjection[0]
       @_drawObjectShape object, material
 
       if material.fillColor?
@@ -92,7 +91,7 @@ define ["jquery", "gl-matrix", "./box", "./disc"], ($, gl, Box, Disc) ->
 
       return m
 
-    _setWorldTransform: (object, material, viewScaleFactor) ->
+    _applyWorldTransform: (object, material, viewScaleFactor) ->
       @_applyMatrix object.getWorldMatrix()
 
       if material.isFixedSize
