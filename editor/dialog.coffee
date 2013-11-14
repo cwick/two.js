@@ -19,9 +19,11 @@ define ["jquery", "./mouse_buttons"], ($, MouseButtons) ->
                 "dialog-footer"]
         @$domElement.append $("<div/>", class: c)
 
-      @$domElement.find('.drag-handle').on 'mousedown', @_onDrag
-      @$domElement.find('.right-resize, .top-right-resize').on 'mousedown', (e) => @_onResize e, right: true
+      @$domElement.find('.drag-handle').on 'mousedown', (e) => @_onDrag e
+      @$domElement.find('.right-resize').on 'mousedown', (e) => @_onResize e, right: true
       @$domElement.find('.bottom-right-resize').on 'mousedown', (e) => @_onResize e, down: true, right: true
+      @$domElement.find('.top-resize').on 'mousedown', (e) => @_onResize e, up: true
+      @$domElement.find('.top-right-resize').on 'mousedown', (e) => @_onResize e, up: true, right: true
 
     setBody: (value) ->
       @$domElement.find(".dialog-body").html(value)
@@ -46,14 +48,14 @@ define ["jquery", "./mouse_buttons"], ($, MouseButtons) ->
       parentWidth = $draggable.parent().width()
       parentHeight = $draggable.parent().height()
 
-      $(document).on 'mousemove.draggable', (e) ->
+      $(document).on 'mousemove.draggable', (e) =>
         x = Math.max(e.clientX-offsetX-borderLeft, 0)
         y = Math.max(e.clientY-offsetY-borderTop, 0)
 
         x = Math.min(parentWidth  - outerWidth, x)
         y = Math.min(parentHeight - outerHeight, y)
 
-        $draggable.css("-webkit-transform": "translate3d(#{x}px,#{y}px,0)")
+        @_setTranslation $draggable, x, y
 
       $(document).one "mouseup", ->
         $(document).off 'mousemove.draggable'
@@ -63,10 +65,14 @@ define ["jquery", "./mouse_buttons"], ($, MouseButtons) ->
       $handle = $(e.target)
       $resizable = $handle.closest('.resizable')
 
+      position = $resizable.position()
+
       startX = e.clientX
       startY = e.clientY
       startWidth = $resizable.width()
       startHeight = $resizable.height()
+      startTop = position.top
+      startLeft = position.left
 
       parentWidth = $resizable.parent().width()
       parentHeight = $resizable.parent().height()
@@ -75,18 +81,23 @@ define ["jquery", "./mouse_buttons"], ($, MouseButtons) ->
       outerHeight = $resizable.outerHeight()
       innerWidth = $resizable.innerWidth()
 
-      position = $resizable.position()
-
       maxWidth = parentWidth - position.left - (outerWidth - innerWidth)
       maxHeight = parentHeight - position.top - (outerHeight - innerHeight)
 
-      $(document).on 'mousemove.resizable', (e) ->
+      $(document).on 'mousemove.resizable', (e) =>
         if options.right
           $resizable.width(Math.min(startWidth + e.clientX - startX, maxWidth))
         if options.down
           $resizable.height(Math.min(startHeight + e.clientY - startY, maxHeight))
+        if options.up
+          newTop = Math.max(startTop - (startY - e.clientY), 0)
+          newHeight = startHeight - newTop + startTop
 
+          $resizable.height(newHeight)
+          @_setTranslation $resizable, startLeft, newTop
 
       $(document).one "mouseup", ->
         $(document).off 'mousemove.resizable'
 
+    _setTranslation: (e, x, y) ->
+      e.css("-webkit-transform": "translate3d(#{x}px,#{y}px,0)")
