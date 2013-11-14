@@ -1,7 +1,7 @@
-define ["jquery"], ($) ->
+define ["jquery", "./mouse_buttons"], ($, MouseButtons) ->
   class
     constructor: ->
-      @$domElement = $("<div/>", class: "dialog draggable resizable")
+      @$domElement = $("<div/>", class: "panel dialog draggable resizable")
       @domElement = @$domElement.get(0)
 
       @$domElement.width "200px"
@@ -14,17 +14,23 @@ define ["jquery"], ($) ->
                 "bottom-right-resize",
                 "top-left-resize",
                 "top-right-resize",
-                "panel dialog-header drag-handle",
+                "dialog-header drag-handle",
                 "dialog-body",
                 "dialog-footer"]
         @$domElement.append $("<div/>", class: c)
 
-      # console.log(new XMLSerializer().serializeToString(@$domElement.get(0)).replace(///\s+xmlns="http://www.w3.org/1999/xhtml"///g, ""))
+      @$domElement.find('.drag-handle').on 'mousedown', @_onDrag
+      @$domElement.find('.right-resize, .top-right-resize').on 'mousedown', (e) => @_onResize e, right: true
+      @$domElement.find('.bottom-right-resize').on 'mousedown', (e) => @_onResize e, down: true, right: true
 
-      @$domElement.find('.drag-handle').on 'mousedown', @onDrag
-      @$domElement.find('.right-resize, .bottom-right-resize, .top-right-resize').on 'mousedown', @onResize
+    setBody: (value) ->
+      @$domElement.find(".dialog-body").html(value)
 
-    onDrag: (e) ->
+    setFooter: (value) ->
+      @$domElement.find(".dialog-footer").html(value)
+
+    _onDrag: (e) ->
+      return unless e.which == MouseButtons.LEFT
       $handle = $(e.target)
       $draggable = $handle.closest('.draggable')
 
@@ -52,28 +58,35 @@ define ["jquery"], ($) ->
       $(document).one "mouseup", ->
         $(document).off 'mousemove.draggable'
 
-    onResize: (e) ->
+    _onResize: (e, options) ->
+      return unless e.which == MouseButtons.LEFT
       $handle = $(e.target)
       $resizable = $handle.closest('.resizable')
 
       startX = e.clientX
+      startY = e.clientY
       startWidth = $resizable.width()
+      startHeight = $resizable.height()
 
       parentWidth = $resizable.parent().width()
+      parentHeight = $resizable.parent().height()
 
       outerWidth = $resizable.outerWidth()
+      outerHeight = $resizable.outerHeight()
       innerWidth = $resizable.innerWidth()
 
       position = $resizable.position()
 
       maxWidth = parentWidth - position.left - (outerWidth - innerWidth)
+      maxHeight = parentHeight - position.top - (outerHeight - innerHeight)
 
       $(document).on 'mousemove.resizable', (e) ->
-        $resizable.width(Math.min(startWidth + e.clientX - startX, maxWidth))
+        if options.right
+          $resizable.width(Math.min(startWidth + e.clientX - startX, maxWidth))
+        if options.down
+          $resizable.height(Math.min(startHeight + e.clientY - startY, maxHeight))
+
 
       $(document).one "mouseup", ->
         $(document).off 'mousemove.resizable'
-
-    setBody: (value) -> @$domElement.find(".dialog-body").html(value)
-    setFooter: (value) -> @$domElement.find(".dialog-footer").html(value)
 
