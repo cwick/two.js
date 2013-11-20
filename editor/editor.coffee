@@ -5,12 +5,10 @@ define (require) ->
   Box = require "two/box"
   Camera = require "two/camera"
   CanvasRenderer = require "two/canvas_renderer"
-  Color = require "two/color"
   Dialog = require "./dialog"
   Disc = require "two/disc"
+  Grid = require "./grid"
   KeyCodes = require "./key_codes"
-  LineGroup = require "two/line_group"
-  LineMaterial = require "two/line_material"
   ShapeMaterial = require "two/shape_material"
   MouseButtons = require "./mouse_buttons"
   Projector = require "two/projector"
@@ -116,12 +114,15 @@ define (require) ->
     @renderer = new CanvasRenderer(width: $viewport.width(), height: $viewport.height(), autoClear: false)
     @scene = new Scene()
     @sceneGizmos = new Scene()
+    @sceneGrid = new Scene()
     @camera = new Camera(width: 15, aspectRatio: @renderer.getWidth() / @renderer.getHeight())
     @projector = new Projector(@camera, @renderer)
 
     @scene.add new Disc(radius: 3, scale: 0.7, material: new ShapeMaterial(fillColor: "#BE0028"))
     @scene.add new Disc(x:5, y:-3, radius: 2, material: new ShapeMaterial(fillColor: "green"))
     @scene.add new Box(x:-5, y:-1, width: 4, height: 6, material: new ShapeMaterial(fillColor: "yellow", strokeColor: "red"))
+
+    @sceneGrid.add new Grid()
 
     @canvas = @renderer.domElement
     @$canvas = $(@canvas)
@@ -161,6 +162,7 @@ define (require) ->
 
   _render: ->
     @renderer.clear()
+    @renderer.render(@sceneGrid, @camera)
     @renderer.render(@scene, @camera)
     @renderer.render(@sceneGizmos, @camera)
 

@@ -57,15 +57,6 @@ define ["jquery",
 
       @_context.restore()
 
-    _applyObjectMaterial: (material) ->
-      if material instanceof ShapeMaterial
-        @_context.fillStyle = material.fillColor.css()
-        @_context.strokeStyle = material.strokeColor.css()
-      else if material instanceof LineMaterial
-        @_context.strokeStyle = material.color.css()
-      else
-        throw new Error("Unknown material type #{material.constructor.name}")
-
     clear: ->
       @_context.setTransform(1, 0, 0, 1, 0, 0)
       @_context.clearRect 0,0, @domElement.width, @domElement.height
@@ -143,4 +134,13 @@ define ["jquery",
         @_context.stroke() unless object.material.strokeColor.a is 0
 
       @_context.closePath()
+
+    _applyObjectMaterial: (material) ->
+      if material instanceof ShapeMaterial
+        @_context.fillStyle = material.fillColor.css()
+        @_context.strokeStyle = material.strokeColor.css()
+      else if material instanceof LineMaterial
+        @_context.strokeStyle = material.color.css()
+      else
+        throw new Error("Unknown material type #{material.constructor.name}")
 
