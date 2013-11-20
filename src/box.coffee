@@ -1,9 +1,8 @@
-define ["gl-matrix", "./material", "./object2d", "./utils", "./bounding_box", "./bounding_disc"], \
-       (gl, Material, Object2d, Utils, BoundingBox, BoundingDisc) ->
+define ["gl-matrix", "./shape", "./utils"], (gl, Shape, Utils) ->
 
-  class Box extends Object2d
+  class Box extends Shape
     constructor: (options={}) ->
-      super options
+      super
       @width = options.width ?= 5
       @height = options.height ?= 5
 

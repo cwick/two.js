@@ -42,16 +42,14 @@ define ["jquery", "gl-matrix", "./box", "./disc"], ($, gl, Box, Disc) ->
       @_context.lineWidth = 1/(viewProjection[0] * object.getScale())
 
       material = object.material
-      @_context.fillStyle = material.fillColor?.css()
-      @_context.strokeStyle = material.strokeColor?.css()
+      @_context.fillStyle = material.fillColor.css()
+      @_context.strokeStyle = material.strokeColor.css()
 
       @_applyWorldTransform object, material, viewProjection[0]
       @_drawObjectShape object, material
 
-      if material.fillColor?
-        @_context.fill()
-      if material.strokeColor?
-        @_context.stroke()
+      @_context.fill() unless material.fillColor.a is 0
+      @_context.stroke() unless material.strokeColor.a is 0
 
       @_context.restore()
 

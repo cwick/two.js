@@ -8,7 +8,7 @@ define (require) ->
   Dialog = require "./dialog"
   Disc = require "two/disc"
   KeyCodes = require "./key_codes"
-  Material = require "two/material"
+  ShapeMaterial = require "two/shape_material"
   MouseButtons = require "./mouse_buttons"
   Projector = require "two/projector"
   Scene = require "two/scene"
@@ -116,9 +116,9 @@ define (require) ->
     @camera = new Camera(width: 15, aspectRatio: @renderer.getWidth() / @renderer.getHeight())
     @projector = new Projector(@camera, @renderer)
 
-    @scene.add new Disc(radius: 3, scale: 0.7, material: new Material(fillColor: "#BE0028"))
-    @scene.add new Disc(x:5, y:-3, radius: 2, material: new Material(fillColor: "green"))
-    @scene.add new Box(x:-5, y:-1, width: 4, height: 6, material: new Material(fillColor: "yellow", strokeColor: "red"))
+    @scene.add new Disc(radius: 3, scale: 0.7, material: new ShapeMaterial(fillColor: "#BE0028"))
+    @scene.add new Disc(x:5, y:-3, radius: 2, material: new ShapeMaterial(fillColor: "green"))
+    @scene.add new Box(x:-5, y:-1, width: 4, height: 6, material: new ShapeMaterial(fillColor: "yellow", strokeColor: "red"))
 
     @canvas = @renderer.domElement
     @$canvas = $(@canvas)

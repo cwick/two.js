@@ -1,9 +1,7 @@
-define ["./object2d", "./bounding_box", "./bounding_disc"], \
-       (Object2d, BoundingBox, BoundingDisc) ->
-
-  class Disc extends Object2d
-    constructor: (options) ->
-      super options
+define ["./shape"], (Shape) ->
+  class Disc extends Shape
+    constructor: (options={}) ->
+      super
       @radius = options.radius ?= 5
 
     updateBoundingDisc: (disc) ->

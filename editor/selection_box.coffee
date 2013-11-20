@@ -1,5 +1,5 @@
-define ["gl-matrix", "two/box", "two/material", "two/color", "./mouse_buttons", "two/utils"], \
-       (gl, Box, Material, Color, MouseButtons, Utils) ->
+define ["gl-matrix", "two/box", "two/shape_material", "two/color", "./mouse_buttons", "two/utils"], \
+       (gl, Box, ShapeMaterial, Color, MouseButtons, Utils) ->
 
   SELECTION_COLOR = new Color(r: 20, g: 0, b: 229)
   SELECTION_FILL_COLOR = SELECTION_COLOR.clone(a: 0.1)
@@ -11,7 +11,7 @@ define ["gl-matrix", "two/box", "two/material", "two/color", "./mouse_buttons", 
   class ResizeHandle extends Box
     constructor: (options) ->
       options.material =
-        new Material
+        new ShapeMaterial
           strokeColor: SELECTION_COLOR
           fillColor: "white"
           isFixedSize: true
@@ -112,7 +112,7 @@ define ["gl-matrix", "two/box", "two/material", "two/color", "./mouse_buttons", 
   class SelectionBox extends Box
     constructor: (@_signals, @_projector) ->
       options =
-        material: new Material(strokeColor: SELECTION_COLOR, fillColor: SELECTION_FILL_COLOR)
+        material: new ShapeMaterial(strokeColor: SELECTION_COLOR, fillColor: SELECTION_FILL_COLOR)
         name: "selection-box"
       super options
 
