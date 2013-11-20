@@ -68,11 +68,11 @@ define ["gl-matrix", "./material", "./utils", "./bounding_box", "./bounding_disc
         pixelOffsetX: @pixelOffsetX
         pixelOffsetY: @pixelOffsetY, overrides
 
-    # Override this in derived classes
     updateBoundingBox: ->
+      throw new Error("updateBoundingBox must be implemented in derived classes")
 
-    # Override this in derived classes
     updateBoundingDisc: ->
+      throw new Error("updateBoundingDisc must be implemented in derived classes")
 
     invalidateWorldTransform: ->
       @_isWorldMatrixValid = false

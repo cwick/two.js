@@ -1,4 +1,12 @@
-define ["jquery", "gl-matrix", "./box", "./disc"], ($, gl, Box, Disc) ->
+define ["jquery",
+        "gl-matrix",
+        "./box",
+        "./disc",
+        "./line_group",
+        "./shape",
+        "./shape_material",
+        "./line_material"], \
+       ($, gl, Box, Disc, LineGroup, Shape, ShapeMaterial, LineMaterial) ->
   class CanvasRenderer
     constructor: (options) ->
       @$domElement = $("<canvas/>")
@@ -42,16 +50,21 @@ define ["jquery", "gl-matrix", "./box", "./disc"], ($, gl, Box, Disc) ->
       @_context.lineWidth = 1/(viewProjection[0] * object.getScale())
 
       material = object.material
-      @_context.fillStyle = material.fillColor.css()
-      @_context.strokeStyle = material.strokeColor.css()
 
       @_applyWorldTransform object, material, viewProjection[0]
-      @_drawObjectShape object, material
-
-      @_context.fill() unless material.fillColor.a is 0
-      @_context.stroke() unless material.strokeColor.a is 0
+      @_applyObjectMaterial material
+      @_drawObjectShape object
 
       @_context.restore()
+
+    _applyObjectMaterial: (material) ->
+      if material instanceof ShapeMaterial
+        @_context.fillStyle = material.fillColor.css()
+        @_context.strokeStyle = material.strokeColor.css()
+      else if material instanceof LineMaterial
+        @_context.strokeStyle = material.color.css()
+      else
+        throw new Error("Unknown material type #{material.constructor.name}")
 
     clear: ->
       @_context.setTransform(1, 0, 0, 1, 0, 0)
@@ -96,7 +109,7 @@ define ["jquery", "gl-matrix", "./box", "./disc"], ($, gl, Box, Disc) ->
         @_context.scale @_devicePixelRatio/viewScaleFactor, @_devicePixelRatio/viewScaleFactor
         @_context.lineWidth = 1
 
-    _drawObjectShape: (object, material) ->
+    _drawObjectShape: (object) ->
       @_context.beginPath()
 
       if object instanceof Disc
@@ -112,6 +125,22 @@ define ["jquery", "gl-matrix", "./box", "./disc"], ($, gl, Box, Disc) ->
           -object.height/2,
           object.width,
           object.height)
+      else if object instanceof LineGroup
+        begin = true
+        for v in object.vertices
+          if begin
+            @_context.moveTo v[0], v[1]
+          else
+            @_context.lineTo v[0], v[1]
+          begin = !begin
+
+        @_context.stroke()
+      else
+        throw new Error("Unknown object type #{object.constructor.name}")
+
+      if object instanceof Shape
+        @_context.fill() unless object.material.fillColor.a is 0
+        @_context.stroke() unless object.material.strokeColor.a is 0
 
       @_context.closePath()
 
