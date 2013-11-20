@@ -1,5 +1,5 @@
 define ["jquery", "./mouse_buttons"], ($, MouseButtons) ->
-  class
+  class Dialog
     constructor: ->
       @$domElement = $("<div/>", class: "panel dialog draggable resizable")
       @domElement = @$domElement.get(0)
@@ -66,45 +66,27 @@ define ["jquery", "./mouse_buttons"], ($, MouseButtons) ->
 
     _onResize: (e, options) ->
       return unless e.which == MouseButtons.LEFT
-      $handle = $(e.target)
-      $resizable = $handle.closest('.resizable')
 
-      position = $resizable.position()
+      $resizable = $(e.target).closest('.resizable')
 
-      startX = e.clientX
-      startY = e.clientY
-      startWidth = $resizable.width()
-      startHeight = $resizable.height()
-      startTop = position.top
-      startLeft = position.left
+      metrics = @_getResizeMetrics(e, $resizable)
+      newLeft = metrics.startLeft
+      newTop = metrics.startTop
 
-      parentWidth = $resizable.parent().width()
-      parentHeight = $resizable.parent().height()
-
-      outerWidth = $resizable.outerWidth()
-      outerHeight = $resizable.outerHeight()
-      innerWidth = $resizable.innerWidth()
-      innerHeight = $resizable.innerHeight()
-
-      maxWidth = parentWidth - position.left - (outerWidth - innerWidth)
-      maxHeight = parentHeight - position.top - (outerHeight - innerHeight)
-
-      newLeft = startLeft
-      newTop = startTop
-
+      console.log metrics
       $(document).on 'mousemove.resizable', (e) =>
         if options.right
-          $resizable.width(Math.min(startWidth + e.clientX - startX, maxWidth))
+          $resizable.width(Math.min(metrics.startWidth + e.clientX - metrics.startX, metrics.maxWidth))
         if options.down
-          $resizable.height(Math.min(startHeight + e.clientY - startY, maxHeight))
+          $resizable.height(Math.min(metrics.startHeight + e.clientY - metrics.startY, metrics.maxHeight))
         if options.up
-          newTop = Math.max(startTop - (startY - e.clientY), 0)
-          newHeight = startHeight - newTop + startTop
+          newTop = Math.max(metrics.startTop - (metrics.startY - e.clientY), 0)
+          newHeight = metrics.startHeight - newTop + metrics.startTop
 
           $resizable.height(newHeight)
         if options.left
-          newLeft = Math.max(startLeft - (startX - e.clientX), 0)
-          newWidth = startWidth - newLeft + startLeft
+          newLeft = Math.max(metrics.startLeft - (metrics.startX - e.clientX), 0)
+          newWidth = metrics.startWidth - newLeft + metrics.startLeft
 
           $resizable.width(newWidth)
 
@@ -115,3 +97,29 @@ define ["jquery", "./mouse_buttons"], ($, MouseButtons) ->
 
     _setTranslation: (e, x, y) ->
       e.css("-webkit-transform": "translate3d(#{x}px,#{y}px,0)")
+
+    _getResizeMetrics: (e, $resizable) ->
+      position = $resizable.position()
+      parent = $resizable.parent()
+      outerWidth = $resizable.outerWidth()
+      outerHeight = $resizable.outerHeight()
+      innerWidth = $resizable.innerWidth()
+      innerHeight = $resizable.innerHeight()
+
+      return {
+        startX:       e.clientX
+        startY:       e.clientY
+        startWidth:   $resizable.width()
+        startHeight:  $resizable.height()
+        startTop:     position.top
+        startLeft:    position.left
+        parentWidth:  parent.width()
+        parentHeight: parent.height()
+        outerWidth:   outerWidth
+        outerHeight:  outerHeight
+        innerWidth:   innerWidth
+        innerHeight:  innerHeight
+        maxWidth:     parent.width() - position.left - (outerWidth - innerWidth)
+        maxHeight:    parent.height() - position.top - (outerHeight - innerHeight)
+      }
+
