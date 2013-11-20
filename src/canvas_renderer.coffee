@@ -38,8 +38,8 @@ define ["jquery", "gl-matrix", "./box", "./disc"], ($, gl, Box, Disc) ->
 
       viewProjection = @_applyMatrix(@_getViewProjectionMatrix())
 
-      # Don't scale line width with projection matrix
-      @_context.lineWidth = 1/viewProjection[0]
+      # Don't scale line width with object or view scale
+      @_context.lineWidth = 1/(viewProjection[0] * object.getScale())
 
       material = object.material
       @_context.fillStyle = material.fillColor?.css()
