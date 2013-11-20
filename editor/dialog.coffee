@@ -21,9 +21,13 @@ define ["jquery", "./mouse_buttons"], ($, MouseButtons) ->
 
       @$domElement.find('.drag-handle').on 'mousedown', (e) => @_onDrag e
       @$domElement.find('.right-resize').on 'mousedown', (e) => @_onResize e, right: true
-      @$domElement.find('.bottom-right-resize').on 'mousedown', (e) => @_onResize e, down: true, right: true
+      @$domElement.find('.left-resize').on 'mousedown', (e) => @_onResize e, left: true
+      @$domElement.find('.bottom-resize').on 'mousedown', (e) => @_onResize e, down: true
       @$domElement.find('.top-resize').on 'mousedown', (e) => @_onResize e, up: true
       @$domElement.find('.top-right-resize').on 'mousedown', (e) => @_onResize e, up: true, right: true
+      @$domElement.find('.top-left-resize').on 'mousedown', (e) => @_onResize e, up: true, left: true
+      @$domElement.find('.bottom-right-resize').on 'mousedown', (e) => @_onResize e, down: true, right: true
+      @$domElement.find('.bottom-left-resize').on 'mousedown', (e) => @_onResize e, down: true, left: true
 
     setBody: (value) ->
       @$domElement.find(".dialog-body").html(value)
@@ -80,9 +84,13 @@ define ["jquery", "./mouse_buttons"], ($, MouseButtons) ->
       outerWidth = $resizable.outerWidth()
       outerHeight = $resizable.outerHeight()
       innerWidth = $resizable.innerWidth()
+      innerHeight = $resizable.innerHeight()
 
       maxWidth = parentWidth - position.left - (outerWidth - innerWidth)
       maxHeight = parentHeight - position.top - (outerHeight - innerHeight)
+
+      newLeft = startLeft
+      newTop = startTop
 
       $(document).on 'mousemove.resizable', (e) =>
         if options.right
@@ -94,7 +102,13 @@ define ["jquery", "./mouse_buttons"], ($, MouseButtons) ->
           newHeight = startHeight - newTop + startTop
 
           $resizable.height(newHeight)
-          @_setTranslation $resizable, startLeft, newTop
+        if options.left
+          newLeft = Math.max(startLeft - (startX - e.clientX), 0)
+          newWidth = startWidth - newLeft + startLeft
+
+          $resizable.width(newWidth)
+
+        @_setTranslation $resizable, newLeft, newTop
 
       $(document).one "mouseup", ->
         $(document).off 'mousemove.resizable'
