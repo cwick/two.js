@@ -136,6 +136,7 @@ define (require) ->
     @_render()
 
     $(document).on "keydown keyup mousedown mouseup mousemove mousewheel", => @_onUserInput.apply @, arguments
+    $("input").change (e) => @_onGridChanged(isVisible: $(e.target).is(':checked'))
     @on.cursorStyleChanged.add @_onCursorStyleChanged, @
     @on.gizmoChanged.add @_onGizmoChanged, @
 
@@ -151,9 +152,12 @@ define (require) ->
     @on.keyPressed.add @_onGrabToolSelected, @
     @on.keyReleased.add @_onGrabToolDeselected, @
 
+    @on.gridChanged.add @_onGridChanged, @
+
   on:
     cursorStyleChanged: new Signal()
     gizmoChanged: new Signal()
+    gridChanged: new Signal()
     keyPressed: new Signal()
     keyReleased: new Signal()
     mouseButtonPressed: new Signal()
@@ -337,3 +341,8 @@ define (require) ->
   _createInputEvent: (e, gizmo, activeGizmo) ->
     event = Utils.merge {}, e
     Utils.merge event, gizmo: gizmo, activeGizmo: activeGizmo
+
+  _onGridChanged: (options) ->
+    o.setVisible(options.isVisible) for o in @sceneGrid.getChildren()
+    @_render()
+

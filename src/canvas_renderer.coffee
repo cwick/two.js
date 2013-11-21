@@ -32,6 +32,7 @@ define ["jquery",
       @_prepareToRender(camera)
 
       for object in scene.getChildren()
+        continue unless object.isVisible()
         @_renderObject(object)
         @_renderObject(child) for child in object.getChildren()
 

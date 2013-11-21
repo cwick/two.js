@@ -10,6 +10,10 @@ define ["gl-matrix", "./material", "./utils", "./bounding_box", "./bounding_disc
       @_name = options.name ?= ""
       @_scale = options.scale ?= 1
       @_children = []
+      @_isVisible = true
+
+    isVisible: -> @_isVisible
+    setVisible: (value) -> @_isVisible = value; console.log value
 
     setY: (value) ->
       @_y = value

@@ -3,7 +3,10 @@ define ->
     constructor: ->
       @objects = []
 
-    add: (object) -> @objects.push object
+    add: (object) ->
+      @objects.push object
+      object
+
     remove: (object) ->
       idx = @objects.indexOf object
       @objects.splice(idx, 1) if idx != -1
