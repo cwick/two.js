@@ -1,12 +1,12 @@
 define (require) ->
   $ = require "jquery"
-  require "jquery.mousewheel"
   gl = require "gl-matrix"
   Box = require "two/box"
   Camera = require "two/camera"
   CanvasRenderer = require "two/canvas_renderer"
   Dialog = require "./dialog"
   Disc = require "two/disc"
+  EditorInput = require "./editor_input"
   Grid = require "./grid"
   KeyCodes = require "./key_codes"
   ShapeMaterial = require "two/shape_material"
@@ -135,7 +135,9 @@ define (require) ->
     @_selectionBox = new SelectionBox(@on, @projector)
     @_render()
 
-    $(document).on "keydown keyup mousedown mouseup mousemove mousewheel", => @_onUserInput.apply @, arguments
+    new EditorInput(@on, @canvas)
+
+    $(document).on "keydown keyup mousedown mouseup mousemove", => @_onUserInput.apply @, arguments
     $("input").change (e) => @_onGridChanged(isVisible: $(e.target).is(':checked'))
     @on.cursorStyleChanged.add @_onCursorStyleChanged, @
     @on.gizmoChanged.add @_onGizmoChanged, @
@@ -153,6 +155,7 @@ define (require) ->
     @on.keyReleased.add @_onGrabToolDeselected, @
 
     @on.gridChanged.add @_onGridChanged, @
+    @on.zoomLevelChanged.add @_onZoomLevelChanged, @
 
   on:
     cursorStyleChanged: new Signal()
@@ -163,6 +166,7 @@ define (require) ->
     mouseButtonPressed: new Signal()
     mouseButtonReleased: new Signal()
     mouseMoved: new Signal()
+    zoomLevelChanged: new Signal()
 
   _render: ->
     @renderer.clear()
@@ -280,12 +284,7 @@ define (require) ->
   _onMouseUpDefault: (e) ->
     @_setCursor "auto" unless e.gizmo?
 
-  _onMousewheel: (e, delta, deltaX, deltaY) ->
-    return unless e.target == @canvas && deltaY != 0
-
-    return @_onZoom(deltaY*0.006) || true
-
-  _onZoom: (amount) ->
+  _onZoomLevelChanged: (amount) ->
     width = @camera.getWidth()
     # Zoom speed gets faster the more zoomed out we are
     width -= amount*@zoomSpeed*width*0.6
