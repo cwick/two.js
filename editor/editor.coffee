@@ -283,9 +283,9 @@ define (require) ->
   _onMousewheel: (e, delta, deltaX, deltaY) ->
     return unless e.target == @canvas && deltaY != 0
 
-    return @_onZoom(deltaY*0.006, gl.vec2.fromValues e.offsetX, e.offsetY) || true
+    return @_onZoom(deltaY*0.006) || true
 
-  _onZoom: (amount, screenPoint) ->
+  _onZoom: (amount) ->
     width = @camera.getWidth()
     # Zoom speed gets faster the more zoomed out we are
     width -= amount*@zoomSpeed*width*0.6
