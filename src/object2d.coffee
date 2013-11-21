@@ -13,7 +13,7 @@ define ["gl-matrix", "./material", "./utils", "./bounding_box", "./bounding_disc
       @_isVisible = true
 
     isVisible: -> @_isVisible
-    setVisible: (value) -> @_isVisible = value; console.log value
+    setVisible: (value) -> @_isVisible = value
 
     setY: (value) ->
       @_y = value
