@@ -137,7 +137,7 @@ define (require) ->
 
     new EditorInput(@on, @canvas)
 
-    $(document).on "keydown keyup mousedown mouseup mousemove", => @_onUserInput.apply @, arguments
+    $(document).on "mousedown mouseup mousemove", => @_onUserInput.apply @, arguments
     $("input").change (e) => @_onGridChanged(isVisible: $(e.target).is(':checked'))
     @on.cursorStyleChanged.add @_onCursorStyleChanged, @
     @on.gizmoChanged.add @_onGizmoChanged, @
@@ -151,11 +151,11 @@ define (require) ->
     @on.mouseMoved.add @_onGrabToolMoved, @, 2
     @on.mouseButtonPressed.add @_onGrabStarted, @, 2
     @on.mouseButtonReleased.add @_onGrabStopped, @, 2
-    @on.keyPressed.add @_onGrabToolSelected, @
-    @on.keyReleased.add @_onGrabToolDeselected, @
 
     @on.gridChanged.add @_onGridChanged, @
     @on.zoomLevelChanged.add @_onZoomLevelChanged, @
+    @on.grabToolSelected.add @_onGrabToolSelected, @
+    @on.grabToolDeselected.add @_onGrabToolDeselected, @
 
   on:
     cursorStyleChanged: new Signal()
@@ -166,6 +166,8 @@ define (require) ->
     mouseButtonPressed: new Signal()
     mouseButtonReleased: new Signal()
     mouseMoved: new Signal()
+    grabToolDeselected: new Signal()
+    grabToolSelected: new Signal()
     zoomLevelChanged: new Signal()
 
   _render: ->
@@ -179,14 +181,6 @@ define (require) ->
     if handled
       e.preventDefault()
       e.stopPropagation()
-
-  _onKeydown: (e) ->
-    @on.keyPressed.dispatch @_createInputEvent(e, null, @_activeGizmo)
-    return e.target == @canvas
-
-  _onKeyup: (e) ->
-    @on.keyReleased.dispatch @_createInputEvent(e, null, @_activeGizmo)
-    return e.target == @canvas
 
   _onMousedown: (e) ->
     if e.target == @canvas
@@ -226,15 +220,11 @@ define (require) ->
     if gl.vec2.squaredDistance(mouseUpPoint, mouseDownPoint) <= 1
       @_onPick(mouseDownPoint)
 
-  _onGrabToolSelected: (e) ->
-    return unless e.keyCode == KeyCodes.SHIFT
-
+  _onGrabToolSelected: ->
     @_grabTool = true
     @_setCursor "-webkit-grab" unless @_grabbing
 
-  _onGrabToolDeselected: (e) ->
-    return unless e.keyCode == KeyCodes.SHIFT
-
+  _onGrabToolDeselected: ->
     @_grabTool = false
     @_setCursor "auto" unless @_grabbing
 
