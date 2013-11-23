@@ -215,6 +215,7 @@ define (require) ->
       @_activeGizmo?.onActivated()
 
   _onStylusDragged: (e) ->
+    @_stylusPosition = e.canvasEndPoint
     worldDelta = @_calculateWorldTranslation(e.canvasStartPoint, e.canvasEndPoint)
     if @_grabbing
       @on.grabToolDragged.dispatch(worldDelta: worldDelta)
@@ -222,7 +223,11 @@ define (require) ->
       @_activeGizmo?.onDragged(worldDelta: worldDelta)
 
   _onStylusReleased: (e) ->
-    @_activeGizmo = null
+    if @_activeGizmo
+      @_activeGizmo = null
+      @_updateCursorStyle()
+      return
+
     if @_grabbing
       @on.grabToolStopped.dispatch()
       return
