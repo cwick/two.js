@@ -229,6 +229,7 @@ define (require) ->
     selectionThreshold = 2
     return unless e.isOnCanvas
     return if Math.abs(e.delta[0]) > selectionThreshold || Math.abs(e.delta[1]) > selectionThreshold
+    return if @projector.pick(e.canvasStartPoint, @sceneGizmos)?
 
     object = @projector.pick(e.canvasStartPoint, @scene)
     if object?
