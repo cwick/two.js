@@ -7,8 +7,11 @@
   -webkit-user-select: none;
 }
 
-.main-view, .viewport {
+.main-view {
   height: 100%;
+}
+
+.viewport {
   width: 100%;
 }
 
