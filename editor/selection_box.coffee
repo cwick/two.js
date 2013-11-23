@@ -78,33 +78,29 @@ define ["gl-matrix", "two/box", "two/shape_material", "two/color", "./mouse_butt
 
       return true
 
-    _onMouseMoved: (e) ->
-      return true if e.activeGizmo? and e.activeGizmo isnt @
+    onStylusMoved: ->
+      # return true if e.activeGizmo? and e.activeGizmo isnt @
 
-      if e.activeGizmo is @
-        movePoint = @_projector.unproject gl.vec2.fromValues(e.pageX, e.pageY)
-        moveVector = gl.vec2.create()
-        gl.vec2.subtract moveVector, movePoint, @_anchorPoint
+      # if e.activeGizmo is @
+      #   movePoint = @_projector.unproject gl.vec2.fromValues(e.pageX, e.pageY)
+      #   moveVector = gl.vec2.create()
+      #   gl.vec2.subtract moveVector, movePoint, @_anchorPoint
 
-        moveVector[0] *= @_scaleDirectionX
+      #   moveVector[0] *= @_scaleDirectionX
 
-        newScale = @_initialScale * (1 - moveVector[0]/@_initialWidth)
-        @_object.setScale newScale
-        @_object.setPosition [
-          @_initialPosition[0] + @_scaleDirectionX*moveVector[0]/2,
-          @_initialPosition[1] + @_scaleDirectionY*moveVector[0]/2
-        ]
+      #   newScale = @_initialScale * (1 - moveVector[0]/@_initialWidth)
+      #   @_object.setScale newScale
+      #   @_object.setPosition [
+      #     @_initialPosition[0] + @_scaleDirectionX*moveVector[0]/2,
+      #     @_initialPosition[1] + @_scaleDirectionY*moveVector[0]/2
+      #   ]
 
-        @getParent().shrinkWrap @_object
-        @_signals.gizmoChanged.dispatch @
-        return false
+      #   @getParent().shrinkWrap @_object
+      #   @_signals.gizmoChanged.dispatch @
+      #   return false
 
-      else if e.gizmo is @
-        @_signals.cursorStyleChanged.dispatch e.gizmo.getName()
-        return false
-
-      else
-        return true
+      # else if e.gizmo is @
+      @_signals.cursorStyleChanged.dispatch @getName()
 
     _onKeyPressed: (e) -> return false if e.activeGizmo is @
     _onKeyReleased: (e) -> return false if e.activeGizmo is @
@@ -232,18 +228,8 @@ define ["gl-matrix", "two/box", "two/shape_material", "two/color", "./mouse_butt
 
       return true
 
-    _onMouseMoved: (e) ->
-      return if e.activeGizmo? and e.activeGizmo isnt @
-
-      if e.activeGizmo is @
-        @_moveSelectionBox(e)
-        return false
-
-      if e.gizmo is @
-        @_signals.cursorStyleChanged.dispatch "move"
-        return false
-      else
-        return true
+    onStylusMoved: ->
+      @_signals.cursorStyleChanged.dispatch "move"
 
     _onKeyPressed: (e) ->
       return false if e.activeGizmo is @

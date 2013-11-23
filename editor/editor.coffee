@@ -138,23 +138,28 @@ define (require) ->
     new EditorInput(@on, @canvas)
 
     $("input").change (e) => @_onGridChanged(isVisible: $(e.target).is(':checked'))
+
     @on.cursorStyleChanged.add @_onCursorStyleChanged, @
+
     @on.gizmoChanged.add @_onGizmoChanged, @
 
-    @on.gridChanged.add @_onGridChanged, @
-    @on.zoomLevelChanged.add @_onZoomLevelChanged, @
-    @on.grabToolSelected.add @_onGrabToolSelected, @
     @on.grabToolDeselected.add @_onGrabToolDeselected, @
-
-    @on.stylusTouched.add @_onStylusTouched, @
-    @on.stylusDragged.add @_onStylusDragged, @
-    @on.stylusReleased.add @_onStylusReleased, @
-    @on.objectSelected.add @_onObjectSelected, @
-    @on.objectDeselected.add @_onObjectDeselected, @
-
+    @on.grabToolDragged.add @_onGrabToolDragged, @
+    @on.grabToolSelected.add @_onGrabToolSelected, @
     @on.grabToolStarted.add @_onGrabToolStarted, @
     @on.grabToolStopped.add @_onGrabToolStopped, @
-    @on.grabToolDragged.add @_onGrabToolDragged, @
+
+    @on.gridChanged.add @_onGridChanged, @
+
+    @on.objectDeselected.add @_onObjectDeselected, @
+    @on.objectSelected.add @_onObjectSelected, @
+
+    @on.stylusDragged.add @_onStylusDragged, @
+    @on.stylusMoved.add @_onStylusMoved, @
+    @on.stylusReleased.add @_onStylusReleased, @
+    @on.stylusTouched.add @_onStylusTouched, @
+
+    @on.zoomLevelChanged.add @_onZoomLevelChanged, @
 
   on:
     cursorStyleChanged: new Signal()
@@ -188,6 +193,7 @@ define (require) ->
 
     @camera.setWidth(width)
 
+    @_updateCursorStyle()
     @_render()
 
   _onCursorStyleChanged: (newStyle) ->
@@ -195,6 +201,10 @@ define (require) ->
 
   _onGizmoChanged: ->
     @_render()
+
+  _onStylusMoved: (e) ->
+    @_stylusPosition = e.canvasPoint
+    @_updateCursorStyle()
 
   _onStylusTouched: ->
     if @_grabTool
@@ -224,6 +234,7 @@ define (require) ->
       @sceneGizmos.add @_selectionBox
 
     @_selectionBox.attachTo object
+    @_updateCursorStyle()
     @_render()
 
   _onObjectDeselected: ->
@@ -273,3 +284,11 @@ define (require) ->
     o.setVisible(options.isVisible) for o in @sceneGrid.getChildren()
     @_render()
 
+  _updateCursorStyle: ->
+    return if @_grabTool
+    return unless @_stylusPosition?
+    gizmo = @projector.pick(@_stylusPosition, @sceneGizmos)
+    if gizmo?
+      gizmo.onStylusMoved()
+    else
+      @on.cursorStyleChanged.dispatch("auto")
