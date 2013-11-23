@@ -16,7 +16,6 @@ define ["gl-matrix", "two/box", "two/shape_material", "two/color", "./mouse_butt
           fillColor: "white"
           isFixedSize: true
 
-      @_signalBindings = []
       @_projector = options.projector
       @_signals = options.signals
       @_scaleDirectionY = options.scaleDirectionY
@@ -43,24 +42,10 @@ define ["gl-matrix", "two/box", "two/shape_material", "two/color", "./mouse_butt
     getBoundingHeight: -> @height * 2
 
     attachTo: (object) ->
-      @detach()
       @_object = object
-      @_attachSignalHandlers()
 
     detach: ->
       @_object = null
-      @_detachSignalHandlers()
-
-    _attachSignalHandlers: ->
-      priority = 1
-      # @_signalBindings.push @_signals.mouseMoved.add(@_onMouseMoved, @, priority)
-      # @_signalBindings.push @_signals.mouseButtonPressed.add(@_onMouseButtonPressed, @ , priority)
-      # @_signalBindings.push @_signals.mouseButtonReleased.add(@_onMouseButtonReleased, @ , priority)
-      # @_signalBindings.push @_signals.keyPressed.add(@_onKeyPressed, @ , priority)
-      # @_signalBindings.push @_signals.keyReleased.add(@_onKeyReleased, @ , priority)
-
-    _detachSignalHandlers: ->
-      binding.detach() for binding in @_signalBindings
 
     _onMouseButtonPressed: (e) ->
       if e.which == MouseButtons.LEFT && e.gizmo is @
@@ -112,13 +97,10 @@ define ["gl-matrix", "two/box", "two/shape_material", "two/color", "./mouse_butt
         name: "selection-box"
       super options
 
-      @_signalBindings = []
       @_buildResizeHandles()
 
     attachTo: (object) ->
-      @detach()
       @_object = object
-      @_attachSignalHandlers()
       child.attachTo object for child in @getChildren()
 
       @shrinkWrap object
@@ -141,25 +123,10 @@ define ["gl-matrix", "two/box", "two/shape_material", "two/color", "./mouse_butt
 
     detach: ->
       @_object = null
-      @_detachSignalHandlers()
       child.detach() for child in @getChildren()
 
     isAttached: ->
       @_object?
-
-    _attachSignalHandlers: ->
-      priority = 1
-      # @_signalBindings.push @_signals.mouseMoved.add(@_onMouseMoved, @, priority)
-      # @_signalBindings.push @_signals.mouseButtonPressed.add(@_onMouseButtonPressed, @ , priority)
-      # @_signalBindings.push @_signals.mouseButtonReleased.add(@_onMouseButtonReleased, @ , priority)
-      # @_signalBindings.push @_signals.keyPressed.add(@_onKeyPressed, @ , priority)
-      # @_signalBindings.push @_signals.keyReleased.add(@_onKeyReleased, @ , priority)
-
-      child._attachSignalHandlers() for child in @getChildren()
-
-    _detachSignalHandlers: ->
-      binding.detach() for binding in @_signalBindings
-      child._detachSignalHandlers() for child in @getChildren()
 
     _buildResizeHandles: ->
       largeHandle = new ResizeHandle
@@ -214,36 +181,17 @@ define ["gl-matrix", "two/box", "two/shape_material", "two/color", "./mouse_butt
         name: "ew-resize"
         pixelOffsetX: -SMALL_HANDLE_PADDING))
 
-    _onMouseButtonPressed: (e) ->
-      if e.which == MouseButtons.LEFT && e.gizmo is @
-        @_anchorPoint = @_projector.unproject gl.vec2.fromValues(e.pageX, e.pageY)
-        @_initialPosition = @getPosition()
-        return false
-      else
-        return true
-
-    _onMouseButtonReleased: (e) ->
-      if e.which == MouseButtons.LEFT
-        @_anchorPoint = null
-
-      return true
-
     onStylusMoved: ->
       @_signals.cursorStyleChanged.dispatch "move"
 
-    _onKeyPressed: (e) ->
-      return false if e.activeGizmo is @
-
-    _onKeyReleased: (e) ->
-      return false if e.activeGizmo is @
-
-    _moveSelectionBox: (e) ->
-      movePoint = @_projector.unproject gl.vec2.fromValues(e.pageX, e.pageY)
-      moveVector = gl.vec2.create()
+    onDragged: (e) ->
       newPosition = gl.vec2.create()
-      gl.vec2.subtract moveVector, movePoint, @_anchorPoint
-      gl.vec2.add newPosition, moveVector, @_initialPosition
+      gl.vec2.add newPosition, e.worldDelta, @_initialPosition
+
       @setPosition newPosition
       @_object.setPosition newPosition
       @_signals.gizmoChanged.dispatch @
+
+    onActivated: ->
+      @_initialPosition = @getPosition()
 

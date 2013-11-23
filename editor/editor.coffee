@@ -206,15 +206,22 @@ define (require) ->
     @_stylusPosition = e.canvasPoint
     @_updateCursorStyle()
 
-  _onStylusTouched: ->
+  _onStylusTouched: (e) ->
     if @_grabTool
       @on.grabToolStarted.dispatch()
+    else
+      @_activeGizmo = @_pickGizmo(e.canvasPoint)
+      @_activeGizmo?.onActivated()
 
   _onStylusDragged: (e) ->
+    worldDelta = @_calculateWorldTranslation(e.canvasStartPoint, e.canvasEndPoint)
     if @_grabbing
-      @on.grabToolDragged.dispatch(e)
+      @on.grabToolDragged.dispatch(worldDelta: worldDelta)
+    else
+      @_activeGizmo?.onDragged(worldDelta: worldDelta)
 
   _onStylusReleased: (e) ->
+    @_activeGizmo = null
     if @_grabbing
       @on.grabToolStopped.dispatch()
       return
@@ -223,7 +230,7 @@ define (require) ->
     return unless e.isOnCanvas
     return if Math.abs(e.delta[0]) > selectionThreshold || Math.abs(e.delta[1]) > selectionThreshold
 
-    object = @projector.pick e.canvasStartPoint, @scene
+    object = @projector.pick(e.canvasStartPoint, @scene)
     if object?
       @on.objectSelected.dispatch(object)
     else
@@ -265,16 +272,11 @@ define (require) ->
     @_setCursor "auto" unless @_grabbing
 
   _onGrabToolDragged: (e) ->
-    worldStartPoint = @projector.unproject(e.canvasStartPoint)
-    worldEndPoint = @projector.unproject(e.canvasEndPoint)
-    worldTranslation = gl.vec2.create()
     newCameraPosition = gl.vec2.create()
 
-    gl.vec2.subtract worldTranslation, worldStartPoint, worldEndPoint
-    gl.vec2.add newCameraPosition, @_initialCameraPosition, worldTranslation
+    gl.vec2.subtract newCameraPosition, @_initialCameraPosition, e.worldDelta
 
     @camera.setPosition newCameraPosition
-
     @_render()
 
   _setCursor: (cursor) ->
@@ -285,10 +287,19 @@ define (require) ->
     @_render()
 
   _updateCursorStyle: ->
-    return if @_grabTool
+    return if @_grabTool || @_activeGizmo?
     return unless @_stylusPosition?
-    gizmo = @projector.pick(@_stylusPosition, @sceneGizmos)
+    gizmo = @_pickGizmo(@_stylusPosition, @sceneGizmos)
     if gizmo?
       gizmo.onStylusMoved()
     else
       @on.cursorStyleChanged.dispatch("auto")
+
+  _pickGizmo: (canvasPoint) ->
+    @projector.pick(canvasPoint, @sceneGizmos)
+
+  _calculateWorldTranslation: (screenStartPoint, screenEndPoint) ->
+    worldStartPoint = @projector.unproject(screenStartPoint)
+    worldEndPoint = @projector.unproject(screenEndPoint)
+    worldTranslation = gl.vec2.create()
+    gl.vec2.subtract worldTranslation, worldEndPoint, worldStartPoint
