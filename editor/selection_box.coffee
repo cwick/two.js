@@ -47,48 +47,28 @@ define ["gl-matrix", "two/box", "two/shape_material", "two/color", "./mouse_butt
     detach: ->
       @_object = null
 
-    _onMouseButtonPressed: (e) ->
-      if e.which == MouseButtons.LEFT && e.gizmo is @
-        @_anchorPoint = @_projector.unproject gl.vec2.fromValues(e.pageX, e.pageY)
-        @_initialScale = @_object.getScale()
-        @_initialWidth = @getParent().getWidth()
-        @_initialPosition = @getParent().getPosition()
-        return false
-      else
-        return true
+    onActivated: ->
+      @_initialScale = @_object.getScale()
+      @_initialWidth = @getParent().getWidth()
+      @_initialPosition = @getParent().getPosition()
 
-    _onMouseButtonReleased: (e) ->
-      if e.which == MouseButtons.LEFT
-        @_anchorPoint = null
+    onDragged: (e) ->
+      worldDelta = gl.vec2.clone(e.worldDelta)
 
-      return true
+      worldDelta[0] *= @_scaleDirectionX
+
+      newScale = @_initialScale * (1 - worldDelta[0]/@_initialWidth)
+      @_object.setScale newScale
+      @_object.setPosition [
+        @_initialPosition[0] + @_scaleDirectionX*worldDelta[0]/2,
+        @_initialPosition[1] + @_scaleDirectionY*worldDelta[0]/2
+      ]
+
+      @getParent().shrinkWrap @_object
+      @_signals.gizmoChanged.dispatch @
 
     onStylusMoved: ->
-      # return true if e.activeGizmo? and e.activeGizmo isnt @
-
-      # if e.activeGizmo is @
-      #   movePoint = @_projector.unproject gl.vec2.fromValues(e.pageX, e.pageY)
-      #   moveVector = gl.vec2.create()
-      #   gl.vec2.subtract moveVector, movePoint, @_anchorPoint
-
-      #   moveVector[0] *= @_scaleDirectionX
-
-      #   newScale = @_initialScale * (1 - moveVector[0]/@_initialWidth)
-      #   @_object.setScale newScale
-      #   @_object.setPosition [
-      #     @_initialPosition[0] + @_scaleDirectionX*moveVector[0]/2,
-      #     @_initialPosition[1] + @_scaleDirectionY*moveVector[0]/2
-      #   ]
-
-      #   @getParent().shrinkWrap @_object
-      #   @_signals.gizmoChanged.dispatch @
-      #   return false
-
-      # else if e.gizmo is @
       @_signals.cursorStyleChanged.dispatch @getName()
-
-    _onKeyPressed: (e) -> return false if e.activeGizmo is @
-    _onKeyReleased: (e) -> return false if e.activeGizmo is @
 
   class SelectionBox extends Box
     constructor: (@_signals, @_projector) ->
