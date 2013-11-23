@@ -137,37 +137,40 @@ define (require) ->
 
     new EditorInput(@on, @canvas)
 
-    $(document).on "mousedown mouseup mousemove", => @_onUserInput.apply @, arguments
     $("input").change (e) => @_onGridChanged(isVisible: $(e.target).is(':checked'))
     @on.cursorStyleChanged.add @_onCursorStyleChanged, @
     @on.gizmoChanged.add @_onGizmoChanged, @
-
-    @on.mouseMoved.add @_onMouseMoveDefault, @
-    @on.mouseButtonReleased.add @_onMouseUpDefault, @
-
-    @on.mouseButtonPressed.add @_onSelectionStarted, @
-    @on.mouseButtonReleased.add @_onSelectionFinished, @
-
-    @on.mouseMoved.add @_onGrabToolMoved, @, 2
-    @on.mouseButtonPressed.add @_onGrabStarted, @, 2
-    @on.mouseButtonReleased.add @_onGrabStopped, @, 2
 
     @on.gridChanged.add @_onGridChanged, @
     @on.zoomLevelChanged.add @_onZoomLevelChanged, @
     @on.grabToolSelected.add @_onGrabToolSelected, @
     @on.grabToolDeselected.add @_onGrabToolDeselected, @
 
+    @on.stylusTouched.add @_onStylusTouched, @
+    @on.stylusDragged.add @_onStylusDragged, @
+    @on.stylusReleased.add @_onStylusReleased, @
+    @on.objectSelected.add @_onObjectSelected, @
+    @on.objectDeselected.add @_onObjectDeselected, @
+
+    @on.grabToolStarted.add @_onGrabToolStarted, @
+    @on.grabToolStopped.add @_onGrabToolStopped, @
+    @on.grabToolDragged.add @_onGrabToolDragged, @
+
   on:
     cursorStyleChanged: new Signal()
     gizmoChanged: new Signal()
-    gridChanged: new Signal()
-    keyPressed: new Signal()
-    keyReleased: new Signal()
-    mouseButtonPressed: new Signal()
-    mouseButtonReleased: new Signal()
-    mouseMoved: new Signal()
     grabToolDeselected: new Signal()
     grabToolSelected: new Signal()
+    grabToolStarted: new Signal()
+    grabToolStopped: new Signal()
+    grabToolDragged: new Signal()
+    gridChanged: new Signal()
+    objectDeselected: new Signal()
+    objectSelected: new Signal()
+    stylusDragged: new Signal()
+    stylusMoved: new Signal()
+    stylusReleased: new Signal()
+    stylusTouched: new Signal()
     zoomLevelChanged: new Signal()
 
   _render: ->
@@ -175,104 +178,6 @@ define (require) ->
     @renderer.render(@sceneGrid, @camera)
     @renderer.render(@scene, @camera)
     @renderer.render(@sceneGizmos, @camera)
-
-  _onUserInput: (e) ->
-    handled = @["_on#{e.type.charAt(0).toUpperCase() + e.type.slice(1)}"].apply @, arguments
-    if handled
-      e.preventDefault()
-      e.stopPropagation()
-
-  _onMousedown: (e) ->
-    if e.target == @canvas
-      @_activeGizmo = @projector.pick(gl.vec2.fromValues(e.offsetX, e.offsetY), @sceneGizmos)
-
-    @on.mouseButtonPressed.dispatch @_createInputEvent(e, @_activeGizmo, @_activeGizmo)
-    return e.target == @canvas
-
-  _onMouseup: (e) ->
-    if e.target == @canvas
-      gizmo = @projector.pick(gl.vec2.fromValues(e.offsetX, e.offsetY), @sceneGizmos)
-
-    @_activeGizmo = null
-    @on.mouseButtonReleased.dispatch @_createInputEvent(e, gizmo, @_activeGizmo)
-    return e.target == @canvas
-
-  _onMousemove: (e) ->
-    if e.target == @canvas
-      gizmo = @projector.pick(gl.vec2.fromValues(e.offsetX, e.offsetY), @sceneGizmos)
-
-    @on.mouseMoved.dispatch @_createInputEvent(e, gizmo, @_activeGizmo)
-    e.target == @canvas
-
-  _onSelectionStarted: (e) ->
-    return unless e.target == @canvas && e.which == MouseButtons.LEFT
-
-    @_mouseDownPoint = gl.vec2.fromValues e.offsetX, e.offsetY
-
-  _onSelectionFinished: (e) ->
-    mouseDownPoint = @_mouseDownPoint
-    @_mouseDownPoint = null
-
-    return unless e.target == @canvas && mouseDownPoint?
-
-    mouseUpPoint = gl.vec2.fromValues e.offsetX, e.offsetY
-
-    if gl.vec2.squaredDistance(mouseUpPoint, mouseDownPoint) <= 1
-      @_onPick(mouseDownPoint)
-
-  _onGrabToolSelected: ->
-    @_grabTool = true
-    @_setCursor "-webkit-grab" unless @_grabbing
-
-  _onGrabToolDeselected: ->
-    @_grabTool = false
-    @_setCursor "auto" unless @_grabbing
-
-  _onGrabStarted: (e) ->
-    return unless @_grabTool && e.which == MouseButtons.LEFT
-
-    @_grabbing = true
-    @_grabAnchor = gl.vec2.fromValues(e.pageX, e.pageY)
-    @_initialCameraPosition = @camera.getPosition()
-
-    @_setCursor "-webkit-grabbing"
-    return false
-
-  _onGrabToolMoved: (e) ->
-    unless @_grabbing
-      return !@_grabTool
-
-    grabPoint = gl.vec2.fromValues(e.pageX, e.pageY)
-    grabAnchor = gl.vec2.clone(@_grabAnchor)
-    grabPoint = @projector.unproject grabPoint
-    grabAnchor = @projector.unproject grabAnchor
-
-    grabVector = gl.vec2.create()
-    gl.vec2.subtract grabVector, grabAnchor, grabPoint
-
-    gl.vec2.add grabVector, @_initialCameraPosition, grabVector
-    @camera.setPosition grabVector
-
-    @_render()
-    return false
-
-  _onGrabStopped: (e) ->
-    return unless e.which == MouseButtons.LEFT && @_grabbing
-
-    @_grabbing = false
-
-    if @_grabTool
-      @_setCursor "-webkit-grab"
-    else
-      @_setCursor "auto"
-
-    return false
-
-  _onMouseMoveDefault: ->
-    @_setCursor "auto"
-
-  _onMouseUpDefault: (e) ->
-    @_setCursor "auto" unless e.gizmo?
 
   _onZoomLevelChanged: (amount) ->
     width = @camera.getWidth()
@@ -285,51 +190,84 @@ define (require) ->
 
     @_render()
 
-  _onPick: (screenPoint) ->
-    return if @projector.pick screenPoint, @sceneGizmos
-
-    selected = @projector.pick screenPoint, @scene
-    return if @_selectedObject is selected
-
-    @_selectedObject = selected
-    if @_selectedObject?
-      @_onPickObject(selected, screenPoint)
-    else
-      @_onUnpick()
-
-    @_render()
-
-  _onPickObject: (object, screenPoint) ->
-    unless @_selectionBox.isAttached()
-      @sceneGizmos.add @_selectionBox
-
-    @_selectionBox.attachTo object
-
-    event =
-      offsetX: screenPoint[0]
-      offsetY: screenPoint[1]
-      target: @canvas
-
-    gizmo = @projector.pick(screenPoint, @sceneGizmos)
-
-    @on.mouseMoved.dispatch @_createInputEvent(event, gizmo, null)
-
-  _onUnpick: ->
-    @sceneGizmos.remove @_selectionBox
-    @_selectionBox.detach()
-
   _onCursorStyleChanged: (newStyle) ->
     @_setCursor newStyle
 
   _onGizmoChanged: ->
     @_render()
 
+  _onStylusTouched: ->
+    if @_grabTool
+      @on.grabToolStarted.dispatch()
+
+  _onStylusDragged: (e) ->
+    if @_grabbing
+      @on.grabToolDragged.dispatch(e)
+
+  _onStylusReleased: (e) ->
+    if @_grabbing
+      @on.grabToolStopped.dispatch()
+      return
+
+    selectionThreshold = 2
+    return unless e.isOnCanvas
+    return if Math.abs(e.delta[0]) > selectionThreshold || Math.abs(e.delta[1]) > selectionThreshold
+
+    object = @projector.pick e.canvasStartPoint, @scene
+    if object?
+      @on.objectSelected.dispatch(object)
+    else
+      @on.objectDeselected.dispatch()
+
+  _onObjectSelected: (object) ->
+    unless @_selectionBox.isAttached()
+      @sceneGizmos.add @_selectionBox
+
+    @_selectionBox.attachTo object
+    @_render()
+
+  _onObjectDeselected: ->
+    @sceneGizmos.remove @_selectionBox
+    @_selectionBox.detach()
+    @_render()
+
+  _onGrabToolStarted: ->
+    @_grabbing = true
+    @_initialCameraPosition = @camera.getPosition()
+
+    @_setCursor "-webkit-grabbing"
+
+  _onGrabToolStopped: (e) ->
+    @_grabbing = false
+
+    if @_grabTool
+      @_setCursor "-webkit-grab"
+    else
+      @_setCursor "auto"
+
+  _onGrabToolSelected: ->
+    @_grabTool = true
+    @_setCursor "-webkit-grab" unless @_grabbing
+
+  _onGrabToolDeselected: ->
+    @_grabTool = false
+    @_setCursor "auto" unless @_grabbing
+
+  _onGrabToolDragged: (e) ->
+    worldStartPoint = @projector.unproject(e.canvasStartPoint)
+    worldEndPoint = @projector.unproject(e.canvasEndPoint)
+    worldTranslation = gl.vec2.create()
+    newCameraPosition = gl.vec2.create()
+
+    gl.vec2.subtract worldTranslation, worldStartPoint, worldEndPoint
+    gl.vec2.add newCameraPosition, @_initialCameraPosition, worldTranslation
+
+    @camera.setPosition newCameraPosition
+
+    @_render()
+
   _setCursor: (cursor) ->
     @$canvas.css "cursor", cursor
-
-  _createInputEvent: (e, gizmo, activeGizmo) ->
-    event = Utils.merge {}, e
-    Utils.merge event, gizmo: gizmo, activeGizmo: activeGizmo
 
   _onGridChanged: (options) ->
     o.setVisible(options.isVisible) for o in @sceneGrid.getChildren()

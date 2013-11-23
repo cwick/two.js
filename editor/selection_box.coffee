@@ -53,11 +53,11 @@ define ["gl-matrix", "two/box", "two/shape_material", "two/color", "./mouse_butt
 
     _attachSignalHandlers: ->
       priority = 1
-      @_signalBindings.push @_signals.mouseMoved.add(@_onMouseMoved, @, priority)
-      @_signalBindings.push @_signals.mouseButtonPressed.add(@_onMouseButtonPressed, @ , priority)
-      @_signalBindings.push @_signals.mouseButtonReleased.add(@_onMouseButtonReleased, @ , priority)
-      @_signalBindings.push @_signals.keyPressed.add(@_onKeyPressed, @ , priority)
-      @_signalBindings.push @_signals.keyReleased.add(@_onKeyReleased, @ , priority)
+      # @_signalBindings.push @_signals.mouseMoved.add(@_onMouseMoved, @, priority)
+      # @_signalBindings.push @_signals.mouseButtonPressed.add(@_onMouseButtonPressed, @ , priority)
+      # @_signalBindings.push @_signals.mouseButtonReleased.add(@_onMouseButtonReleased, @ , priority)
+      # @_signalBindings.push @_signals.keyPressed.add(@_onKeyPressed, @ , priority)
+      # @_signalBindings.push @_signals.keyReleased.add(@_onKeyReleased, @ , priority)
 
     _detachSignalHandlers: ->
       binding.detach() for binding in @_signalBindings
@@ -153,11 +153,11 @@ define ["gl-matrix", "two/box", "two/shape_material", "two/color", "./mouse_butt
 
     _attachSignalHandlers: ->
       priority = 1
-      @_signalBindings.push @_signals.mouseMoved.add(@_onMouseMoved, @, priority)
-      @_signalBindings.push @_signals.mouseButtonPressed.add(@_onMouseButtonPressed, @ , priority)
-      @_signalBindings.push @_signals.mouseButtonReleased.add(@_onMouseButtonReleased, @ , priority)
-      @_signalBindings.push @_signals.keyPressed.add(@_onKeyPressed, @ , priority)
-      @_signalBindings.push @_signals.keyReleased.add(@_onKeyReleased, @ , priority)
+      # @_signalBindings.push @_signals.mouseMoved.add(@_onMouseMoved, @, priority)
+      # @_signalBindings.push @_signals.mouseButtonPressed.add(@_onMouseButtonPressed, @ , priority)
+      # @_signalBindings.push @_signals.mouseButtonReleased.add(@_onMouseButtonReleased, @ , priority)
+      # @_signalBindings.push @_signals.keyPressed.add(@_onKeyPressed, @ , priority)
+      # @_signalBindings.push @_signals.keyReleased.add(@_onKeyReleased, @ , priority)
 
       child._attachSignalHandlers() for child in @getChildren()
 

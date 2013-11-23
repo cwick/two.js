@@ -1,8 +1,12 @@
-define ["jquery", "two/utils", "./key_codes", "jquery.mousewheel"], ($, Utils, KeyCodes) ->
+define ["gl-matrix", "jquery", "two/utils", "./key_codes", "./mouse_buttons", "jquery.mousewheel"], \
+       (gl, $, Utils, KeyCodes, MouseButtons) ->
   class EditorInput
     constructor: (@signals, @canvas) ->
-      $(document).on "mousewheel keydown keyup", => @_onUserInput.apply @, arguments
+      $(document).on "mousewheel keydown keyup mousedown mouseup mousemove", => @_onUserInput.apply @, arguments
       @_body = $("body")[0]
+
+      @signals.stylusTouched.add @_onStylusTouched, @
+      @signals.stylusReleased.add @_onStylusReleased, @
 
     _onUserInput: (e) ->
       handled = @["_on#{e.type.charAt(0).toUpperCase() + e.type.slice(1)}"].apply @, arguments
@@ -28,4 +32,59 @@ define ["jquery", "two/utils", "./key_codes", "jquery.mousewheel"], ($, Utils, K
         @signals.grabToolDeselected.dispatch()
 
       return e.target == @_body
+
+    _onMousedown: (e) ->
+      return unless e.target == @canvas && e.which == MouseButtons.LEFT
+
+      @signals.stylusTouched.dispatch
+        canvasPoint: [e.offsetX, e.offsetY]
+        screenPoint: [e.screenX, e.screenY]
+
+      return true
+
+    _onMouseup: (e) ->
+      return unless @_isStylusTouching() && e.which == MouseButtons.LEFT
+
+      @signals.stylusReleased.dispatch
+        delta: @_getStylusDelta(e.screenX, e.screenY)
+        canvasStartPoint: gl.vec2.clone(@_stylusCanvasTouchPoint)
+        isOnCanvas: e.target == @canvas
+
+      return e.target == @canvas
+
+    _onMousemove: (e) ->
+      if @_isStylusTouching()
+        @_dispatchStylusDragged(e)
+      else if e.target == @canvas
+        @_dispatchStylusMoved(e)
+
+      return e.target == @canvas
+
+    _onStylusTouched: (options) ->
+      @_stylueScreenTouchPoint = options.screenPoint
+      @_stylusCanvasTouchPoint = options.canvasPoint
+
+    _onStylusReleased: ->
+      @_stylueScreenTouchPoint = @_stylusCanvasTouchPoint = null
+
+    _isStylusTouching: ->
+      @_stylusCanvasTouchPoint?
+
+    _getStylusDelta: (x,y) ->
+      delta = gl.vec2.create()
+
+      if @_isStylusTouching()
+        gl.vec2.subtract(delta, [x,y], @_stylueScreenTouchPoint)
+
+      delta
+
+    _dispatchStylusDragged: (e) ->
+      delta = @_getStylusDelta(e.screenX, e.screenY)
+      @signals.stylusDragged.dispatch
+        canvasStartPoint: gl.vec2.clone(@_stylusCanvasTouchPoint)
+        canvasEndPoint: [@_stylusCanvasTouchPoint[0] + delta[0], @_stylusCanvasTouchPoint[1] + delta[1]]
+        delta: delta
+
+    _dispatchStylusMoved: (e) ->
+      @signals.stylusMoved.dispatch(canvasPoint: [e.offsetX, e.offsetY])
 
