@@ -299,8 +299,10 @@ define (require) ->
   _pickGizmo: (canvasPoint) ->
     @projector.pick(canvasPoint, @sceneGizmos)
 
-  _calculateWorldTranslation: (screenStartPoint, screenEndPoint) ->
-    worldStartPoint = @projector.unproject(screenStartPoint)
-    worldEndPoint = @projector.unproject(screenEndPoint)
+  _calculateWorldTranslation: (startPoint, endPoint) ->
+    worldStartPoint = @projector.unproject(startPoint)
+    worldEndPoint = @projector.unproject(endPoint)
     worldTranslation = gl.vec2.create()
     gl.vec2.subtract worldTranslation, worldEndPoint, worldStartPoint
+
+    worldTranslation

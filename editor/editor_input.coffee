@@ -38,7 +38,7 @@ define ["gl-matrix", "jquery", "two/utils", "./key_codes", "./mouse_buttons", "j
 
       @signals.stylusTouched.dispatch
         canvasPoint: [e.offsetX, e.offsetY]
-        screenPoint: [e.screenX, e.screenY]
+        pagePoint: [e.pageX, e.pageY]
 
       return true
 
@@ -46,7 +46,7 @@ define ["gl-matrix", "jquery", "two/utils", "./key_codes", "./mouse_buttons", "j
       return unless @_isStylusTouching() && e.which == MouseButtons.LEFT
 
       @signals.stylusReleased.dispatch
-        delta: @_getStylusDelta(e.screenX, e.screenY)
+        delta: @_getStylusDelta(e.pageX, e.pageY)
         canvasStartPoint: gl.vec2.clone(@_stylusCanvasTouchPoint)
         isOnCanvas: e.target == @canvas
 
@@ -61,11 +61,11 @@ define ["gl-matrix", "jquery", "two/utils", "./key_codes", "./mouse_buttons", "j
       return e.target == @canvas
 
     _onStylusTouched: (options) ->
-      @_stylueScreenTouchPoint = options.screenPoint
+      @_stylusPageTouchPoint = options.pagePoint
       @_stylusCanvasTouchPoint = options.canvasPoint
 
     _onStylusReleased: ->
-      @_stylueScreenTouchPoint = @_stylusCanvasTouchPoint = null
+      @_stylusPageTouchPoint = @_stylusCanvasTouchPoint = null
 
     _isStylusTouching: ->
       @_stylusCanvasTouchPoint?
@@ -74,12 +74,12 @@ define ["gl-matrix", "jquery", "two/utils", "./key_codes", "./mouse_buttons", "j
       delta = gl.vec2.create()
 
       if @_isStylusTouching()
-        gl.vec2.subtract(delta, [x,y], @_stylueScreenTouchPoint)
+        gl.vec2.subtract(delta, [x,y], @_stylusPageTouchPoint)
 
       delta
 
     _dispatchStylusDragged: (e) ->
-      delta = @_getStylusDelta(e.screenX, e.screenY)
+      delta = @_getStylusDelta(e.pageX, e.pageY)
       @signals.stylusDragged.dispatch
         canvasStartPoint: gl.vec2.clone(@_stylusCanvasTouchPoint)
         canvasEndPoint: [@_stylusCanvasTouchPoint[0] + delta[0], @_stylusCanvasTouchPoint[1] + delta[1]]
