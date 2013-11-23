@@ -9,10 +9,17 @@
 <body>
 
 <div id="editor" class="panel">
-  <div class="toolbar">
-    <label><input checked="checked" type="checkbox"></input> Show grid</label>
+  <div class="ribbon">
+    <label><input id="show-grid" checked="checked" type="checkbox"></input> Show grid</label>
   </div>
-  <div class="panel viewport"> </div>
+  <div class="panel main-view">
+    <div class="toolbar">
+      <ul>
+        <li><button id="grab-tool">Grab</button></li>
+      </ul>
+    </div>
+    <div class="panel viewport"> </div>
+  </div>
 </div>
 
 </body>

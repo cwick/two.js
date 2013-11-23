@@ -137,7 +137,8 @@ define (require) ->
 
     new EditorInput(@on, @canvas)
 
-    $("input").change (e) => @_onGridChanged(isVisible: $(e.target).is(':checked'))
+    $("#show-grid").change (e) => @on.gridChanged.dispatch(isVisible: $(e.target).is(':checked'))
+    $("#grab-tool").click => @on.grabToolSelected.dispatch()
 
     @on.cursorStyleChanged.add @_onCursorStyleChanged, @
 

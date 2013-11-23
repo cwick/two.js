@@ -1,4 +1,4 @@
-.toolbar {
+.ribbon {
   width: 100%;
 }
 
@@ -7,9 +7,9 @@
   -webkit-user-select: none;
 }
 
-.viewport {
-  width: 100%;
+.main-view, .viewport {
   height: 100%;
+  width: 100%;
 }
 
 .dialog {
