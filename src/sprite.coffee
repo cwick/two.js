@@ -4,16 +4,32 @@ define ["./box", "./sprite_material"], (Box, SpriteMaterial) ->
       unless options.material instanceof SpriteMaterial
         throw new Error("Material must be instance of SpriteMaterial")
 
-      unless options.width? || options.height?
-        options.width = options.height = 0
+      width = options.width
+      height = options.height
+      name = options.name
+      image = options.material.image
 
-        options.material.image?.loaded.addOnce =>
-          image = options.material.image
-          @setHeight(2)
-          @setWidth((image.getWidth() / image.getHeight())*@getHeight())
+      autoSize = !width? || !height?
 
       super
 
-      unless options.name
-        @setName "#{options.material.image?.path} (#{@getId()})"
+      unless name
+        @setName "#{image?.getPath()} (#{@getId()})"
 
+      if autoSize
+        image?.loaded.addOnce (=> @_onImageLoaded(width, height)), @, 1
+
+    _onImageLoaded: (width, height) ->
+      if !width? && !height?
+        height = 2
+
+      image = @material.image
+
+      if height?
+        @setHeight(height)
+        @setWidth((image.getWidth() / image.getHeight())*@getHeight())
+      else if width?
+        @setWidth(width)
+        @setHeight((image.getHeight() / image.getWidth())*@getWidth())
+
+      return true

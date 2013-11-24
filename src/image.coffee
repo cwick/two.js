@@ -1,19 +1,27 @@
 define ["signals"], (Signal) ->
   class Image
-    constructor: (@path) ->
+    constructor: (@_path, callback) ->
       @loaded = new Signal()
       @loaded.memorize = true
+      @loaded.add (=> callback(); return true) if callback?
 
-      @_imageData = new window.Image()
-      @_imageData.onload = => @_onImageLoaded()
-      @_imageData.src = path
+      if @_path of Image._imageCache
+        @_loadLocalImage()
+      else
+        @_loadRemoteImage()
 
     getImageData: -> @_imageData
-    getWidth: ->@_imageData.width
+    getWidth: -> @_imageData.width
     getHeight: -> @_imageData.height
+    getPath: -> @_path
 
-    @loaded = new Signal()
+    @_imageCache = {}
 
-    _onImageLoaded: ->
-      @loaded.dispatch()
-      Image.loaded.dispatch()
+    _loadLocalImage: ->
+      @_imageData = Image._imageCache[@_path]
+      window.setTimeout (=> @loaded.dispatch()), 0
+
+    _loadRemoteImage: ->
+      @_imageData = Image._imageCache[@_path] = new window.Image()
+      @_imageData.onload = => @loaded.dispatch()
+      @_imageData.src = @_path

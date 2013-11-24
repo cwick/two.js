@@ -34,7 +34,7 @@ define (require) ->
     @scene.add new Disc(radius: 3, scale: 0.7, material: new ShapeMaterial(fillColor: "#BE0028"))
     @scene.add new Disc(x:5, y:-3, radius: 2, material: new ShapeMaterial(fillColor: "green"))
     @scene.add new Box(x:-5, y:-1, width: 4, height: 6, material: new ShapeMaterial(fillColor: "yellow", strokeColor: "red"))
-    @scene.add new Sprite(material: new SpriteMaterial(image: new Image("assets/mario.png")))
+    @scene.add new Sprite(width: 2, material: new SpriteMaterial(image: new Image("assets/mario.png", => @_render())))
 
     @sceneGrid.add new Grid()
 
@@ -53,6 +53,7 @@ define (require) ->
 
     $("#show-grid").change (e) => @on.gridChanged.dispatch(isVisible: $(e.target).is(':checked'))
     $("#grab-tool").click => @on.grabToolSelected.dispatch()
+    $("#new-sprite").click => @on.spriteCreated.dispatch()
 
     @on.cursorStyleChanged.add @_onCursorStyleChanged, @
 
@@ -74,8 +75,8 @@ define (require) ->
     @on.stylusReleased.add @_onStylusReleased, @
     @on.stylusTouched.add @_onStylusTouched, @
 
+    @on.spriteCreated.add @_onSpriteCreated, @
     @on.zoomLevelChanged.add @_onZoomLevelChanged, @
-    Image.loaded.add @_onImageLoaded, @
 
   on:
     cursorStyleChanged: new Signal()
@@ -91,6 +92,7 @@ define (require) ->
     objectChanged: new Signal()
     objectDeselected: new Signal()
     objectSelected: new Signal()
+    spriteCreated: new Signal()
     stylusDragged: new Signal()
     stylusMoved: new Signal()
     stylusReleased: new Signal()
@@ -210,8 +212,14 @@ define (require) ->
     @camera.setPosition newCameraPosition
     @_render()
 
-  _onImageLoaded: ->
-    @_render()
+  _onSpriteCreated: ->
+    image = new Image "assets/default.png"
+    sprite = new Sprite(material: new SpriteMaterial(image: image))
+
+    image.loaded.add =>
+      @scene.add sprite
+      @on.objectSelected.dispatch sprite
+      @_render()
 
   _setCursor: (cursor) ->
     @$canvas.css "cursor", cursor
