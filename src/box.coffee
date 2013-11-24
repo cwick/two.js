@@ -4,6 +4,8 @@ define ["gl-matrix", "./shape", "./utils"], (gl, Shape, Utils) ->
       super
       @width = options.width ?= 5
       @height = options.height ?= 5
+      unless options.name
+        @setName "Box (#{@getId()})"
 
     cloneProperties: (overrides) ->
       super Utils.merge(

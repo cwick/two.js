@@ -3,6 +3,8 @@ define ["./shape"], (Shape) ->
     constructor: (options={}) ->
       super
       @radius = options.radius ?= 5
+      unless options.name
+        @setName "Disc (#{@getId()})"
 
     updateBoundingDisc: (disc) ->
       disc.setPosition @getPosition()

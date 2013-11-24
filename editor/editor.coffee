@@ -5,11 +5,11 @@ define (require) ->
   Camera = require "two/camera"
   CanvasRenderer = require "two/canvas_renderer"
   Color = require "two/color"
-  Dialog = require "./dialog"
   Disc = require "two/disc"
   EditorInput = require "./editor_input"
   Grid = require "./grid"
   Image = require "two/image"
+  Inspector = require "./inspector"
   ShapeMaterial = require "two/shape_material"
   SpriteMaterial = require "two/sprite_material"
   Projector = require "two/projector"
@@ -19,98 +19,10 @@ define (require) ->
   Sprite = require "two/sprite"
 
   run: ->
-    dialog = new Dialog()
-    $("#editor").append dialog.$domElement
+    inspector = new Inspector(@on)
+    $("#editor").append inspector.$domElement
     $viewport = $(".viewport")
 
-    dialog.setBody(
-      """
-        <table>
-          <tr>
-            <td>Name</td>
-              <td><input></input></td>
-          </tr>
-          <tr>
-            <td>Parent</td>
-            <td><select><option>Scene</option></select></td>
-          </tr>
-          <tr>
-            <td>Position</td>
-            <td>
-              <input type="number" value="3"></input>
-              <input type="number" value="0.0"></input>
-            </td>
-          </tr>
-          <tr>
-            <td>Rotation</td>
-            <td>
-              <input class="format-degrees" type="number" value="3"></input>
-            </td>
-          </tr>
-          <tr>
-            <td>Scale</td>
-            <td>
-              <input type="number" value="99993" />
-              <input type="number" value="0.0" />
-            </td>
-          </tr>
-          <tr>
-            <td>Visible</td>
-            <td><input type="checkbox"/></td>
-          </tr>
-          <tr>
-            <td>User Data</td>
-            <td><textarea></textarea></td>
-          </tr>
-        </table>
-        <table style="display:none">
-          <tr>
-            <td>Foo</td>
-              <td><input></input></td>
-          </tr>
-          <tr>
-            <td>Parent</td>
-            <td><select><option>Scene</option></select></td>
-          </tr>
-          <tr>
-            <td>Position</td>
-            <td>
-              <input type="number" value="3"></input>
-              <input type="number" value="0.0"></input>
-            </td>
-          </tr>
-          <tr>
-            <td>Rotation</td>
-            <td>
-              <input class="format-degrees" type="number" value="3"></input>
-            </td>
-          </tr>
-          <tr>
-            <td>Scale</td>
-            <td>
-              <input type="number" value="99993" />
-              <input type="number" value="0.0" />
-            </td>
-          </tr>
-          <tr>
-            <td>Visible</td>
-            <td><input type="checkbox"/></td>
-          </tr>
-          <tr>
-            <td>User Data</td>
-            <td><textarea></textarea></td>
-          </tr>
-        </table>
-      """)
-
-    dialog.setFooter(
-      """
-        <div class="panel tabs">
-          <span class="tab active">Tab 1</span>
-          <span class="tab">Tab 2</span>
-          <span class="tab">Tab 3</span>
-        </div>
-      """)
 
     @renderer = new CanvasRenderer(width: $viewport.width(), height: $viewport.height(), autoClear: false)
     @scene = new Scene()

@@ -14,3 +14,6 @@ define ["./box", "./sprite_material"], (Box, SpriteMaterial) ->
 
       super
 
+      unless options.name
+        @setName "#{options.material.image?.path} (#{@getId()})"
+

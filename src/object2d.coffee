@@ -1,6 +1,8 @@
 define ["gl-matrix", "./material", "./utils", "./bounding_box", "./bounding_disc"], \
        (gl, Material, Utils, BoundingBox, BoundingDisc) ->
   class Object2d
+    @_nextId = 1
+
     constructor: (options={}) ->
       @material = options.material ?= new Material()
       @_x = options.x ?= 0
@@ -11,6 +13,7 @@ define ["gl-matrix", "./material", "./utils", "./bounding_box", "./bounding_disc
       @_scale = options.scale ?= 1
       @_children = []
       @_isVisible = true
+      @_id = Object2d._nextId++
 
     isVisible: -> @_isVisible
     setVisible: (value) -> @_isVisible = value
@@ -45,7 +48,6 @@ define ["gl-matrix", "./material", "./utils", "./bounding_box", "./bounding_disc
 
       @_boundingDisc
 
-
     add: (child) ->
       child._parent = @
       @_children.push child
@@ -59,6 +61,9 @@ define ["gl-matrix", "./material", "./utils", "./bounding_box", "./bounding_disc
     getChildren: -> @_children
     getParent: -> @_parent
     getName: -> @_name
+    setName: (value) -> @_name = value
+
+    getId: -> @_id
 
     getWorldMatrix: ->
       @_updateWorldMatrix() unless @_isWorldMatrixValid
