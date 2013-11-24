@@ -39,6 +39,7 @@ input[type="number"] {
   color: #0076FF;
   &:focus {
     color: #111211;
+    -webkit-border-radius: 0;
     outline: {
       width: 1px;
       color: rgb(160,160,160);

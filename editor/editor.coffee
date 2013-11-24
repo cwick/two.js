@@ -56,7 +56,7 @@ define (require) ->
 
     @on.cursorStyleChanged.add @_onCursorStyleChanged, @
 
-    @on.gizmoChanged.add @_onGizmoChanged, @
+    @on.objectChanged.add @_onObjectChanged, @
 
     @on.grabToolDeselected.add @_onGrabToolDeselected, @
     @on.grabToolDragged.add @_onGrabToolDragged, @
@@ -79,13 +79,13 @@ define (require) ->
 
   on:
     cursorStyleChanged: new Signal()
-    gizmoChanged: new Signal()
     grabToolDeselected: new Signal()
     grabToolSelected: new Signal()
     grabToolStarted: new Signal()
     grabToolStopped: new Signal()
     grabToolDragged: new Signal()
     gridChanged: new Signal()
+    objectChanged: new Signal()
     objectDeselected: new Signal()
     objectSelected: new Signal()
     stylusDragged: new Signal()
@@ -115,7 +115,7 @@ define (require) ->
   _onCursorStyleChanged: (newStyle) ->
     @_setCursor newStyle
 
-  _onGizmoChanged: ->
+  _onObjectChanged: ->
     @_render()
 
   _onStylusMoved: (e) ->

@@ -24,6 +24,8 @@ define ["gl-matrix", "./material", "./utils", "./bounding_box", "./bounding_disc
     setX: (value) ->
       @_x = value
       @invalidateWorldTransform()
+    getX: -> @_x
+    getY: -> @_y
 
     getPosition: -> gl.vec2.fromValues @_x, @_y
     setPosition: (value) ->

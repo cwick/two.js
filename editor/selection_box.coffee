@@ -16,7 +16,7 @@ define ["gl-matrix", "two/box", "two/shape_material", "two/color", "two/utils"],
           fillColor: "white"
           isFixedSize: true
 
-      @_signals = options.signals
+      @on = options.signals
       @_scaleDirectionY = options.scaleDirectionY
       @_scaleDirectionX = options.scaleDirectionX
 
@@ -33,7 +33,7 @@ define ["gl-matrix", "two/box", "two/shape_material", "two/color", "two/utils"],
       super Utils.merge(
         scaleDirectionX: @_scaleDirectionX
         scaleDirectionY: @_scaleDirectionY
-        signals: @_signals, overrides)
+        signals: @on, overrides)
 
     getBoundingWidth: -> @width * 2
     getBoundingHeight: -> @height * 2
@@ -64,10 +64,10 @@ define ["gl-matrix", "two/box", "two/shape_material", "two/color", "two/utils"],
       ]
 
       @getParent().shrinkWrap @_object
-      @_signals.gizmoChanged.dispatch @
+      @on.objectChanged.dispatch @_object
 
     onStylusMoved: ->
-      @_signals.cursorStyleChanged.dispatch @getName()
+      @on.cursorStyleChanged.dispatch @getName()
 
     _adjustStylusForUniformScale: (stylusPosition) ->
       boundingBox = @getParent().getBoundingBox()
@@ -83,12 +83,13 @@ define ["gl-matrix", "two/box", "two/shape_material", "two/color", "two/utils"],
       [snapX, snapY]
 
   class SelectionBox extends Box
-    constructor: (@_signals) ->
+    constructor: (@on) ->
       options =
         material: new ShapeMaterial(strokeColor: SELECTION_COLOR, fillColor: SELECTION_FILL_COLOR)
         name: "selection-box"
       super options
 
+      @on.objectChanged.add @_onObjectChanged, @
       @_buildResizeHandles()
 
     attachTo: (object) ->
@@ -124,7 +125,7 @@ define ["gl-matrix", "two/box", "two/shape_material", "two/color", "two/utils"],
       largeHandle = new ResizeHandle
         width: LARGE_HANDLE_SIZE
         height: LARGE_HANDLE_SIZE
-        signals: @_signals
+        signals: @on
 
       smallHandle = largeHandle.clone(width: SMALL_HANDLE_SIZE, height: SMALL_HANDLE_SIZE)
 
@@ -173,7 +174,7 @@ define ["gl-matrix", "two/box", "two/shape_material", "two/color", "two/utils"],
         pixelOffsetX: -SMALL_HANDLE_PADDING))
 
     onStylusMoved: ->
-      @_signals.cursorStyleChanged.dispatch "move"
+      @on.cursorStyleChanged.dispatch "move"
 
     onDragged: (e) ->
       newPosition = gl.vec2.create()
@@ -181,8 +182,10 @@ define ["gl-matrix", "two/box", "two/shape_material", "two/color", "two/utils"],
 
       @setPosition newPosition
       @_object.setPosition newPosition
-      @_signals.gizmoChanged.dispatch @
+      @on.objectChanged.dispatch @_object
 
     onActivated: ->
       @_initialPosition = @getPosition()
 
+    _onObjectChanged: (object) ->
+      @shrinkWrap object if object is @_object
