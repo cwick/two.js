@@ -1,4 +1,4 @@
-define ["jquery"], ($) ->
+define ["jquery", "../utils"], ($, Utils) ->
   class Control
     constructor: (@$domElement = $("<div/>")) ->
       @domElement = @$domElement.get(0)
@@ -16,3 +16,16 @@ define ["jquery"], ($) ->
 
     blur: ->
       @$domElement.blur()
+
+    getOpacity: ->
+      @$domElement.css "opacity"
+    setOpacity: (value) ->
+      @$domElement.css "opacity", value
+
+    setWidth: (value) ->
+      @$domElement.width value
+
+    setTranslation: (x,y) ->
+      Utils.setTranslation @$domElement, x, y
+
+

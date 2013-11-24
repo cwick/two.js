@@ -6,10 +6,15 @@ define ["jquery", "./lib/dialog", "./lib/number_input"], ($, Dialog, NumberInput
       @on.objectSelected.add @_onObjectSelected, @
       @on.objectDeselected.add @_onObjectDeselected, @
       @on.objectChanged.add @_onObjectChanged, @
+      @on.gizmoDragged.add @_onGizmoDragged, @
+      @on.gizmoDeactivated.add @_onGizmoDeactivated, @
 
       @objectPositionX = new NumberInput()
       @objectPositionY = new NumberInput()
       @objectScale = new NumberInput()
+
+      @setWidth 200
+      @setTranslation 50, 50
 
       @setBody(
         """
@@ -118,6 +123,11 @@ define ["jquery", "./lib/dialog", "./lib/number_input"], ($, Dialog, NumberInput
     _onInputChanged: (e) ->
       @_copyToObject(@_object)
       $(e.target).blur()
+
+    _onGizmoDragged: ->
+      @hide()
+    _onGizmoDeactivated: ->
+      @show()
 
     _copyToObject: (object) ->
       object.setName @$domElement.find(".inspector-object-name").val()

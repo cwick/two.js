@@ -79,6 +79,9 @@ define (require) ->
 
   on:
     cursorStyleChanged: new Signal()
+    gizmoActivated: new Signal()
+    gizmoDeactivated: new Signal()
+    gizmoDragged: new Signal()
     grabToolDeselected: new Signal()
     grabToolSelected: new Signal()
     grabToolStarted: new Signal()
@@ -127,20 +130,25 @@ define (require) ->
       @on.grabToolStarted.dispatch()
     else
       @_activeGizmo = @_pickGizmo(e.canvasPoint)
-      @_activeGizmo?.onActivated()
+      if @_activeGizmo?
+        @_activeGizmo.onActivated()
+        @on.gizmoActivated.dispatch @_activeGizmo
 
   _onStylusDragged: (e) ->
     @_stylusPosition = e.canvasEndPoint
     e.calculateWorldCoordinates(@projector)
     if @_grabbing
       @on.grabToolDragged.dispatch(e)
-    else
-      @_activeGizmo?.onDragged(e)
+    else if @_activeGizmo?
+      @_activeGizmo.onDragged(e)
+      @on.gizmoDragged.dispatch @_activeGizmo
 
   _onStylusReleased: (e) ->
     if @_activeGizmo
+      oldGizmo = @_activeGizmo
       @_activeGizmo = null
       @_updateCursorStyle()
+      @on.gizmoDeactivated.dispatch oldGizmo
       return
 
     if @_grabbing

@@ -4,8 +4,6 @@ define ["jquery", "../mouse_buttons", "./draggable", "./resizable", "./control"]
     constructor: ->
       super $("<div/>", class: "panel dialog draggable resizable")
 
-      @$domElement.width "200px"
-
       for c in ["bottom-resize"
                 "top-resize",
                 "right-resize",
