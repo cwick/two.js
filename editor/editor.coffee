@@ -8,14 +8,11 @@ define (require) ->
   Disc = require "two/disc"
   EditorInput = require "./editor_input"
   Grid = require "./grid"
-  KeyCodes = require "./key_codes"
   ShapeMaterial = require "two/shape_material"
-  MouseButtons = require "./mouse_buttons"
   Projector = require "two/projector"
   Scene = require "two/scene"
   SelectionBox = require "./selection_box"
   Signal = require "signals"
-  Utils = require "two/utils"
 
   run: ->
     dialog = new Dialog()

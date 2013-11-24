@@ -1,5 +1,5 @@
-define ["gl-matrix", "two/box", "two/shape_material", "two/color", "./mouse_buttons", "two/utils"], \
-       (gl, Box, ShapeMaterial, Color, MouseButtons, Utils) ->
+define ["gl-matrix", "two/box", "two/shape_material", "two/color", "two/utils"], \
+       (gl, Box, ShapeMaterial, Color, Utils) ->
 
   SELECTION_COLOR = new Color(r: 20, g: 0, b: 229)
   SELECTION_FILL_COLOR = SELECTION_COLOR.clone(a: 0.1)
