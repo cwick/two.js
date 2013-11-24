@@ -216,11 +216,11 @@ define (require) ->
 
   _onStylusDragged: (e) ->
     @_stylusPosition = e.canvasEndPoint
-    worldDelta = @_calculateWorldTranslation(e.canvasStartPoint, e.canvasEndPoint)
+    e.calculateWorldCoordinates(@projector)
     if @_grabbing
-      @on.grabToolDragged.dispatch(worldDelta: worldDelta)
+      @on.grabToolDragged.dispatch(e)
     else
-      @_activeGizmo?.onDragged(worldDelta: worldDelta)
+      @_activeGizmo?.onDragged(e)
 
   _onStylusReleased: (e) ->
     if @_activeGizmo
@@ -234,7 +234,7 @@ define (require) ->
 
     selectionThreshold = 2
     return unless e.isOnCanvas
-    return if Math.abs(e.delta[0]) > selectionThreshold || Math.abs(e.delta[1]) > selectionThreshold
+    return if Math.abs(e.canvasDelta[0]) > selectionThreshold || Math.abs(e.canvasDelta[1]) > selectionThreshold
     return if @projector.pick(e.canvasStartPoint, @sceneGizmos)?
 
     object = @projector.pick(e.canvasStartPoint, @scene)
@@ -281,7 +281,7 @@ define (require) ->
   _onGrabToolDragged: (e) ->
     newCameraPosition = gl.vec2.create()
 
-    gl.vec2.subtract newCameraPosition, @_initialCameraPosition, e.worldDelta
+    gl.vec2.subtract newCameraPosition, @_initialCameraPosition, e.worldTranslation
 
     @camera.setPosition newCameraPosition
     @_render()
@@ -305,10 +305,3 @@ define (require) ->
   _pickGizmo: (canvasPoint) ->
     @projector.pick(canvasPoint, @sceneGizmos)
 
-  _calculateWorldTranslation: (startPoint, endPoint) ->
-    worldStartPoint = @projector.unproject(startPoint)
-    worldEndPoint = @projector.unproject(endPoint)
-    worldTranslation = gl.vec2.create()
-    gl.vec2.subtract worldTranslation, worldEndPoint, worldStartPoint
-
-    worldTranslation

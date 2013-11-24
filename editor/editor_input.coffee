@@ -1,5 +1,11 @@
-define ["gl-matrix", "jquery", "two/utils", "./key_codes", "./mouse_buttons", "jquery.mousewheel"], \
-       (gl, $, Utils, KeyCodes, MouseButtons) ->
+define ["gl-matrix",
+        "jquery",
+        "./key_codes",
+        "./mouse_buttons",
+        "editor/stylus_drag_event",
+        "jquery.mousewheel"], \
+       (gl, $, KeyCodes, MouseButtons, StylusDragEvent) ->
+
   class EditorInput
     constructor: (@signals, @canvas) ->
       $(document).on "mousewheel keydown keyup mousedown mouseup mousemove", => @_onUserInput.apply @, arguments
@@ -45,10 +51,7 @@ define ["gl-matrix", "jquery", "two/utils", "./key_codes", "./mouse_buttons", "j
     _onMouseup: (e) ->
       return unless @_isStylusTouching() && e.which == MouseButtons.LEFT
 
-      @signals.stylusReleased.dispatch
-        delta: @_getStylusDelta(e.pageX, e.pageY)
-        canvasStartPoint: gl.vec2.clone(@_stylusCanvasTouchPoint)
-        isOnCanvas: e.target == @canvas
+      @signals.stylusReleased.dispatch @_createStylusDragEvent(e)
 
       return e.target == @canvas
 
@@ -60,15 +63,17 @@ define ["gl-matrix", "jquery", "two/utils", "./key_codes", "./mouse_buttons", "j
 
       return e.target == @canvas
 
-    _onStylusTouched: (options) ->
-      @_stylusPageTouchPoint = options.pagePoint
-      @_stylusCanvasTouchPoint = options.canvasPoint
+    _dispatchStylusDragged: (e) ->
+      @signals.stylusDragged.dispatch @_createStylusDragEvent(e)
 
-    _onStylusReleased: ->
-      @_stylusPageTouchPoint = @_stylusCanvasTouchPoint = null
+    _dispatchStylusMoved: (e) ->
+      @signals.stylusMoved.dispatch(canvasPoint: [e.offsetX, e.offsetY])
 
-    _isStylusTouching: ->
-      @_stylusCanvasTouchPoint?
+    _createStylusDragEvent: (e) ->
+      new StylusDragEvent
+        canvasStartPoint: gl.vec2.clone(@_stylusCanvasTouchPoint)
+        canvasDelta: @_getStylusDelta(e.pageX, e.pageY)
+        isOnCanvas: e.target == @canvas
 
     _getStylusDelta: (x,y) ->
       delta = gl.vec2.create()
@@ -78,13 +83,13 @@ define ["gl-matrix", "jquery", "two/utils", "./key_codes", "./mouse_buttons", "j
 
       delta
 
-    _dispatchStylusDragged: (e) ->
-      delta = @_getStylusDelta(e.pageX, e.pageY)
-      @signals.stylusDragged.dispatch
-        canvasStartPoint: gl.vec2.clone(@_stylusCanvasTouchPoint)
-        canvasEndPoint: [@_stylusCanvasTouchPoint[0] + delta[0], @_stylusCanvasTouchPoint[1] + delta[1]]
-        delta: delta
+    _isStylusTouching: ->
+      @_stylusCanvasTouchPoint?
 
-    _dispatchStylusMoved: (e) ->
-      @signals.stylusMoved.dispatch(canvasPoint: [e.offsetX, e.offsetY])
+    _onStylusTouched: (options) ->
+      @_stylusPageTouchPoint = options.pagePoint
+      @_stylusCanvasTouchPoint = options.canvasPoint
+
+    _onStylusReleased: ->
+      @_stylusPageTouchPoint = @_stylusCanvasTouchPoint = null
 

@@ -53,15 +53,15 @@ define ["gl-matrix", "two/box", "two/shape_material", "two/color", "./mouse_butt
       @_initialPosition = @getParent().getPosition()
 
     onDragged: (e) ->
-      worldDelta = gl.vec2.clone(e.worldDelta)
+      worldTranslation = gl.vec2.clone(e.worldTranslation)
 
-      worldDelta[0] *= @_scaleDirectionX
+      worldTranslation[0] *= @_scaleDirectionX
 
-      newScale = @_initialScale * (1 - worldDelta[0]/@_initialWidth)
+      newScale = @_initialScale * (1 - worldTranslation[0]/@_initialWidth)
       @_object.setScale newScale
       @_object.setPosition [
-        @_initialPosition[0] + @_scaleDirectionX*worldDelta[0]/2,
-        @_initialPosition[1] + @_scaleDirectionY*worldDelta[0]/2
+        @_initialPosition[0] + @_scaleDirectionX*worldTranslation[0]/2,
+        @_initialPosition[1] + @_scaleDirectionY*worldTranslation[0]/2
       ]
 
       @getParent().shrinkWrap @_object
@@ -166,7 +166,7 @@ define ["gl-matrix", "two/box", "two/shape_material", "two/color", "./mouse_butt
 
     onDragged: (e) ->
       newPosition = gl.vec2.create()
-      gl.vec2.add newPosition, e.worldDelta, @_initialPosition
+      gl.vec2.add newPosition, e.worldTranslation, @_initialPosition
 
       @setPosition newPosition
       @_object.setPosition newPosition

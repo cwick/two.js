@@ -1,5 +1,4 @@
 define ["gl-matrix", "./shape", "./utils"], (gl, Shape, Utils) ->
-
   class Box extends Shape
     constructor: (options={}) ->
       super
