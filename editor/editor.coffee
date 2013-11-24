@@ -163,6 +163,7 @@ define (require) ->
     @on.stylusTouched.add @_onStylusTouched, @
 
     @on.zoomLevelChanged.add @_onZoomLevelChanged, @
+    Image.loaded.add @_onImageLoaded, @
 
   on:
     cursorStyleChanged: new Signal()
@@ -287,6 +288,9 @@ define (require) ->
     gl.vec2.subtract newCameraPosition, @_initialCameraPosition, e.worldTranslation
 
     @camera.setPosition newCameraPosition
+    @_render()
+
+  _onImageLoaded: ->
     @_render()
 
   _setCursor: (cursor) ->

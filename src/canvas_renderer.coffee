@@ -23,6 +23,8 @@ define ["jquery",
       @_width = options.width
       @_height = options.height
 
+      @_disableImageSmoothing()
+
     getAspectRatio: -> @domElement.width / @domElement.height
     getWidth: -> @_width
     getHeight: -> @_height
@@ -157,3 +159,7 @@ define ["jquery",
       else
         throw new Error("Unknown material type #{material.constructor.name}")
 
+    _disableImageSmoothing: ->
+      @_context.imageSmoothingEnabled = false
+      @_context.mozImageSmoothingEnabled = false
+      @_context.webkitImageSmoothingEnabled = false

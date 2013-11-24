@@ -1,15 +1,19 @@
 define ["signals"], (Signal) ->
   class Image
-    constructor: (path) ->
+    constructor: (@path) ->
+      @loaded = new Signal()
+      @loaded.memorize = true
+
       @_imageData = new window.Image()
-      @_imageData.onload = => @loaded.dispatch()
+      @_imageData.onload = => @_onImageLoaded()
       @_imageData.src = path
 
     getImageData: -> @_imageData
     getWidth: ->@_imageData.width
     getHeight: -> @_imageData.height
 
-    loaded: new Signal()
+    @loaded = new Signal()
 
-    @::loaded.memorize = true
-
+    _onImageLoaded: ->
+      @loaded.dispatch()
+      Image.loaded.dispatch()
