@@ -4,15 +4,19 @@ define (require) ->
   Box = require "two/box"
   Camera = require "two/camera"
   CanvasRenderer = require "two/canvas_renderer"
+  Color = require "two/color"
   Dialog = require "./dialog"
   Disc = require "two/disc"
   EditorInput = require "./editor_input"
   Grid = require "./grid"
+  Image = require "two/image"
   ShapeMaterial = require "two/shape_material"
+  SpriteMaterial = require "two/sprite_material"
   Projector = require "two/projector"
   Scene = require "two/scene"
   SelectionBox = require "./selection_box"
   Signal = require "signals"
+  Sprite = require "two/sprite"
 
   run: ->
     dialog = new Dialog()
@@ -118,6 +122,7 @@ define (require) ->
     @scene.add new Disc(radius: 3, scale: 0.7, material: new ShapeMaterial(fillColor: "#BE0028"))
     @scene.add new Disc(x:5, y:-3, radius: 2, material: new ShapeMaterial(fillColor: "green"))
     @scene.add new Box(x:-5, y:-1, width: 4, height: 6, material: new ShapeMaterial(fillColor: "yellow", strokeColor: "red"))
+    @scene.add new Sprite(material: new SpriteMaterial(image: new Image("assets/mario.png")))
 
     @sceneGrid.add new Grid()
 

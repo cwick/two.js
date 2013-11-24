@@ -2,11 +2,12 @@ define ["jquery",
         "gl-matrix",
         "./box",
         "./disc",
+        "./sprite",
         "./line_group",
         "./shape",
         "./shape_material",
         "./line_material"], \
-       ($, gl, Box, Disc, LineGroup, Shape, ShapeMaterial, LineMaterial) ->
+       ($, gl, Box, Disc, Sprite, LineGroup, Shape, ShapeMaterial, LineMaterial) ->
   class CanvasRenderer
     constructor: (options) ->
       @$domElement = $("<canvas/>")
@@ -113,10 +114,10 @@ define ["jquery",
           2*Math.PI)
       else if object instanceof Box
         @_context.rect(
-          -object.width/2,
-          -object.height/2,
-          object.width,
-          object.height)
+          -object.getWidth()/2,
+          -object.getHeight()/2,
+          object.getWidth(),
+          object.getHeight())
       else if object instanceof LineGroup
         begin = true
         for v in object.vertices
@@ -129,6 +130,17 @@ define ["jquery",
         @_context.stroke()
       else
         throw new Error("Unknown object type #{object.constructor.name}")
+
+      if object instanceof Sprite
+        image = object.material.image
+        if image?
+          @_context.scale 1, -1
+          @_context.drawImage(
+            image.getImageData(),
+            -object.getWidth()/2,
+            -object.getHeight()/2,
+            object.getWidth(),
+            object.getHeight())
 
       if object instanceof Shape
         @_context.fill() unless object.material.fillColor.a is 0
