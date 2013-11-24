@@ -129,7 +129,7 @@ define (require) ->
     @minCameraWidth = 1
     @zoomSpeed = 1
 
-    @_selectionBox = new SelectionBox(@on, @projector)
+    @_selectionBox = new SelectionBox(@on)
     @_render()
 
     new EditorInput(@on, @canvas)

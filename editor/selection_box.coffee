@@ -16,12 +16,10 @@ define ["gl-matrix", "two/box", "two/shape_material", "two/color", "two/utils"],
           fillColor: "white"
           isFixedSize: true
 
-      @_projector = options.projector
       @_signals = options.signals
       @_scaleDirectionY = options.scaleDirectionY
       @_scaleDirectionX = options.scaleDirectionX
 
-      delete options.projector
       delete options.signals
       delete options.scaleDirectionX
       delete options.scaleDirectionY
@@ -35,7 +33,6 @@ define ["gl-matrix", "two/box", "two/shape_material", "two/color", "two/utils"],
       super Utils.merge(
         scaleDirectionX: @_scaleDirectionX
         scaleDirectionY: @_scaleDirectionY
-        projector: @_projector
         signals: @_signals, overrides)
 
     getBoundingWidth: -> @width * 2
@@ -53,6 +50,8 @@ define ["gl-matrix", "two/box", "two/shape_material", "two/color", "two/utils"],
       @_initialPosition = @getParent().getPosition()
 
     onDragged: (e) ->
+      e.setWorldEndPoint(@_adjustStylusForUniformScale(e.worldEndPoint))
+
       worldTranslation = gl.vec2.clone(e.worldTranslation)
 
       worldTranslation[0] *= @_scaleDirectionX
@@ -70,8 +69,21 @@ define ["gl-matrix", "two/box", "two/shape_material", "two/color", "two/utils"],
     onStylusMoved: ->
       @_signals.cursorStyleChanged.dispatch @getName()
 
+    _adjustStylusForUniformScale: (stylusPosition) ->
+      boundingBox = @getParent().getBoundingBox()
+      slope = boundingBox.getHeight() / boundingBox.getWidth()
+      slope *= @_scaleDirectionX * @_scaleDirectionY
+
+      stylusX = stylusPosition[0]
+      stylusY = stylusPosition[1]
+
+      snapX = 0.5*(stylusX + boundingBox.getX()) + (stylusY - boundingBox.getY())/(2*slope)
+      snapY = slope*(snapX - boundingBox.getX()) + boundingBox.getY()
+
+      [snapX, snapY]
+
   class SelectionBox extends Box
-    constructor: (@_signals, @_projector) ->
+    constructor: (@_signals) ->
       options =
         material: new ShapeMaterial(strokeColor: SELECTION_COLOR, fillColor: SELECTION_FILL_COLOR)
         name: "selection-box"
@@ -113,7 +125,6 @@ define ["gl-matrix", "two/box", "two/shape_material", "two/color", "two/utils"],
         width: LARGE_HANDLE_SIZE
         height: LARGE_HANDLE_SIZE
         signals: @_signals
-        projector: @_projector
 
       smallHandle = largeHandle.clone(width: SMALL_HANDLE_SIZE, height: SMALL_HANDLE_SIZE)
 

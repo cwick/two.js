@@ -24,6 +24,12 @@ define ["gl-matrix", "two/utils"], (gl, Utils) ->
     calculateWorldCoordinates: (projector) ->
       @worldStartPoint = projector.unproject(@canvasStartPoint)
       @worldEndPoint = projector.unproject(@canvasEndPoint)
+      @_calculateWorldTranslation()
+
+    setWorldEndPoint: (point) ->
+      @worldEndPoint = gl.vec2.clone(point)
+      @_calculateWorldTranslation()
+
+    _calculateWorldTranslation: ->
       @worldTranslation = gl.vec2.create()
       gl.vec2.subtract @worldTranslation, @worldEndPoint, @worldStartPoint
-
