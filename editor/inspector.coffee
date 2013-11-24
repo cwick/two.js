@@ -1,4 +1,4 @@
-define ["jquery", "./lib/dialog", "./key_codes"], ($, Dialog, KeyCodes) ->
+define ["jquery", "./lib/dialog", "./lib/number_input"], ($, Dialog, NumberInput) ->
   class Inspector extends Dialog
     constructor: (@on) ->
       super
@@ -6,6 +6,10 @@ define ["jquery", "./lib/dialog", "./key_codes"], ($, Dialog, KeyCodes) ->
       @on.objectSelected.add @_onObjectSelected, @
       @on.objectDeselected.add @_onObjectDeselected, @
       @on.objectChanged.add @_onObjectChanged, @
+
+      @objectPositionX = new NumberInput()
+      @objectPositionY = new NumberInput()
+      @objectScale = new NumberInput()
 
       @setBody(
         """
@@ -20,10 +24,7 @@ define ["jquery", "./lib/dialog", "./key_codes"], ($, Dialog, KeyCodes) ->
             </tr>
             <tr>
               <td>Position</td>
-              <td>
-                <input class="inspector-object-position-x" type="number"></input>
-                <input class="inspector-object-position-y" type="number"></input>
-              </td>
+              <td id="inspector-object-position"></td>
             </tr>
             <tr>
               <td>Rotation</td>
@@ -33,10 +34,7 @@ define ["jquery", "./lib/dialog", "./key_codes"], ($, Dialog, KeyCodes) ->
             </tr>
             <tr>
               <td>Scale</td>
-              <td>
-                <input class="inspector-object-scale-x" type="number" />
-                <input class="inspector-object-scale-y" type="number" />
-              </td>
+              <td id="inspector-object-scale"></td>
             </tr>
             <tr>
               <td>Visible</td>
@@ -96,9 +94,13 @@ define ["jquery", "./lib/dialog", "./key_codes"], ($, Dialog, KeyCodes) ->
           </div>
         """)
 
+      positionRow = @getBody().find("#inspector-object-position")
+      positionRow.append @objectPositionX.domElement
+      positionRow.append @objectPositionY.domElement
+      scaleRow = @getBody().find("#inspector-object-scale")
+      scaleRow.append @objectScale.domElement
+
       @$domElement.find("input").change (e) => @_onInputChanged(e)
-      @$domElement.find("input").focus (e) => @_onInputFocus(e)
-      @$domElement.find("input").keydown (e) => @_onInputKeydown(e)
 
     _onObjectSelected: (object) ->
       @_object = object
@@ -117,23 +119,16 @@ define ["jquery", "./lib/dialog", "./key_codes"], ($, Dialog, KeyCodes) ->
       @_copyToObject(@_object)
       $(e.target).blur()
 
-    _onInputFocus: (e) ->
-      window.setTimeout (-> $(e.target).select()), 0
-
-    _onInputKeydown: (e) ->
-      $(e.target).blur() if e.keyCode is KeyCodes.ENTER
-
     _copyToObject: (object) ->
       object.setName @$domElement.find(".inspector-object-name").val()
-      object.setX parseFloat(@$domElement.find(".inspector-object-position-x").val())
-      object.setY parseFloat(@$domElement.find(".inspector-object-position-y").val())
-      object.setScale parseFloat(@$domElement.find(".inspector-object-scale-x").val())
+      object.setX @objectPositionX.getValue()
+      object.setY @objectPositionY.getValue()
+      object.setScale @objectScale.getValue()
       @on.objectChanged.dispatch object
 
     _copyFromObject: (object) ->
       @$domElement.find(".inspector-object-name").val object.getName()
-      @$domElement.find(".inspector-object-position-x").val object.getX().toFixed(2)
-      @$domElement.find(".inspector-object-position-y").val object.getY().toFixed(2)
-      @$domElement.find(".inspector-object-scale-x").val object.getScale().toFixed(2)
-      @$domElement.find(".inspector-object-scale-y").val object.getScale().toFixed(2)
+      @objectPositionX.setValue object.getX()
+      @objectPositionY.setValue object.getY()
+      @objectScale.setValue object.getScale()
 
