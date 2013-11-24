@@ -2,7 +2,7 @@ define ["gl-matrix", "two/utils"], (gl, Utils) ->
   class StylusDragEvent
     constructor: (options={}) ->
       options = Utils.merge({
-        canvasDelta: [0,0]
+        canvasTranslation: [0,0]
         worldTranslation: [0,0]
         canvasStartPoint: null
         canvasEndPoint: null
@@ -13,9 +13,9 @@ define ["gl-matrix", "two/utils"], (gl, Utils) ->
 
       @[k] = v for k,v of options
 
-      if !@canvasEndPoint? && @canvasStartPoint? && @canvasDelta?
+      if !@canvasEndPoint? && @canvasStartPoint? && @canvasTranslation?
         @canvasEndPoint = gl.vec2.create()
-        gl.vec2.add @canvasEndPoint, @canvasStartPoint, @canvasDelta
+        gl.vec2.add @canvasEndPoint, @canvasStartPoint, @canvasTranslation
 
       if !@worldEndPoint? && @worldStartPoint? && @worldTranslation?
         @worldEndPoint = gl.vec2.create()

@@ -72,7 +72,7 @@ define ["gl-matrix",
     _createStylusDragEvent: (e) ->
       new StylusDragEvent
         canvasStartPoint: gl.vec2.clone(@_stylusCanvasTouchPoint)
-        canvasDelta: @_getStylusDelta(e.pageX, e.pageY)
+        canvasTranslation: @_getStylusDelta(e.pageX, e.pageY)
         isOnCanvas: e.target == @canvas
 
     _getStylusDelta: (x,y) ->
