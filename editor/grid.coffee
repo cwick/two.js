@@ -3,12 +3,12 @@ define ["two/line_group", "two/color", "two/line_material"], (LineGroup, Color, 
     constructor: (options) ->
       vertices = []
 
-      for x in [-100..100] by 1
-        vertices.push [x, -100]
-        vertices.push [x, 100]
-      for y in [-100..100] by 1
-        vertices.push [-100, y]
-        vertices.push [100, y]
+      for x in [-10..10] by 1
+        vertices.push [x, -10]
+        vertices.push [x, 10]
+      for y in [-10..10] by 1
+        vertices.push [-10, y]
+        vertices.push [10, y]
 
       super {
         vertices: vertices
