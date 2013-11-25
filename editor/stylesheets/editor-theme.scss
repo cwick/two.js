@@ -21,7 +21,7 @@ h1 {
   }
   -webkit-border-radius: 8px;
 
-  background-color: rgba(247, 247, 247, 0.95);
+  background-color: rgba(245, 245, 245, 0.93);
 }
 
 .dialog-header {
@@ -30,6 +30,9 @@ h1 {
     style: solid;
     width: 2px;
   }
+}
+.dialog-body {
+  background-color: rgba(255,255,255,0.85);
 }
 
 input, select, textarea {
