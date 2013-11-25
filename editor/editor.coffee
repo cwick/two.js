@@ -52,6 +52,7 @@ define (require) ->
     new EditorInput(@on, @canvas)
 
     $("#show-grid").change (e) => @on.gridChanged.dispatch(isVisible: $(e.target).is(':checked'))
+    $("#snap-to-grid").change (e) => @on.gridSnappingChanged.dispatch(enabled: $(e.target).is(':checked'))
     $("#grab-tool").click => @on.grabToolSelected.dispatch()
     $("#new-sprite").click => @on.spriteCreated.dispatch()
 
@@ -89,6 +90,7 @@ define (require) ->
     grabToolStopped: new Signal()
     grabToolDragged: new Signal()
     gridChanged: new Signal()
+    gridSnappingChanged: new Signal()
     objectChanged: new Signal()
     objectDeselected: new Signal()
     objectSelected: new Signal()

@@ -90,6 +90,7 @@ define ["gl-matrix", "two/box", "two/shape_material", "two/color", "two/utils"],
       super options
 
       @on.objectChanged.add @_onObjectChanged, @
+      @on.gridSnappingChanged.add @_onGridSnappingChanged, @
       @_buildResizeHandles()
 
     attachTo: (object) ->
@@ -180,6 +181,10 @@ define ["gl-matrix", "two/box", "two/shape_material", "two/color", "two/utils"],
       newPosition = gl.vec2.create()
       gl.vec2.add newPosition, e.worldTranslation, @_initialPosition
 
+      if @_isGridSnappingEnabled
+        newPosition[0] = Math.round(newPosition[0])
+        newPosition[1] = Math.round(newPosition[1])
+
       @setPosition newPosition
       @_object.setPosition newPosition
       @on.objectChanged.dispatch @_object
@@ -189,3 +194,6 @@ define ["gl-matrix", "two/box", "two/shape_material", "two/color", "two/utils"],
 
     _onObjectChanged: (object) ->
       @shrinkWrap object if object is @_object
+
+    _onGridSnappingChanged: (e) ->
+      @_isGridSnappingEnabled = e.enabled
