@@ -5,7 +5,7 @@ define ["signals"], (Signal) ->
       @loaded.memorize = true
       @loaded.add (=> callback(); return true) if callback?
 
-      if imageOrURL instanceof window.Image
+      if imageOrURL instanceof window.Image || imageOrURL instanceof window.HTMLImageElement
         @_loadImageData(imageOrURL)
       else if imageOrURL of Image._imageCache
         @_loadCachedImage(imageOrURL)
