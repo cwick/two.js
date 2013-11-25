@@ -2,7 +2,7 @@ define ["jquery", "../mouse_buttons", "./draggable", "./resizable", "./control"]
        ($, MouseButtons, Draggable, Resizable, Control) ->
   class Dialog extends Control
     constructor: (options) ->
-      super $("<div/>", class: "panel dialog draggable resizable")
+      super $("<div/>", class: "panel-vertical dialog draggable resizable")
 
       for c in ["bottom-resize"
                 "top-resize",
