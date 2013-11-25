@@ -23,4 +23,5 @@ define ["jquery", "../utils"], ($, Utils) ->
     setTranslation: (x,y) ->
       Utils.setTranslation @$domElement, x, y
 
-
+    addClass: (c) ->
+      @$domElement.addClass c

@@ -24,5 +24,7 @@ define ["jquery", "./lib/dialog", "./lib/number_input"], ($, Dialog, NumberInput
 
       gridWidth = new NumberInput(digits: 3, value: 10)
       gridHeight = new NumberInput(digits: 3, value: 10)
+      gridWidth.addClass "right-align"
+
       gridWidth.$domElement.insertAfter @$domElement.find("[for='tileset-grid-width']")
       gridHeight.$domElement.insertAfter @$domElement.find("[for='tileset-grid-height']")
