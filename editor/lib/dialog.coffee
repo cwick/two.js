@@ -13,7 +13,7 @@ define ["jquery", "../mouse_buttons", "./draggable", "./resizable", "./control"]
                 "top-left-resize",
                 "top-right-resize",
                 "dialog-header drag-handle",
-                "dialog-body",
+                "dialog-body no-footer",
                 "dialog-footer"]
         @$domElement.append $("<div/>", class: c)
 
@@ -36,4 +36,9 @@ define ["jquery", "../mouse_buttons", "./draggable", "./resizable", "./control"]
 
     setFooter: (value) ->
       @$domElement.find(".dialog-footer").html(value)
+
+      if value
+        @$domElement.find(".dialog-body").removeClass "no-footer"
+      else
+        @$domElement.find(".dialog-body").addClass "no-footer"
 

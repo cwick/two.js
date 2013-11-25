@@ -20,8 +20,10 @@ h1 {
     style: solid;
   }
   -webkit-border-radius: 8px;
+}
 
-  background-color: rgba(245, 245, 245, 0.93);
+.dialog-header, .dialog-footer {
+  background-color: rgba(245, 245, 245, 0.95);
 }
 
 .dialog-header {
@@ -32,7 +34,7 @@ h1 {
   }
 }
 .dialog-body {
-  background-color: rgba(255,255,255,0.85);
+  background-color: rgba(255,255,255,0.96);
 }
 
 input, select, textarea {
