@@ -90,6 +90,12 @@ input[type="text"] {
 textarea {
   vertical-align: middle;
 }
+.image-input {
+  width: 50px;
+  vertical-align: middle;
+  cursor: pointer;
+  image-rendering: -webkit-optimize-contrast;
+}
 
 // http://stackoverflow.com/questions/3790935/can-i-hide-the-html5-number-inputs-spin-box
 input::-webkit-outer-spin-button,

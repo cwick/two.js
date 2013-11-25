@@ -1,4 +1,5 @@
-define ["jquery", "./lib/dialog", "./lib/number_input"], ($, Dialog, NumberInput) ->
+define ["jquery", "./lib/dialog", "./lib/number_input", "./lib/image_input", "two/image", "two/sprite"], \
+       ($, Dialog, NumberInput, ImageInput, Image, Sprite) ->
   class Inspector extends Dialog
     constructor: (@on) ->
       super
@@ -12,6 +13,7 @@ define ["jquery", "./lib/dialog", "./lib/number_input"], ($, Dialog, NumberInput
       @objectPositionX = new NumberInput()
       @objectPositionY = new NumberInput()
       @objectScale = new NumberInput()
+      @spriteImage = new ImageInput()
 
       @setWidth 200
       @setTranslation 50, 50
@@ -46,8 +48,8 @@ define ["jquery", "./lib/dialog", "./lib/number_input"], ($, Dialog, NumberInput
               <td><input type="checkbox"/></td>
             </tr>
             <tr>
-              <td>User Data</td>
-              <td><textarea></textarea></td>
+              <td>Image</td>
+              <td id="inspector-sprite-image"></td>
             </tr>
           </table>
           <table style="display:none">
@@ -93,24 +95,31 @@ define ["jquery", "./lib/dialog", "./lib/number_input"], ($, Dialog, NumberInput
       @setFooter(
         """
           <div class="panel tabs">
-            <span class="tab active">Tab 1</span>
-            <span class="tab">Tab 2</span>
+            <span class="tab active">Object</span>
+            <span class="tab">Sprite</span>
             <span class="tab">Tab 3</span>
           </div>
         """)
 
-      positionRow = @getBody().find("#inspector-object-position")
+      body = @getBody()
+      positionRow = body.find("#inspector-object-position")
       positionRow.append @objectPositionX.domElement
       positionRow.append @objectPositionY.domElement
-      scaleRow = @getBody().find("#inspector-object-scale")
+      scaleRow = body.find("#inspector-object-scale")
       scaleRow.append @objectScale.domElement
 
       @$domElement.find("input").change (e) => @_onInputChanged(e)
+      @spriteImage.changed.add @_onInputChanged, @
+      body.find("#inspector-sprite-image").append @spriteImage.domElement
 
     _onObjectSelected: (object) ->
       @_object = object
       @_copyFromObject object
       @$domElement.find("input").blur()
+      if @_object instanceof Sprite
+        @spriteImage.show()
+      else
+        @spriteImage.hide()
       @show()
 
     _onObjectDeselected: ->
@@ -122,7 +131,7 @@ define ["jquery", "./lib/dialog", "./lib/number_input"], ($, Dialog, NumberInput
 
     _onInputChanged: (e) ->
       @_copyToObject(@_object)
-      $(e.target).blur()
+      $(e?.target).blur()
 
     _onGizmoDragged: ->
       @hide()
@@ -134,6 +143,11 @@ define ["jquery", "./lib/dialog", "./lib/number_input"], ($, Dialog, NumberInput
       object.setX @objectPositionX.getValue()
       object.setY @objectPositionY.getValue()
       object.setScale @objectScale.getValue()
+
+      if object instanceof Sprite
+        object.material.image = new Image(@spriteImage.getValue())
+        object.autoSize()
+
       @on.objectChanged.dispatch object
 
     _copyFromObject: (object) ->
@@ -141,4 +155,6 @@ define ["jquery", "./lib/dialog", "./lib/number_input"], ($, Dialog, NumberInput
       @objectPositionX.setValue object.getX()
       @objectPositionY.setValue object.getY()
       @objectScale.setValue object.getScale()
+      if @_object instanceof Sprite
+        @spriteImage.setValue object.material.image.getImageData()
 
