@@ -10,9 +10,9 @@ define ["jquery", "./lib/dialog", "./lib/number_input", "./lib/image_input", "tw
       @on.gizmoDragged.add @_onGizmoDragged, @
       @on.gizmoDeactivated.add @_onGizmoDeactivated, @
 
-      @objectPositionX = new NumberInput()
-      @objectPositionY = new NumberInput()
-      @objectScale = new NumberInput()
+      @objectPositionX = new NumberInput(digits: 7)
+      @objectPositionY = new NumberInput(digits: 7)
+      @objectScale = new NumberInput(digits: 7)
       @spriteImage = new ImageInput()
 
       @setWidth 200

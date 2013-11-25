@@ -1,11 +1,14 @@
 define ["jquery", "./control", "../key_codes"], ($, Control, KeyCodes) ->
   class NumberInput extends Control
-    constructor: ->
+    constructor: (options={}) ->
       super $("<input/>", type: "number")
 
       @$domElement.focus => @_onFocus()
       @$domElement.keydown (e) => @_onKeydown(e)
       @$domElement.change => @_onChange()
+
+      if options.digits?
+        @$domElement.addClass "digit-#{options.digits}"
 
     setValue: (v) ->
       @$domElement.val v.toFixed(2)
