@@ -22,17 +22,27 @@ h1 {
   -webkit-border-radius: 8px;
 }
 
-.dialog-header, .dialog-footer {
+.dialog-header, .dialog-footer, .toolbar {
   background-color: rgba(245, 245, 245, 0.95);
 }
 
-.dialog-header {
+.dialog-header, .toolbar {
   border-bottom: {
     color: #E2E3E2;
     style: solid;
     width: 2px;
   }
 }
+.toolbar-vertical {
+  @extend .toolbar;
+  border: none;
+  border-right: {
+    color: #E2E3E2;
+    style: solid;
+    width: 2px;
+  }
+}
+
 .dialog-body {
   background-color: rgba(255,255,255,0.96);
 }
@@ -48,6 +58,7 @@ input, select, textarea {
 
 input[type="number"] {
   color: #0076FF;
+  background-color: transparent;
   &:focus {
     color: #111211;
     -webkit-border-radius: 0;

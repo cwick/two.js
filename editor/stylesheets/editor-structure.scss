@@ -6,6 +6,10 @@ h1 {
   margin: 6px;
 }
 
+.hidden {
+  display: none !important;
+}
+
 .title {
   text-align: center;
 }
@@ -76,6 +80,13 @@ h1 {
   cursor: move;
 }
 
+.toolbar {
+  padding: 5px;
+}
+.toolbar-vertical {
+  @extend .toolbar;
+}
+
 input, select, textarea {
   -webkit-box-sizing: border-box;
   width: 100%;
@@ -86,7 +97,6 @@ input, select, textarea {
 input[type="number"] {
   width: 60px;
   border: none;
-  background-color: inherit;
   cursor: ew-resize;
   margin: 4px;
   margin-left: 0px;

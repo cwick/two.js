@@ -1,14 +1,17 @@
-define ["jquery", "./lib/control"], ($, Control) ->
-  class TilesetEditor extends Control
+define ["jquery", "./lib/dialog"], ($, Dialog) ->
+  class TilesetEditor extends Dialog
     constructor: ->
-      super $("<div/>", class: "panel-vertical")
-      @$domElement.append(
+      super
+
+      @setTitle "Tileset"
+      @setToolbar(
         """
-        <div class="panel">
-          <input type="text" style="background-color:blue" value="10">
-          <input type="text" style="background-color:green" value="20">
-          <span style="background-color:red"></span>
-        </div>
+        <input type="number" value="10">
+        <input type="number" value="20">
+        """
+      )
+      @setBody(
+        """
         <div style="overflow: auto">
           <img src="assets/default.png">
         </div>

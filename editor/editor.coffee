@@ -21,11 +21,8 @@ define (require) ->
   TilesetEditor = require "./tileset_editor"
 
   run: ->
-    inspector = new Inspector(@on)
-    tilesetDialog = new Dialog(title: "Tileset")
-    tilesetDialog.setBody (new TilesetEditor()).domElement
-    $("#editor").append inspector.domElement
-    $("#editor").append tilesetDialog.domElement
+    $("#editor").append (new Inspector(@on)).domElement
+    $("#editor").append (new TilesetEditor()).domElement
     $viewport = $(".viewport")
 
 
