@@ -4,14 +4,11 @@ define ["jquery", "../mouse_buttons", "../utils"], ($, MouseButtons, Utils) ->
 
   _onDrag: (e) ->
     return unless e.which == MouseButtons.LEFT
-    $handle = $(e.target)
-    $draggable = $handle.closest('.draggable')
+    $draggable = $(e.target).closest('.draggable')
 
-    offsetX = e.offsetX
-    offsetY = e.offsetY
-
-    borderTop = $draggable[0].clientTop
-    borderLeft = $draggable[0].clientLeft
+    initialTranslation = Utils.getTranslation $draggable
+    startX = e.pageX
+    startY = e.pageY
 
     outerWidth = $draggable.outerWidth()
     outerHeight = $draggable.outerHeight()
@@ -20,8 +17,11 @@ define ["jquery", "../mouse_buttons", "../utils"], ($, MouseButtons, Utils) ->
     parentHeight = $draggable.parent().height()
 
     $(document).on 'mousemove.draggable', (e) =>
-      x = Math.max(e.clientX-offsetX-borderLeft, 0)
-      y = Math.max(e.clientY-offsetY-borderTop, 0)
+      x = initialTranslation[0] + e.pageX - startX
+      y = initialTranslation[1] + e.pageY - startY
+
+      x = Math.max(0, x)
+      y = Math.max(0, y)
 
       x = Math.min(parentWidth  - outerWidth, x)
       y = Math.min(parentHeight - outerHeight, y)

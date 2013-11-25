@@ -6,6 +6,7 @@ define (require) ->
   CanvasRenderer = require "two/canvas_renderer"
   Color = require "two/color"
   Disc = require "two/disc"
+  Dialog = require "./lib/dialog"
   EditorInput = require "./editor_input"
   Grid = require "./grid"
   Image = require "two/image"
@@ -17,10 +18,14 @@ define (require) ->
   SelectionBox = require "./selection_box"
   Signal = require "signals"
   Sprite = require "two/sprite"
+  TilesetEditor = require "./tileset_editor"
 
   run: ->
     inspector = new Inspector(@on)
-    $("#editor").append inspector.$domElement
+    tilesetDialog = new Dialog(title: "Tileset")
+    tilesetDialog.setBody (new TilesetEditor()).domElement
+    $("#editor").append inspector.domElement
+    $("#editor").append tilesetDialog.domElement
     $viewport = $(".viewport")
 
 

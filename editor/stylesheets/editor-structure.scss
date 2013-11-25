@@ -2,6 +2,14 @@
   width: 100%;
 }
 
+h1 {
+  margin: 6px;
+}
+
+.title {
+  text-align: center;
+}
+
 .panel {
   display: -webkit-flex;
   -webkit-user-select: none;
@@ -27,7 +35,6 @@
 
 .dialog-header {
   min-height: 15px;
-  width: 100%;
   -webkit-border-top-left-radius: inherit;
   -webkit-border-top-right-radius: inherit;
 }

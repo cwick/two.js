@@ -18,6 +18,8 @@ define ["jquery", "./lib/dialog", "./lib/number_input", "./lib/image_input", "tw
       @setWidth 200
       @setTranslation 50, 50
 
+      @setTitle "Object Properties"
+
       @setBody(
         """
           <table>

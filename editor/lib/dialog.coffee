@@ -1,7 +1,7 @@
 define ["jquery", "../mouse_buttons", "./draggable", "./resizable", "./control"], \
        ($, MouseButtons, Draggable, Resizable, Control) ->
   class Dialog extends Control
-    constructor: ->
+    constructor: (options) ->
       super $("<div/>", class: "panel dialog draggable resizable")
 
       for c in ["bottom-resize"
@@ -20,11 +20,19 @@ define ["jquery", "../mouse_buttons", "./draggable", "./resizable", "./control"]
       Draggable.enhance @domElement
       Resizable.enhance @domElement
 
+      @setTitle options.title
+
     setBody: (value) ->
       @$domElement.find(".dialog-body").html(value)
 
     getBody: ->
       @$domElement.find(".dialog-body")
+
+    setTitle: (title) ->
+      @setHeader "<h1 class='title'>#{title}</h1>"
+
+    setHeader: (value) ->
+      @$domElement.find(".dialog-header").html(value)
 
     setFooter: (value) ->
       @$domElement.find(".dialog-footer").html(value)
