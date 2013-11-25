@@ -10,9 +10,9 @@ define ["jquery", "./lib/dialog", "./lib/number_input", "./lib/image_input", "tw
       @on.gizmoDragged.add @_onGizmoDragged, @
       @on.gizmoDeactivated.add @_onGizmoDeactivated, @
 
-      @objectPositionX = new NumberInput(digits: 7)
-      @objectPositionY = new NumberInput(digits: 7)
-      @objectScale = new NumberInput(digits: 7)
+      @objectPositionX = new NumberInput(digits: 7, decimalPlaces: 2)
+      @objectPositionY = new NumberInput(digits: 7, decimalPlaces: 2)
+      @objectScale = new NumberInput(digits: 7, decimalPlaces: 2)
       @spriteImage = new ImageInput()
 
       @setWidth 200
@@ -133,7 +133,6 @@ define ["jquery", "./lib/dialog", "./lib/number_input", "./lib/image_input", "tw
 
     _onInputChanged: (e) ->
       @_copyToObject(@_object)
-      $(e?.target).blur()
 
     _onGizmoDragged: ->
       @hide()

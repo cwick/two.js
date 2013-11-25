@@ -1,4 +1,4 @@
-define ["jquery", "./lib/dialog"], ($, Dialog) ->
+define ["jquery", "./lib/dialog", "./lib/number_input"], ($, Dialog, NumberInput) ->
   class TilesetEditor extends Dialog
     constructor: ->
       super
@@ -8,11 +8,9 @@ define ["jquery", "./lib/dialog"], ($, Dialog) ->
         """
         <span>
           <label for="tileset-grid-width">Grid size:</label>
-          <input id="tileset-grid-width" class="digit-3" type="number" value="10">
         </span>
         <span>
           <label for="tileset-grid-height">by</label>
-          <input id="tileset-grid-height" class="digit-3" type="number" value="20">
         </span>
         """
       )
@@ -23,3 +21,8 @@ define ["jquery", "./lib/dialog"], ($, Dialog) ->
         </div>
         """
       )
+
+      gridWidth = new NumberInput(digits: 3, value: 10)
+      gridHeight = new NumberInput(digits: 3, value: 10)
+      gridWidth.$domElement.insertAfter @$domElement.find("[for='tileset-grid-width']")
+      gridHeight.$domElement.insertAfter @$domElement.find("[for='tileset-grid-height']")
