@@ -17,11 +17,6 @@ define ["jquery", "../utils"], ($, Utils) ->
     blur: ->
       @$domElement.blur()
 
-    getOpacity: ->
-      @$domElement.css "opacity"
-    setOpacity: (value) ->
-      @$domElement.css "opacity", value
-
     setWidth: (value) ->
       @$domElement.width value
 
