@@ -2,8 +2,8 @@ define ["gl-matrix", "./shape", "./utils"], (gl, Shape, Utils) ->
   class Box extends Shape
     constructor: (options={}) ->
       super
-      @width = options.width ?= 5
-      @height = options.height ?= 5
+      @width = options.width ?= 1
+      @height = options.height ?= 1
       unless options.name
         @setName "Box (#{@getId()})"
 

@@ -26,6 +26,10 @@ h1 {
   background-color: rgba(245, 245, 245, 0.95);
 }
 
+.toolbar {
+  -webkit-border-radius: 0;
+}
+
 .dialog-header, .toolbar {
   border-bottom: {
     color: #E2E3E2;
@@ -85,5 +89,5 @@ input[type="number"] {
 }
 
 canvas {
-  background-color: bisque;
+  background-color: white;
 }
