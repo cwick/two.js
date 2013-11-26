@@ -8,5 +8,8 @@ require.config
     "two": "."
 
 require ["editor/editor"], (Editor) ->
-  new Editor().run()
+  editor = new Editor()
+
+  $(".main-view").append editor.domElement
+  editor.run()
 

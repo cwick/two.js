@@ -4,6 +4,7 @@ define (require) ->
   Camera = require "two/camera"
   CanvasRenderer = require "two/canvas_renderer"
   Color = require "two/color"
+  Control = require "./lib/control"
   Dialog = require "./lib/dialog"
   EditorInput = require "./editor_input"
   Grid = require "./grid"
@@ -11,8 +12,14 @@ define (require) ->
   Scene = require "two/scene"
   Signal = require "signals"
 
-  class EditorBase
+  class EditorBase extends Control
     constructor: ->
+      super $("<div/>", class: "panel viewport")
+
+      @maxCameraWidth = 1000
+      @minCameraWidth = 1
+      @zoomSpeed = 1
+
       @on =
         cursorStyleChanged: new Signal()
         gizmoActivated: new Signal()
@@ -35,9 +42,11 @@ define (require) ->
         zoomLevelChanged: new Signal()
 
     run: ->
-      $viewport = $(".viewport")
+      @renderer = new CanvasRenderer
+        width: @$domElement.width()
+        height: @$domElement.height()
+        autoClear: false
 
-      @renderer = new CanvasRenderer(width: $viewport.width(), height: $viewport.height(), autoClear: false)
       @scene = new Scene()
       @sceneGizmos = new Scene()
       @sceneGrid = new Scene()
@@ -48,13 +57,7 @@ define (require) ->
 
       @canvas = @renderer.domElement
       @$canvas = $(@canvas)
-      $viewport.append(@$canvas)
-
-      @maxCameraWidth = 1000
-      @minCameraWidth = 1
-      @zoomSpeed = 1
-
-      @render()
+      @$domElement.html(@$canvas)
 
       new EditorInput(@on, @canvas)
 
@@ -80,6 +83,8 @@ define (require) ->
       @on.stylusTouched.add @onStylusTouched, @
 
       @on.zoomLevelChanged.add @onZoomLevelChanged, @
+
+      @render()
 
     render: ->
       @renderer.clear()
