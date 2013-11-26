@@ -1,6 +1,6 @@
 define ->
   setTranslation: (e, x, y) ->
-    e.css("-webkit-transform": "translate3d(#{x}px,#{y}px,0)")
+    e.css("-webkit-transform": "translate3d(#{Math.round(x)}px,#{Math.round(y)}px,0)")
 
   getTranslation: (e) ->
     transform = e.attr("style")

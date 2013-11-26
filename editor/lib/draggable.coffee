@@ -26,7 +26,7 @@ define ["jquery", "../mouse_buttons", "../utils"], ($, MouseButtons, Utils) ->
       x = Math.min(parentWidth  - outerWidth, x)
       y = Math.min(parentHeight - outerHeight+1, y)
 
-      Utils.setTranslation $draggable, Math.round(x), Math.round(y)
+      Utils.setTranslation $draggable, x, y
 
     $(document).one "mouseup", ->
       $(document).off 'mousemove.draggable'
