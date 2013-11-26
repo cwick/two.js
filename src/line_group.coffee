@@ -7,9 +7,5 @@ define ["./line_material", "./object2d"], (LineMaterial, Object2d) ->
       @vertices = options.vertices ?= []
       super
 
-    # TODO: Implement me
-    updateBoundingBox: ->
-    # TODO: Implement me
-    updateBoundingDisc: ->
 
 

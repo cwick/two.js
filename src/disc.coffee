@@ -6,12 +6,6 @@ define ["./shape"], (Shape) ->
       unless options.name
         @setName "Disc (#{@getId()})"
 
-    updateBoundingDisc: (disc) ->
-      disc.setPosition @getPosition()
-      disc.setRadius @radius * @getScale()
-
-    updateBoundingBox: (box) ->
-      box.setPosition @getPosition()
-      box.setWidth @getScale()*@radius*2
-      box.setHeight @getScale()*@radius*2
+    getBoundingWidth: -> @radius*2
+    getBoundingHeight: -> @radius*2
 

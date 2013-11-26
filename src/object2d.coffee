@@ -1,5 +1,5 @@
-define ["gl-matrix", "./material", "./utils", "./bounding_box", "./bounding_disc"], \
-       (gl, Material, Utils, BoundingBox, BoundingDisc) ->
+define ["gl-matrix", "./material", "./utils", "./bounding_box"], \
+       (gl, Material, Utils, BoundingBox) ->
   class Object2d
     @_nextId = 1
 
@@ -44,12 +44,6 @@ define ["gl-matrix", "./material", "./utils", "./bounding_box", "./bounding_disc
 
       @_boundingBox
 
-    getBoundingDisc: ->
-      unless @_isBoundingDiscValid
-        @_recomputeBoundingDisc()
-
-      @_boundingDisc
-
     add: (child) ->
       child._parent = @
       @_children.push child
@@ -79,12 +73,6 @@ define ["gl-matrix", "./material", "./utils", "./bounding_box", "./bounding_disc
         pixelOffsetX: @pixelOffsetX
         pixelOffsetY: @pixelOffsetY, overrides
 
-    updateBoundingBox: ->
-      throw new Error("updateBoundingBox must be implemented in derived classes")
-
-    updateBoundingDisc: ->
-      throw new Error("updateBoundingDisc must be implemented in derived classes")
-
     invalidateWorldTransform: ->
       @_isWorldMatrixValid = false
       @invalidateBoundingGeometry()
@@ -92,7 +80,7 @@ define ["gl-matrix", "./material", "./utils", "./bounding_box", "./bounding_disc
       child.invalidateWorldTransform() for child in @_children
 
     invalidateBoundingGeometry: ->
-      @_isBoundingBoxValid = @_isBoundingDiscValid = false
+      @_isBoundingBoxValid = false
 
     _updateWorldMatrix: ->
       unless @_worldMatrix?
@@ -112,20 +100,12 @@ define ["gl-matrix", "./material", "./utils", "./bounding_box", "./bounding_disc
       unless @_boundingBox?
         @_boundingBox = new BoundingBox()
 
-      @updateBoundingBox @_boundingBox
+      @_boundingBox.setPosition @getPosition()
+      @_boundingBox.setWidth @getScale()*@getBoundingWidth()
+      @_boundingBox.setHeight @getScale()*@getBoundingHeight()
 
       if @_parent?
         @_boundingBox.applyMatrix @_parent.getWorldMatrix()
 
       @_isBoundingBoxValid = true
 
-    _recomputeBoundingDisc: ->
-      unless @_boundingDisc?
-        @_boundingDisc = new BoundingDisc()
-
-      @updateBoundingDisc @_boundingDisc
-
-      if @_parent?
-        @_boundingDisc.applyMatrix @_parent.getWorldMatrix()
-
-      @_isBoundingDiscValid = true

@@ -20,16 +20,6 @@ define (require) ->
 
       expect(object.updateBoundingBox.callCount).toEqual 1
 
-    it "caches its bounding disc", ->
-      object = new Object2d()
-      object.updateBoundingDisc = ->
-      spyOn(object, "updateBoundingDisc")
-
-      object.getBoundingDisc()
-      object.getBoundingDisc()
-
-      expect(object.updateBoundingDisc.callCount).toEqual 1
-
     describe "when its position changes", ->
       object = null
       beforeEach ->
@@ -50,14 +40,6 @@ define (require) ->
         object.getBoundingBox()
         expect(object._isBoundingBoxValid).toBe true
 
-      it "updates its bounding disc", ->
-        object.getBoundingDisc()
-        object.setPosition [3,4]
-
-        expect(object._isBoundingDiscValid).toBe false
-        object.getBoundingDisc()
-        expect(object._isBoundingDiscValid).toBe true
-
     describe "when a parent's position changes", ->
       parent = child1 = child2 = null
 
@@ -73,11 +55,6 @@ define (require) ->
         child2.updateBoundingBox = ->
         spyOn child1, "updateBoundingBox"
         spyOn child2, "updateBoundingBox"
-
-        child1.updateBoundingDisc = ->
-        child2.updateBoundingDisc = ->
-        spyOn child1, "updateBoundingDisc"
-        spyOn child2, "updateBoundingDisc"
 
       it "the children's world matrices are updated", ->
         child1.getWorldMatrix()
@@ -98,18 +75,6 @@ define (require) ->
 
         expect(child1.updateBoundingBox.callCount).toEqual 2
         expect(child2.updateBoundingBox.callCount).toEqual 2
-
-      it "the children's bounding discs are updated", ->
-        child1.getBoundingDisc()
-        child2.getBoundingDisc()
-
-        parent.setPosition [10, 10]
-
-        child1.getBoundingDisc()
-        child2.getBoundingDisc()
-
-        expect(child1.updateBoundingDisc.callCount).toEqual 2
-        expect(child2.updateBoundingDisc.callCount).toEqual 2
 
     describe "when adding children", ->
       parent = child = null

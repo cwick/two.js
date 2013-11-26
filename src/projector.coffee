@@ -1,4 +1,4 @@
-define ["gl-matrix", "./bounding_disc", "./bounding_box"], (gl, BoundingDisc, BoundingBox) ->
+define ["gl-matrix", "./bounding_box"], (gl, BoundingBox) ->
   class Projector
     constructor: (@camera, @renderer) ->
 
@@ -21,22 +21,6 @@ define ["gl-matrix", "./bounding_disc", "./bounding_box"], (gl, BoundingDisc, Bo
       gl.vec2.fromValues(
         ( normalizedScreenPoint[0] + 1) * @renderer.getWidth()/2,
         (-normalizedScreenPoint[1] + 1) * @renderer.getHeight()/2)
-
-    getScreenBoundingDisc: (object) ->
-      worldBoundingDisc = object.getBoundingDisc()
-      screenBoundingDisc = new BoundingDisc()
-      screenBoundingDisc.setPosition(@project worldBoundingDisc.getPosition())
-
-      if object.material.isFixedSize
-        screenBoundingDisc.setRadius(worldBoundingDisc.getRadius())
-      else
-        screenBoundingDisc.setRadius(
-          @project([worldBoundingDisc.getX() + worldBoundingDisc.getRadius(), worldBoundingDisc.getY()]) -
-          screenBoundingDisc.getX())
-
-      screenBoundingDisc.setX(screenBoundingDisc.getX() + object.pixelOffsetX)
-      screenBoundingDisc.setY(screenBoundingDisc.getY() + object.pixelOffsetY)
-      screenBoundingDisc
 
     getScreenBoundingBox: (object) ->
       worldBoundingBox = object.getBoundingBox()
@@ -63,8 +47,7 @@ define ["gl-matrix", "./bounding_disc", "./bounding_box"], (gl, BoundingDisc, Bo
 
       for object in scene.getChildren()
         if object.material.isFixedSize
-          if @getScreenBoundingDisc(object).containsPoint(screenPoint) &&
-             @getScreenBoundingBox(object).containsPoint(screenPoint)
+          if @getScreenBoundingBox(object).containsPoint(screenPoint)
             return object
 
         picked = @_pickScreenObjects screenPoint, object

@@ -5,4 +5,3 @@ define ["./shape_material", "./object2d"], (ShapeMaterial, Object2d) ->
         throw new Error("Material must be instance of ShapeMaterial")
 
       super
-
