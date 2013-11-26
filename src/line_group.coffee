@@ -4,8 +4,11 @@ define ["./line_material", "./object2d"], (LineMaterial, Object2d) ->
       unless options.material instanceof LineMaterial
         throw new Error("Material must be instance of LineMaterial")
 
-      @vertices = options.vertices ?= []
+      @_vertices = options.vertices ?= []
       super
+
+    getVertices: -> @_vertices
+    setVertices: (value) -> @_vertices = value
 
 
 

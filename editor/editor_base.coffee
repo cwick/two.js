@@ -53,7 +53,7 @@ define (require) ->
       @camera = new Camera(width: 15, aspectRatio: @renderer.getWidth() / @renderer.getHeight())
       @projector = new Projector(@camera, @renderer)
 
-      @sceneGrid.add new Grid()
+      @grid = @sceneGrid.add new Grid()
 
       @canvas = @renderer.domElement
       @$canvas = $(@canvas)
@@ -86,8 +86,8 @@ define (require) ->
 
     render: ->
       @renderer.clear()
-      @renderer.render(@sceneGrid, @camera)
       @renderer.render(@scene, @camera)
+      @renderer.render(@sceneGrid, @camera)
       @renderer.render(@sceneGizmos, @camera)
 
     onZoomLevelChanged: (amount) ->
@@ -196,7 +196,6 @@ define (require) ->
       EditorBase::onObjectSelected.apply @, arguments
 
     onGridChanged: (options) ->
-      o.setVisible(options.isVisible) for o in @sceneGrid.getChildren()
       @render()
 
     _setCursor: (cursor) ->

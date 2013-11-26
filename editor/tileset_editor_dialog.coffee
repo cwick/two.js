@@ -21,12 +21,15 @@ define (require) ->
         """
       )
 
-      gridWidth = new NumberInput(id: "tileset-grid-width", digits: 3, value: 10)
-      gridHeight = new NumberInput(id: "tileset-grid-height", digits: 3, value: 10)
+      gridWidth = new NumberInput(id: "tileset-grid-width", digits: 3, value: 32)
+      gridHeight = new NumberInput(id: "tileset-grid-height", digits: 3, value: 32)
       gridWidth.addClass "right-align"
 
       gridWidth.$domElement.insertAfter @$domElement.find("[for='tileset-grid-width']")
       gridHeight.$domElement.insertAfter @$domElement.find("[for='tileset-grid-height']")
+
+      gridWidth.changed.add => @editor.on.gridChanged.dispatch(horizontalSize: gridWidth.getValue())
+      gridHeight.changed.add => @editor.on.gridChanged.dispatch(verticalSize: gridHeight.getValue())
 
       @editor = new TilesetEditor()
       @setBody @editor.domElement

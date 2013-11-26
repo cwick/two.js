@@ -120,7 +120,7 @@ define ["jquery",
           object.getHeight())
       else if object instanceof LineGroup
         begin = true
-        for v in object.vertices
+        for v in object.getVertices()
           if begin
             @_context.moveTo v[0], v[1]
           else

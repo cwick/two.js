@@ -1,10 +1,11 @@
-define ["jquery", "./control", "../key_codes"], ($, Control, KeyCodes) ->
+define ["jquery", "signals", "./control", "../key_codes"], ($, Signal, Control, KeyCodes) ->
   class NumberInput extends Control
     constructor: (options={}) ->
       super $("<input/>", type: "number"), options
 
       @$domElement.focus => @_onFocus()
       @$domElement.keydown (e) => @_onKeydown(e)
+      @$domElement.change => @_onChange()
 
       if options.digits?
         @$domElement.addClass "digit-#{options.digits}"
@@ -12,6 +13,7 @@ define ["jquery", "./control", "../key_codes"], ($, Control, KeyCodes) ->
         @setValue options.value
 
       @_decimalPlaces = options.decimalPlaces
+      @changed = new Signal()
 
     setValue: (v) ->
       if @_decimalPlaces?
@@ -28,3 +30,5 @@ define ["jquery", "./control", "../key_codes"], ($, Control, KeyCodes) ->
     _onKeydown: (e) ->
       @blur() if e.keyCode in [KeyCodes.ENTER, KeyCodes.ESCAPE]
 
+    _onChange: ->
+      @changed.dispatch()
