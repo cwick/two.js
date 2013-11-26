@@ -15,10 +15,14 @@ define (require) ->
       sprite = new Sprite(material: new SpriteMaterial(image: image))
 
       image.loaded.add =>
-        sprite.autoSize()
+        sprite.setWidth(image.getWidth())
+        sprite.setHeight(image.getHeight())
+        @camera.setWidth image.getWidth()
         @render()
 
-      @camera.setWidth 2
       @scene.add sprite
 
-      @render()
+    render: ->
+      @renderer.clear()
+      @renderer.render(@scene, @camera)
+      @renderer.render(@sceneGrid, @camera)
