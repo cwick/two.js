@@ -1,3 +1,4 @@
 define ->
-  SHIFT: 16
   ENTER: 13
+  SHIFT: 16
+  ESCAPE: 27

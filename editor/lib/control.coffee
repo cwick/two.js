@@ -1,7 +1,10 @@
 define ["jquery", "../utils"], ($, Utils) ->
   class Control
-    constructor: (@$domElement = $("<div/>")) ->
+    constructor: (@$domElement = $("<div/>"), options={}) ->
       @domElement = @$domElement.get(0)
+
+      if options.id?
+        @$domElement.attr "id", options.id
 
     toString: ->
       new XMLSerializer().\
@@ -19,6 +22,9 @@ define ["jquery", "../utils"], ($, Utils) ->
 
     setWidth: (value) ->
       @$domElement.width value
+
+    setHeight: (value) ->
+      @$domElement.height value
 
     setTranslation: (x,y) ->
       Utils.setTranslation @$domElement, x, y

@@ -84,8 +84,6 @@ define (require) ->
 
       @on.zoomLevelChanged.add @onZoomLevelChanged, @
 
-      @render()
-
     render: ->
       @renderer.clear()
       @renderer.render(@sceneGrid, @camera)

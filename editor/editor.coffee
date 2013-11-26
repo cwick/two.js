@@ -1,6 +1,5 @@
 define (require) ->
   $ = require "jquery"
-  gl = require "gl-matrix"
   Box = require "two/box"
   Disc = require "two/disc"
   EditorBase = require "./editor_base"
@@ -11,7 +10,7 @@ define (require) ->
   SelectionBox = require "./selection_box"
   Signal = require "signals"
   Sprite = require "two/sprite"
-  TilesetEditor = require "./tileset_editor"
+  TilesetEditorDialog = require "./tileset_editor_dialog"
   Utils = require "two/utils"
 
   class Editor extends EditorBase
@@ -36,8 +35,13 @@ define (require) ->
       $("#grab-tool").click => @on.grabToolSelected.dispatch()
       $("#new-sprite").click => @on.spriteCreated.dispatch()
 
-      $("#editor").append (new Inspector(@on)).domElement
-      $("#editor").append (new TilesetEditor()).domElement
+      tilesetEditor = new TilesetEditorDialog()
+      tilesetEditor.setWidth 400
+      tilesetEditor.setHeight 400
+
+      $("#editor").append new Inspector(@on).domElement
+      $("#editor").append tilesetEditor.domElement
+      tilesetEditor.run()
 
       @on.spriteCreated.add @onSpriteCreated, @
       @render()

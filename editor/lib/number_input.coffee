@@ -1,7 +1,7 @@
 define ["jquery", "./control", "../key_codes"], ($, Control, KeyCodes) ->
   class NumberInput extends Control
     constructor: (options={}) ->
-      super $("<input/>", type: "number")
+      super $("<input/>", type: "number"), options
 
       @$domElement.focus => @_onFocus()
       @$domElement.keydown (e) => @_onKeydown(e)
@@ -26,5 +26,5 @@ define ["jquery", "./control", "../key_codes"], ($, Control, KeyCodes) ->
       window.setTimeout (=> @$domElement.select()), 0
 
     _onKeydown: (e) ->
-      @blur() if e.keyCode is KeyCodes.ENTER
+      @blur() if e.keyCode in [KeyCodes.ENTER, KeyCodes.ESCAPE]
 
