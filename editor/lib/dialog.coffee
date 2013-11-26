@@ -14,7 +14,7 @@ define ["jquery", "../mouse_buttons", "./draggable", "./resizable", "./control"]
                 "top-right-resize",
                 "dialog-header drag-handle",
                 "toolbar panel hidden",
-                "dialog-body no-footer",
+                "dialog-body panel no-footer",
                 "dialog-footer"]
         @$domElement.append $("<div/>", class: c)
 
