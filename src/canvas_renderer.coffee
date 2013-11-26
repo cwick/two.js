@@ -69,8 +69,6 @@ define ["jquery",
       @_camera = camera
       @_viewProjectionMatrix = null
       @_context.setTransform(1, 0, 0, 1, 0, 0)
-      # Avoid blurry lines
-      @_context.translate 0.5, 0.5
       @clear() if @autoClear
 
     _getViewProjectionMatrix: ->
