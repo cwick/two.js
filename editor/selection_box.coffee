@@ -1,5 +1,10 @@
-define ["gl-matrix", "two/box", "two/shape_material", "two/color", "two/utils"], \
-       (gl, Box, ShapeMaterial, Color, Utils) ->
+define (require) ->
+  gl = require "gl-matrix"
+  Box = require "two/box"
+  ShapeMaterial = require "two/shape_material"
+  Color = require "two/color"
+  Disc = require "two/disc"
+  Utils = require "two/utils"
 
   SELECTION_COLOR = new Color(r: 20, g: 0, b: 229)
   SELECTION_FILL_COLOR = SELECTION_COLOR.clone(a: 0.1)
@@ -7,6 +12,128 @@ define ["gl-matrix", "two/box", "two/shape_material", "two/color", "two/utils"],
   LARGE_HANDLE_PADDING = 12
   SMALL_HANDLE_SIZE = LARGE_HANDLE_SIZE / 2 + 2
   SMALL_HANDLE_PADDING = LARGE_HANDLE_PADDING - SMALL_HANDLE_SIZE/2 + 2
+
+  class SelectionBox extends Box
+    constructor: (@on) ->
+      options =
+        material: new ShapeMaterial(strokeColor: SELECTION_COLOR, fillColor: SELECTION_FILL_COLOR)
+        name: "selection-box"
+      super options
+
+      @on.objectChanged.add @_onObjectChanged, @
+      @on.gridSnappingChanged.add @_onGridSnappingChanged, @
+      @_buildResizeHandles()
+      @_buildOriginPoint()
+
+    attachTo: (object) ->
+      @_object = object
+      child.attachTo object for child in @getChildren()
+
+      @shrinkWrap object
+
+    shrinkWrap: (object) ->
+      bounds = object.getBoundingBox()
+      @setPosition bounds.getPosition()
+      @setWidth bounds.getWidth()
+      @setHeight bounds.getHeight()
+
+      @_NEResizeHandle.setPosition [bounds.getWidth()/2, bounds.getHeight()/2]
+      @_NWResizeHandle.setPosition [-bounds.getWidth()/2, bounds.getHeight()/2]
+      @_SEResizeHandle.setPosition [bounds.getWidth()/2, -bounds.getHeight()/2]
+      @_SWResizeHandle.setPosition [-bounds.getWidth()/2, -bounds.getHeight()/2]
+
+      @_NResizeHandle.setY(bounds.getHeight()/2)
+      @_EResizeHandle.setX(bounds.getWidth()/2)
+      @_SResizeHandle.setY(-bounds.getHeight()/2)
+      @_WResizeHandle.setX(-bounds.getWidth()/2)
+
+      @_originMarker.setPosition object.getOrigin()
+
+    detach: ->
+      @_object = null
+      child.detach() for child in @getChildren()
+
+    isAttached: ->
+      @_object?
+
+    _buildResizeHandles: ->
+      largeHandle = new ResizeHandle
+        width: LARGE_HANDLE_SIZE
+        height: LARGE_HANDLE_SIZE
+        signals: @on
+
+      smallHandle = largeHandle.clone(width: SMALL_HANDLE_SIZE, height: SMALL_HANDLE_SIZE)
+
+      @_NEResizeHandle = @add(largeHandle.clone(
+        name: "nesw-resize"
+        scaleDirectionX: -1
+        scaleDirectionY: -1
+        pixelOffsetX: LARGE_HANDLE_PADDING
+        pixelOffsetY: -LARGE_HANDLE_PADDING))
+
+      @_NWResizeHandle = @add(largeHandle.clone(
+        name: "nwse-resize"
+        scaleDirectionX: 1
+        scaleDirectionY: -1
+        pixelOffsetX: -LARGE_HANDLE_PADDING
+        pixelOffsetY: -LARGE_HANDLE_PADDING))
+
+      @_SEResizeHandle = @add(largeHandle.clone(
+        name: "nwse-resize"
+        scaleDirectionX: -1
+        scaleDirectionY: 1
+        pixelOffsetX: LARGE_HANDLE_PADDING
+        pixelOffsetY: LARGE_HANDLE_PADDING))
+
+      @_SWResizeHandle = @add(largeHandle.clone(
+        name: "nesw-resize"
+        scaleDirectionX: 1
+        scaleDirectionY: 1
+        pixelOffsetX: -LARGE_HANDLE_PADDING
+        pixelOffsetY: LARGE_HANDLE_PADDING))
+
+      @_NResizeHandle = @add(smallHandle.clone(
+        name: "ns-resize"
+        pixelOffsetY: -SMALL_HANDLE_PADDING))
+
+      @_EResizeHandle = @add(smallHandle.clone(
+        name: "ew-resize"
+        pixelOffsetX: SMALL_HANDLE_PADDING))
+
+      @_SResizeHandle = @add(smallHandle.clone(
+        name: "ns-resize"
+        pixelOffsetY: SMALL_HANDLE_PADDING))
+
+      @_WResizeHandle = @add(smallHandle.clone(
+        name: "ew-resize"
+        pixelOffsetX: -SMALL_HANDLE_PADDING))
+
+    _buildOriginPoint: ->
+      @_originMarker = @add new OriginMarker()
+
+    onStylusMoved: ->
+      @on.cursorStyleChanged.dispatch "move"
+
+    onDragged: (e) ->
+      newPosition = gl.vec2.create()
+      gl.vec2.add newPosition, e.worldTranslation, @_initialPosition
+
+      if @_isGridSnappingEnabled
+        newPosition[0] = Math.round(newPosition[0])
+        newPosition[1] = Math.round(newPosition[1])
+
+      @setPosition newPosition
+      @_object.setPosition newPosition
+      @on.objectChanged.dispatch @_object
+
+    onActivated: ->
+      @_initialPosition = @_object.getPosition()
+
+    _onObjectChanged: (object) ->
+      @shrinkWrap object if object is @_object
+
+    _onGridSnappingChanged: (e) ->
+      @_isGridSnappingEnabled = e.enabled
 
   class ResizeHandle extends Box
     constructor: (options) ->
@@ -82,118 +209,17 @@ define ["gl-matrix", "two/box", "two/shape_material", "two/color", "two/utils"],
 
       [snapX, snapY]
 
-  class SelectionBox extends Box
-    constructor: (@on) ->
-      options =
-        material: new ShapeMaterial(strokeColor: SELECTION_COLOR, fillColor: SELECTION_FILL_COLOR)
-        name: "selection-box"
-      super options
+  class OriginMarker extends Disc
+    constructor: ->
+      super
+        radius: 2
+        material: new ShapeMaterial(
+          fillColor: "white"
+          strokeColor: SELECTION_COLOR
+          isFixedSize: true)
 
-      @on.objectChanged.add @_onObjectChanged, @
-      @on.gridSnappingChanged.add @_onGridSnappingChanged, @
-      @_buildResizeHandles()
-
-    attachTo: (object) ->
-      @_object = object
-      child.attachTo object for child in @getChildren()
-
-      @shrinkWrap object
-
-    shrinkWrap: (object) ->
-      bounds = object.getBoundingBox()
-      @setPosition bounds.getPosition()
-      @setWidth bounds.getWidth()
-      @setHeight bounds.getHeight()
-
-      @_NEResizeHandle.setPosition [bounds.getWidth()/2, bounds.getHeight()/2]
-      @_NWResizeHandle.setPosition [-bounds.getWidth()/2, bounds.getHeight()/2]
-      @_SEResizeHandle.setPosition [bounds.getWidth()/2, -bounds.getHeight()/2]
-      @_SWResizeHandle.setPosition [-bounds.getWidth()/2, -bounds.getHeight()/2]
-
-      @_NResizeHandle.setY(bounds.getHeight()/2)
-      @_EResizeHandle.setX(bounds.getWidth()/2)
-      @_SResizeHandle.setY(-bounds.getHeight()/2)
-      @_WResizeHandle.setX(-bounds.getWidth()/2)
-
+    attachTo: ->
     detach: ->
-      @_object = null
-      child.detach() for child in @getChildren()
-
-    isAttached: ->
-      @_object?
-
-    _buildResizeHandles: ->
-      largeHandle = new ResizeHandle
-        width: LARGE_HANDLE_SIZE
-        height: LARGE_HANDLE_SIZE
-        signals: @on
-
-      smallHandle = largeHandle.clone(width: SMALL_HANDLE_SIZE, height: SMALL_HANDLE_SIZE)
-
-      @add(@_NEResizeHandle = largeHandle.clone(
-        name: "nesw-resize"
-        scaleDirectionX: -1
-        scaleDirectionY: -1
-        pixelOffsetX: LARGE_HANDLE_PADDING
-        pixelOffsetY: -LARGE_HANDLE_PADDING))
-
-      @add(@_NWResizeHandle = largeHandle.clone(
-        name: "nwse-resize"
-        scaleDirectionX: 1
-        scaleDirectionY: -1
-        pixelOffsetX: -LARGE_HANDLE_PADDING
-        pixelOffsetY: -LARGE_HANDLE_PADDING))
-
-      @add(@_SEResizeHandle = largeHandle.clone(
-        name: "nwse-resize"
-        scaleDirectionX: -1
-        scaleDirectionY: 1
-        pixelOffsetX: LARGE_HANDLE_PADDING
-        pixelOffsetY: LARGE_HANDLE_PADDING))
-
-      @add(@_SWResizeHandle = largeHandle.clone(
-        name: "nesw-resize"
-        scaleDirectionX: 1
-        scaleDirectionY: 1
-        pixelOffsetX: -LARGE_HANDLE_PADDING
-        pixelOffsetY: LARGE_HANDLE_PADDING))
-
-      @add(@_NResizeHandle = smallHandle.clone(
-        name: "ns-resize"
-        pixelOffsetY: -SMALL_HANDLE_PADDING))
-
-      @add(@_EResizeHandle = smallHandle.clone(
-        name: "ew-resize"
-        pixelOffsetX: SMALL_HANDLE_PADDING))
-
-      @add(@_SResizeHandle = smallHandle.clone(
-        name: "ns-resize"
-        pixelOffsetY: SMALL_HANDLE_PADDING))
-
-      @add(@_WResizeHandle = smallHandle.clone(
-        name: "ew-resize"
-        pixelOffsetX: -SMALL_HANDLE_PADDING))
-
     onStylusMoved: ->
-      @on.cursorStyleChanged.dispatch "move"
 
-    onDragged: (e) ->
-      newPosition = gl.vec2.create()
-      gl.vec2.add newPosition, e.worldTranslation, @_initialPosition
-
-      if @_isGridSnappingEnabled
-        newPosition[0] = Math.round(newPosition[0])
-        newPosition[1] = Math.round(newPosition[1])
-
-      @setPosition newPosition
-      @_object.setPosition newPosition
-      @on.objectChanged.dispatch @_object
-
-    onActivated: ->
-      @_initialPosition = @_object.getPosition()
-
-    _onObjectChanged: (object) ->
-      @shrinkWrap object if object is @_object
-
-    _onGridSnappingChanged: (e) ->
-      @_isGridSnappingEnabled = e.enabled
+  return SelectionBox

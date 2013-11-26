@@ -4,6 +4,6 @@ define ["./material", "./color"], (Material, Color) ->
       @fillColor = @_makeColor(options.fillColor)
       @strokeColor = @_makeColor(options.strokeColor, new Color(a: 0))
 
-      super
+      super options
 
 

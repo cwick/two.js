@@ -2,7 +2,7 @@ define ["./shape"], (Shape) ->
   class Disc extends Shape
     constructor: (options={}) ->
       super
-      @radius = options.radius ?= 5
+      @radius = options.radius ?= 2
       unless options.name
         @setName "Disc (#{@getId()})"
 

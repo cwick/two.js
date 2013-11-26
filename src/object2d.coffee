@@ -54,6 +54,7 @@ define ["gl-matrix", "./material", "./utils", "./bounding_box"], \
     add: (child) ->
       child._parent = @
       @_children.push child
+      child
 
     remove: (child) ->
       idx = @_children.indexOf child
