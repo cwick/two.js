@@ -26,7 +26,7 @@ define (require) ->
       @scene.add new Disc(radius: 3, scale: 0.7, material: new ShapeMaterial(fillColor: "#BE0028"))
       @scene.add new Disc(x:5, y:-3, radius: 2, material: new ShapeMaterial(fillColor: "green"))
       @scene.add new Box(x:-5, y:-1, width: 4, height: 6, material: new ShapeMaterial(fillColor: "yellow", strokeColor: "red"))
-      @scene.add new Sprite(width: 2, height: 3.86, material: new SpriteMaterial(image: new Image("assets/mario.png", => @render())))
+      @scene.add new Sprite(origin: [0, -1.93], width: 2, height: 3.86, material: new SpriteMaterial(image: new Image("assets/mario.png", => @render())))
 
       @_selectionBox = new SelectionBox(@on)
 

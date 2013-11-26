@@ -17,7 +17,9 @@ define (require) ->
       image.loaded.add =>
         sprite.setWidth(image.getWidth())
         sprite.setHeight(image.getHeight())
-        @camera.setWidth image.getWidth()
+        sprite.setOrigin [-sprite.getWidth()/2, -sprite.getHeight()/2]
+        @camera.setWidth sprite.getWidth()
+        @camera.setPosition [sprite.getWidth()/2, sprite.getHeight()/2]
         @render()
 
       @scene.add sprite

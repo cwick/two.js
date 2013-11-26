@@ -101,7 +101,7 @@ define ["gl-matrix", "two/box", "two/shape_material", "two/color", "two/utils"],
 
     shrinkWrap: (object) ->
       bounds = object.getBoundingBox()
-      @setPosition object.getPosition()
+      @setPosition bounds.getPosition()
       @setWidth bounds.getWidth()
       @setHeight bounds.getHeight()
 
@@ -190,7 +190,7 @@ define ["gl-matrix", "two/box", "two/shape_material", "two/color", "two/utils"],
       @on.objectChanged.dispatch @_object
 
     onActivated: ->
-      @_initialPosition = @getPosition()
+      @_initialPosition = @_object.getPosition()
 
     _onObjectChanged: (object) ->
       @shrinkWrap object if object is @_object

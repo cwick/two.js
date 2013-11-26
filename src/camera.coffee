@@ -1,5 +1,5 @@
 define ["gl-matrix"], (gl) ->
-  class Camera
+  class Camera # TODO: extends Object2d
     constructor: (options) ->
       options ?= {}
       @_aspectRatio = options.aspectRatio ?= 1

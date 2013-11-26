@@ -9,10 +9,12 @@ define ["gl-matrix", "./material", "./utils", "./bounding_box"], \
       @_y = options.y ?= 0
       @pixelOffsetX = options.pixelOffsetX ?= 0
       @pixelOffsetY = options.pixelOffsetY ?= 0
+      @_origin = options.origin ?= [0,0]
       @_name = options.name ?= ""
       @_scale = options.scale ?= 1
       @_children = []
       @_isVisible = true
+      @_isBoundingBoxValid = false
       @_id = Object2d._nextId++
 
     isVisible: -> @_isVisible
@@ -43,6 +45,11 @@ define ["gl-matrix", "./material", "./utils", "./bounding_box"], \
         @_recomputeBoundingBox()
 
       @_boundingBox
+
+    getOrigin: -> @_origin
+    setOrigin: (value) ->
+      @_origin = value
+      @invalidateWorldTransform()
 
     add: (child) ->
       child._parent = @
@@ -88,8 +95,8 @@ define ["gl-matrix", "./material", "./utils", "./bounding_box"], \
 
       @_worldMatrix[0] = @_scale
       @_worldMatrix[3] = @_scale
-      @_worldMatrix[4] = @_x
-      @_worldMatrix[5] = @_y
+      @_worldMatrix[4] = @_x - @_origin[0]
+      @_worldMatrix[5] = @_y - @_origin[1]
 
       if @_parent?
         gl.mat2d.multiply @_worldMatrix, @_parent.getWorldMatrix(), @_worldMatrix
@@ -100,12 +107,19 @@ define ["gl-matrix", "./material", "./utils", "./bounding_box"], \
       unless @_boundingBox?
         @_boundingBox = new BoundingBox()
 
-      @_boundingBox.setPosition @getPosition()
-      @_boundingBox.setWidth @getScale()*@getBoundingWidth()
-      @_boundingBox.setHeight @getScale()*@getBoundingHeight()
+      @_shrinkWrapBoundingBox()
 
       if @_parent?
         @_boundingBox.applyMatrix @_parent.getWorldMatrix()
 
       @_isBoundingBoxValid = true
+
+    _shrinkWrapBoundingBox: ->
+      position = @getPosition()
+      origin = @getOrigin()
+      scale = @getScale()
+
+      @_boundingBox.setPosition [position[0] - origin[0], position[1] - origin[1]]
+      @_boundingBox.setWidth scale*@getBoundingWidth()
+      @_boundingBox.setHeight scale*@getBoundingHeight()
 
