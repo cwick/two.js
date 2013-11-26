@@ -7,6 +7,6 @@ require.config
     "signals": "../lib/signals"
     "two": "."
 
-require ["editor/editor"], (editor) ->
-  editor.run()
+require ["editor/editor"], (Editor) ->
+  new Editor().run()
 
