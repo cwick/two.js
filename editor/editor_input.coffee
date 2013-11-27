@@ -27,7 +27,7 @@ define ["gl-matrix",
       return false if deltaY == 0
       return false unless @_shouldHandleInput(e)
 
-      @signals.zoomLevelChanged.dispatch(deltaY*0.006)
+      @signals.toolActivated.dispatch("zoom", @_getStylusPosition(e), deltaY*0.006)
       return true
 
     _onKeydown: (e) ->
@@ -48,9 +48,7 @@ define ["gl-matrix",
       return false unless e.which == MouseButtons.LEFT
       return unless @_shouldHandleInput(e)
 
-      @signals.stylusTouched.dispatch
-        canvasPoint: [e.offsetX, e.offsetY]
-        pagePoint: [e.pageX, e.pageY]
+      @signals.stylusTouched.dispatch @_getStylusPosition(e)
 
       return false
 
@@ -92,6 +90,10 @@ define ["gl-matrix",
         gl.vec2.subtract(delta, [x,y], @_stylusPageTouchPoint)
 
       delta
+
+    _getStylusPosition: (e) ->
+      canvasPoint: [e.offsetX, e.offsetY]
+      pagePoint: [e.pageX, e.pageY]
 
     _isStylusTouching: ->
       @_stylusCanvasTouchPoint?

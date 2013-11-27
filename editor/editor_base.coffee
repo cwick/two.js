@@ -15,7 +15,6 @@ define (require) ->
 
       @maxCameraWidth = 1000
       @minCameraWidth = 1
-      @zoomSpeed = 1
       @tools = []
 
       @on =
@@ -34,7 +33,7 @@ define (require) ->
         stylusReleased: new Signal()
         stylusTouched: new Signal()
         toolSelected: new Signal()
-        zoomLevelChanged: new Signal()
+        toolActivated: new Signal()
 
     run: ->
       @renderer = new CanvasRenderer
@@ -74,25 +73,13 @@ define (require) ->
       @on.stylusTouched.add @onStylusTouched, @
 
       @on.toolSelected.add @onToolSelected, @
-
-      @on.zoomLevelChanged.add @onZoomLevelChanged, @
+      @on.toolActivated.add @onToolActivated, @
 
     render: ->
       @renderer.clear()
       @renderer.render(@scene, @camera)
       @renderer.render(@sceneGrid, @camera)
       @renderer.render(@sceneGizmos, @camera)
-
-    onZoomLevelChanged: (amount) ->
-      width = @camera.getWidth()
-      # Zoom speed gets faster the more zoomed out we are
-      width -= amount*@zoomSpeed*width*0.6
-      width = Math.min(width, @maxCameraWidth)
-      width = Math.max(width, @minCameraWidth)
-
-      @camera.setWidth(width)
-
-      @render()
 
     onCursorStyleChanged: (newStyle) ->
       @_setCursor newStyle
@@ -104,7 +91,9 @@ define (require) ->
       @getCurrentTool()?.onMoved(e)
 
     onStylusTouched: (e) ->
-      @getCurrentTool()?.onActivated(e)
+      tool = @getCurrentTool()
+      if tool?
+        @on.toolActivated.dispatch tool.name, e
 
     onStylusDragged: (e) ->
       e.calculateWorldCoordinates(@projector)
@@ -141,7 +130,7 @@ define (require) ->
         @_clearQuickTool()
 
     onQuickToolSelected: (which) ->
-      quickTool = (t for t in @tools when t.name == which)[0]
+      quickTool = @getTool(which)
 
       @_quickTool?.onDeselected() unless quickTool == @_quickTool
       @_quickTool = quickTool
@@ -149,10 +138,18 @@ define (require) ->
       @_quickTool?.onSelected()
 
     onToolSelected: (which) ->
-      tool = (t for t in @tools when t.name == which)[0]
+      tool = @getTool(which)
       @_tool?.onDeselected() unless tool == @_tool
       @_tool = tool
       @_tool?.onSelected()
+
+    onToolActivated: (which, e, toolArguments) ->
+      tool = @getTool(which)
+      if tool?
+        tool.onActivated(e, toolArguments)
+
+    getTool: (name) ->
+      (t for t in @tools when t.name == name)[0]
 
     getCurrentTool: ->
       @_quickTool || @_tool

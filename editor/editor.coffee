@@ -14,6 +14,7 @@ define (require) ->
   Sprite = require "two/sprite"
   TilesetEditorDialog = require "./tileset_editor_dialog"
   Utils = require "two/utils"
+  ZoomTool = require "./tools/zoom"
 
   class Editor extends EditorBase
     constructor: ->
@@ -24,6 +25,7 @@ define (require) ->
 
       @tools.push new GrabTool(@)
       @tools.push new SelectTool(@)
+      @tools.push new ZoomTool(@)
 
     run: ->
       super
@@ -39,6 +41,7 @@ define (require) ->
       $("#snap-to-grid").change (e) => @on.gridSnappingChanged.dispatch(enabled: $(e.target).is(':checked'))
       $("#grab-tool").click => @on.toolSelected.dispatch "grab"
       $("#select-tool").click => @on.toolSelected.dispatch "select"
+      $("#zoom-tool").click => @on.toolSelected.dispatch "zoom"
       $("#new-sprite").click => @on.spriteCreated.dispatch()
 
       tilesetEditor = new TilesetEditorDialog()
