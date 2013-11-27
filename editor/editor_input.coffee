@@ -7,61 +7,71 @@ define ["gl-matrix",
        (gl, $, KeyCodes, MouseButtons, StylusDragEvent) ->
 
   class EditorInput
+    @capturingCanvas = null
+
     constructor: (@signals, @canvas) ->
       $(document).on "mousewheel keydown keyup mousedown mouseup mousemove", => @_onUserInput.apply @, arguments
-      @_body = $("body")[0]
+      $(@canvas).mouseenter => @canvas.focus()
 
       @signals.stylusTouched.add @_onStylusTouched, @
       @signals.stylusReleased.add @_onStylusReleased, @
 
     _onUserInput: (e) ->
-      handled = @["_on#{e.type.charAt(0).toUpperCase() + e.type.slice(1)}"].apply @, arguments
-      if handled
+      shouldPreventDefault = @["_on#{e.type.charAt(0).toUpperCase() + e.type.slice(1)}"].apply @, arguments
+
+      if shouldPreventDefault
         e.preventDefault()
         e.stopPropagation()
 
     _onMousewheel: (e, delta, deltaX, deltaY) ->
-      return unless e.target == @canvas && deltaY != 0
+      return false if deltaY == 0
+      return false unless @_shouldHandleInput(e)
 
       @signals.zoomLevelChanged.dispatch(deltaY*0.006)
-      true
+      return true
 
     _onKeydown: (e) ->
-      return unless e.target == @_body
+      return false unless @_shouldHandleInput(e)
 
       if e.keyCode == KeyCodes.SHIFT
-        @signals.grabToolSelected.dispatch()
-        return true
+        @signals.quickToolSelected.dispatch "grab"
+
+      return false
 
     _onKeyup: (e) ->
       if e.keyCode == KeyCodes.SHIFT
-        @signals.grabToolDeselected.dispatch()
+        @signals.quickToolDeselected.dispatch()
 
-      return e.target == @_body
+      return false
 
     _onMousedown: (e) ->
-      return unless e.target == @canvas && e.which == MouseButtons.LEFT
+      return false unless e.which == MouseButtons.LEFT
+      return unless @_shouldHandleInput(e)
 
       @signals.stylusTouched.dispatch
         canvasPoint: [e.offsetX, e.offsetY]
         pagePoint: [e.pageX, e.pageY]
 
-      return true
+      return false
 
     _onMouseup: (e) ->
-      return unless @_isStylusTouching() && e.which == MouseButtons.LEFT
+      return false unless @_isStylusTouching() && e.which == MouseButtons.LEFT
 
       @signals.stylusReleased.dispatch @_createStylusDragEvent(e)
-
-      return e.target == @canvas
+      return false
 
     _onMousemove: (e) ->
+      return unless @_shouldHandleInput(e)
+
       if @_isStylusTouching()
         @_dispatchStylusDragged(e)
-      else if e.target == @canvas
+      else
         @_dispatchStylusMoved(e)
 
-      return e.target == @canvas
+      return false
+
+    _shouldHandleInput: (e) ->
+      EditorInput.capturingCanvas == @canvas || (!EditorInput.capturingCanvas? && e.target == @canvas)
 
     _dispatchStylusDragged: (e) ->
       @signals.stylusDragged.dispatch @_createStylusDragEvent(e)
@@ -89,7 +99,9 @@ define ["gl-matrix",
     _onStylusTouched: (options) ->
       @_stylusPageTouchPoint = options.pagePoint
       @_stylusCanvasTouchPoint = options.canvasPoint
+      EditorInput.capturingCanvas = @canvas
 
     _onStylusReleased: ->
       @_stylusPageTouchPoint = @_stylusCanvasTouchPoint = null
+      EditorInput.capturingCanvas = null
 

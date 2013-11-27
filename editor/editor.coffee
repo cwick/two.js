@@ -3,11 +3,13 @@ define (require) ->
   Box = require "two/box"
   Disc = require "two/disc"
   EditorBase = require "./editor_base"
+  GrabTool = require "./tools/grab"
   Image = require "two/image"
   Inspector = require "./inspector"
   ShapeMaterial = require "two/shape_material"
   SpriteMaterial = require "two/sprite_material"
   SelectionBox = require "./selection_box"
+  SelectTool = require "./tools/select"
   Signal = require "signals"
   Sprite = require "two/sprite"
   TilesetEditorDialog = require "./tileset_editor_dialog"
@@ -19,6 +21,9 @@ define (require) ->
 
       Utils.merge @on,
         spriteCreated: new Signal()
+
+      @tools.push new GrabTool(@)
+      @tools.push new SelectTool(@)
 
     run: ->
       super
@@ -32,7 +37,8 @@ define (require) ->
 
       $("#show-grid").change (e) => @on.gridChanged.dispatch(isVisible: $(e.target).is(':checked'))
       $("#snap-to-grid").change (e) => @on.gridSnappingChanged.dispatch(enabled: $(e.target).is(':checked'))
-      $("#grab-tool").click => @on.grabToolSelected.dispatch()
+      $("#grab-tool").click => @on.toolSelected.dispatch "grab"
+      $("#select-tool").click => @on.toolSelected.dispatch "select"
       $("#new-sprite").click => @on.spriteCreated.dispatch()
 
       tilesetEditor = new TilesetEditorDialog()
@@ -44,6 +50,7 @@ define (require) ->
       tilesetEditor.run()
 
       @on.spriteCreated.add @onSpriteCreated, @
+      @on.toolSelected.dispatch "select"
       @render()
 
     onObjectSelected: (object) ->

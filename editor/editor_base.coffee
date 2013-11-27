@@ -1,11 +1,8 @@
 define (require) ->
   $ = require "jquery"
-  gl = require "gl-matrix"
   Camera = require "two/camera"
   CanvasRenderer = require "two/canvas_renderer"
-  Color = require "two/color"
   Control = require "./lib/control"
-  Dialog = require "./lib/dialog"
   EditorInput = require "./editor_input"
   Grid = require "./grid"
   Projector = require "two/projector"
@@ -19,26 +16,24 @@ define (require) ->
       @maxCameraWidth = 1000
       @minCameraWidth = 1
       @zoomSpeed = 1
+      @tools = []
 
       @on =
         cursorStyleChanged: new Signal()
-        gizmoActivated: new Signal()
         gizmoDeactivated: new Signal()
         gizmoDragged: new Signal()
-        grabToolDeselected: new Signal()
-        grabToolSelected: new Signal()
-        grabToolStarted: new Signal()
-        grabToolStopped: new Signal()
-        grabToolDragged: new Signal()
         gridChanged: new Signal()
         gridSnappingChanged: new Signal()
         objectChanged: new Signal()
         objectDeselected: new Signal()
         objectSelected: new Signal()
+        quickToolDeselected: new Signal()
+        quickToolSelected: new Signal()
         stylusDragged: new Signal()
         stylusMoved: new Signal()
         stylusReleased: new Signal()
         stylusTouched: new Signal()
+        toolSelected: new Signal()
         zoomLevelChanged: new Signal()
 
     run: ->
@@ -65,22 +60,20 @@ define (require) ->
 
       # Set low priority so rendering is the last thing that happens after object change
       @on.objectChanged.add @onObjectChanged, @, -1
-
-      @on.grabToolDeselected.add @onGrabToolDeselected, @
-      @on.grabToolDragged.add @onGrabToolDragged, @
-      @on.grabToolSelected.add @onGrabToolSelected, @
-      @on.grabToolStarted.add @onGrabToolStarted, @
-      @on.grabToolStopped.add @onGrabToolStopped, @
+      @on.objectSelected.add @onObjectSelected, @, -1
+      @on.objectDeselected.add @onObjectDeselected, @, -1
 
       @on.gridChanged.add @onGridChanged, @
 
-      @on.objectSelected.add @onObjectSelected, @, -1
-      @on.objectDeselected.add @onObjectDeselected, @, -1
+      @on.quickToolDeselected.add @onQuickToolDeselected, @
+      @on.quickToolSelected.add @onQuickToolSelected, @
 
       @on.stylusDragged.add @onStylusDragged, @
       @on.stylusMoved.add @onStylusMoved, @
       @on.stylusReleased.add @onStylusReleased, @
       @on.stylusTouched.add @onStylusTouched, @
+
+      @on.toolSelected.add @onToolSelected, @
 
       @on.zoomLevelChanged.add @onZoomLevelChanged, @
 
@@ -99,7 +92,6 @@ define (require) ->
 
       @camera.setWidth(width)
 
-      @_updateCursorStyle()
       @render()
 
     onCursorStyleChanged: (newStyle) ->
@@ -109,107 +101,71 @@ define (require) ->
       @render()
 
     onStylusMoved: (e) ->
-      @_stylusPosition = e.canvasPoint
-      @_updateCursorStyle()
+      @getCurrentTool()?.onMoved(e)
 
     onStylusTouched: (e) ->
-      if @_grabTool
-        @on.grabToolStarted.dispatch()
-      else
-        @_activeGizmo = @_pickGizmo(e.canvasPoint)
-        if @_activeGizmo?
-          @_activeGizmo.onActivated()
-          @on.gizmoActivated.dispatch @_activeGizmo
+      @getCurrentTool()?.onActivated(e)
 
     onStylusDragged: (e) ->
-      @_stylusPosition = e.canvasEndPoint
       e.calculateWorldCoordinates(@projector)
-      if @_grabbing
-        @on.grabToolDragged.dispatch(e)
-      else if @_activeGizmo?
-        @_activeGizmo.onDragged(e)
-        @on.gizmoDragged.dispatch @_activeGizmo
+      tool = @getCurrentTool()
+      if tool?.isActive()
+        tool.onDragged(e)
 
     onStylusReleased: (e) ->
-      if @_activeGizmo
-        oldGizmo = @_activeGizmo
-        @_activeGizmo = null
-        @_updateCursorStyle()
-        @on.gizmoDeactivated.dispatch oldGizmo
-        return
+      tool = @getCurrentTool()
+      return unless tool
 
-      if @_grabbing
-        @on.grabToolStopped.dispatch()
-        return
+      tool.onDeactivated(e)
 
-      selectionThreshold = 2
-      return unless e.isOnCanvas
-      return if Math.abs(e.canvasTranslation[0]) > selectionThreshold ||
-                Math.abs(e.canvasTranslation[1]) > selectionThreshold
-      return if @projector.pick(e.canvasStartPoint, @sceneGizmos)?
+      if tool is @_quickTool && !tool.isSelected()
+        @_clearQuickTool()
 
-      object = @projector.pick(e.canvasStartPoint, @scene)
-      if object?
-        @on.objectSelected.dispatch(object)
-      else
-        @on.objectDeselected.dispatch()
-
-    onGrabToolStarted: ->
-      @_grabbing = true
-      @_initialCameraPosition = @camera.getPosition()
-
-      @_setCursor "-webkit-grabbing"
-
-    onGrabToolStopped: (e) ->
-      @_grabbing = false
-
-      if @_grabTool
-        @_setCursor "-webkit-grab"
-      else
-        @_setCursor "auto"
-
-    onGrabToolSelected: ->
-      return if @_activeGizmo?
-
-      @_grabTool = true
-      @_setCursor "-webkit-grab" unless @_grabbing
-
-    onGrabToolDeselected: ->
-      return if @_activeGizmo?
-
-      @_grabTool = false
-      @_setCursor "auto" unless @_grabbing
-
-    onGrabToolDragged: (e) ->
-      newCameraPosition = gl.vec2.create()
-
-      gl.vec2.subtract newCameraPosition, @_initialCameraPosition, e.worldTranslation
-
-      @camera.setPosition newCameraPosition
-      @render()
+      return
 
     onObjectSelected: (object) ->
-      @_updateCursorStyle()
       @render()
 
     onObjectDeselected: ->
-      EditorBase::onObjectSelected.apply @, arguments
+      @render()
 
     onGridChanged: (options) ->
       @render()
 
+    onQuickToolDeselected: ->
+      return unless @_quickTool?
+
+      @_quickTool.onDeselected()
+
+      unless @_quickTool.isActive()
+        @_clearQuickTool()
+
+    onQuickToolSelected: (which) ->
+      quickTool = (t for t in @tools when t.name == which)[0]
+
+      @_quickTool?.onDeselected() unless quickTool == @_quickTool
+      @_quickTool = quickTool
+
+      @_quickTool?.onSelected()
+
+    onToolSelected: (which) ->
+      tool = (t for t in @tools when t.name == which)[0]
+      @_tool?.onDeselected() unless tool == @_tool
+      @_tool = tool
+      @_tool?.onSelected()
+
+    getCurrentTool: ->
+      @_quickTool || @_tool
+
+    pickGizmo: (canvasPoint) ->
+      @projector.pick(canvasPoint, @sceneGizmos)
+
+    pickSceneObject: (canvasPoint) ->
+      @projector.pick(canvasPoint, @scene)
+
     _setCursor: (cursor) ->
       @$canvas.css "cursor", cursor
 
-    _updateCursorStyle: ->
-      return if @_grabTool || @_activeGizmo?
-      return unless @_stylusPosition?
-      gizmo = @_pickGizmo(@_stylusPosition, @sceneGizmos)
-      if gizmo?
-        gizmo.onStylusMoved()
-      else
-        @on.cursorStyleChanged.dispatch("auto")
-
-    _pickGizmo: (canvasPoint) ->
-      @projector.pick(canvasPoint, @sceneGizmos)
-
+    _clearQuickTool: ->
+      @_quickTool = null
+      @getCurrentTool()?.onSelected()

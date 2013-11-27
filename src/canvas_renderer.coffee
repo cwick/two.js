@@ -10,7 +10,7 @@ define ["jquery",
        ($, gl, Box, Disc, Sprite, LineGroup, Shape, ShapeMaterial, LineMaterial) ->
   class CanvasRenderer
     constructor: (options) ->
-      @$domElement = $("<canvas/>")
+      @$domElement = $("<canvas/>", tabindex: 0)
       @domElement = @$domElement.get(0)
 
       @_devicePixelRatio = window.devicePixelRatio
