@@ -5,18 +5,12 @@ define (require) ->
   Color = require "two/color"
   Disc = require "two/disc"
   Utils = require "two/utils"
-
-  SELECTION_COLOR = new Color(r: 20, g: 0, b: 229)
-  SELECTION_FILL_COLOR = SELECTION_COLOR.clone(a: 0.1)
-  LARGE_HANDLE_SIZE = 10
-  LARGE_HANDLE_PADDING = 12
-  SMALL_HANDLE_SIZE = LARGE_HANDLE_SIZE / 2 + 2
-  SMALL_HANDLE_PADDING = LARGE_HANDLE_PADDING - SMALL_HANDLE_SIZE/2 + 2
+  Styles = require "./styles"
 
   class SelectionBox extends Box
     constructor: (@on) ->
       options =
-        material: new ShapeMaterial(strokeColor: SELECTION_COLOR, fillColor: SELECTION_FILL_COLOR)
+        material: new ShapeMaterial(strokeColor: Styles.SELECTION_COLOR, fillColor: Styles.SELECTION_FILL_COLOR)
         name: "selection-box"
       super options
 
@@ -58,55 +52,55 @@ define (require) ->
 
     _buildResizeHandles: ->
       largeHandle = new ResizeHandle
-        width: LARGE_HANDLE_SIZE
-        height: LARGE_HANDLE_SIZE
+        width: Styles.LARGE_HANDLE_SIZE
+        height: Styles.LARGE_HANDLE_SIZE
         signals: @on
 
-      smallHandle = largeHandle.clone(width: SMALL_HANDLE_SIZE, height: SMALL_HANDLE_SIZE)
+      smallHandle = largeHandle.clone(width: Styles.SMALL_HANDLE_SIZE, height: Styles.SMALL_HANDLE_SIZE)
 
       @_NEResizeHandle = @add(largeHandle.clone(
         name: "nesw-resize"
         scaleDirectionX: -1
         scaleDirectionY: -1
-        pixelOffsetX: LARGE_HANDLE_PADDING
-        pixelOffsetY: -LARGE_HANDLE_PADDING))
+        pixelOffsetX: Styles.LARGE_HANDLE_PADDING
+        pixelOffsetY: -Styles.LARGE_HANDLE_PADDING))
 
       @_NWResizeHandle = @add(largeHandle.clone(
         name: "nwse-resize"
         scaleDirectionX: 1
         scaleDirectionY: -1
-        pixelOffsetX: -LARGE_HANDLE_PADDING
-        pixelOffsetY: -LARGE_HANDLE_PADDING))
+        pixelOffsetX: -Styles.LARGE_HANDLE_PADDING
+        pixelOffsetY: -Styles.LARGE_HANDLE_PADDING))
 
       @_SEResizeHandle = @add(largeHandle.clone(
         name: "nwse-resize"
         scaleDirectionX: -1
         scaleDirectionY: 1
-        pixelOffsetX: LARGE_HANDLE_PADDING
-        pixelOffsetY: LARGE_HANDLE_PADDING))
+        pixelOffsetX: Styles.LARGE_HANDLE_PADDING
+        pixelOffsetY: Styles.LARGE_HANDLE_PADDING))
 
       @_SWResizeHandle = @add(largeHandle.clone(
         name: "nesw-resize"
         scaleDirectionX: 1
         scaleDirectionY: 1
-        pixelOffsetX: -LARGE_HANDLE_PADDING
-        pixelOffsetY: LARGE_HANDLE_PADDING))
+        pixelOffsetX: -Styles.LARGE_HANDLE_PADDING
+        pixelOffsetY: Styles.LARGE_HANDLE_PADDING))
 
       @_NResizeHandle = @add(smallHandle.clone(
         name: "ns-resize"
-        pixelOffsetY: -SMALL_HANDLE_PADDING))
+        pixelOffsetY: -Styles.SMALL_HANDLE_PADDING))
 
       @_EResizeHandle = @add(smallHandle.clone(
         name: "ew-resize"
-        pixelOffsetX: SMALL_HANDLE_PADDING))
+        pixelOffsetX: Styles.SMALL_HANDLE_PADDING))
 
       @_SResizeHandle = @add(smallHandle.clone(
         name: "ns-resize"
-        pixelOffsetY: SMALL_HANDLE_PADDING))
+        pixelOffsetY: Styles.SMALL_HANDLE_PADDING))
 
       @_WResizeHandle = @add(smallHandle.clone(
         name: "ew-resize"
-        pixelOffsetX: -SMALL_HANDLE_PADDING))
+        pixelOffsetX: -Styles.SMALL_HANDLE_PADDING))
 
     _buildOriginPoint: ->
       @_originMarker = @add new OriginMarker()
@@ -139,7 +133,7 @@ define (require) ->
     constructor: (options) ->
       options.material =
         new ShapeMaterial
-          strokeColor: SELECTION_COLOR
+          strokeColor: Styles.SELECTION_COLOR
           fillColor: "white"
           isFixedSize: true
 
@@ -215,7 +209,7 @@ define (require) ->
         radius: 2
         material: new ShapeMaterial(
           fillColor: "white"
-          strokeColor: SELECTION_COLOR
+          strokeColor: Styles.SELECTION_COLOR
           isFixedSize: true)
 
     attachTo: ->
