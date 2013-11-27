@@ -9,7 +9,7 @@ define (require) ->
   SpriteMaterial = require "two/sprite_material"
   Styles = require "./styles"
   Tool = require "./tools/tool"
-
+  ZoomTool = require "./tools/zoom"
 
   class TileSelectTool extends Tool
     name: "tileSelect"
@@ -45,6 +45,7 @@ define (require) ->
       super
       @tools.push new GrabTool(@)
       @tools.push new TileSelectTool(@)
+      @tools.push new ZoomTool(@)
 
     run: ->
       super

@@ -23,6 +23,9 @@ define ["gl-matrix"], (gl) ->
       @_viewMatrix = null
       @_viewProjectionMatrix = null
 
+    translate: (dx, dy) ->
+      @setPosition [@_x + dx, @_y + dy]
+
     getWorldMatrix: ->
       @_worldMatrix ?= @_createWorldMatrix()
 
