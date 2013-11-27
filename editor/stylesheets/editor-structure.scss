@@ -29,7 +29,6 @@ label {
 .panel {
   display: -webkit-flex;
   -webkit-user-select: none;
-  -webkit-border-radius: inherit;
 }
 .panel-vertical {
   @extend .panel;
@@ -42,6 +41,7 @@ label {
 
 .viewport {
   width: 100%;
+  -webkit-border-radius: inherit;
 }
 
 .dialog {
