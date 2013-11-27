@@ -1,19 +1,18 @@
 define (require) ->
+  Color = require "two/color"
   EditorBase = require "./editor_base"
   Image = require "two/image"
   SpriteMaterial = require "two/sprite_material"
   Sprite = require "two/sprite"
 
   class TilesetEditor extends EditorBase
-    constructor: ->
-      super
-
     run: ->
       super
 
-      image = new Image("assets/mario_spritesheet.png")
+      image = new Image("assets/mario_tileset.png")
       @_tileset = new Sprite(material: new SpriteMaterial(image: image))
 
+      @grid.material.color = new Color("black")
       image.loaded.add =>
         @_tileset.setWidth(image.getWidth())
         @_tileset.setHeight(image.getHeight())
