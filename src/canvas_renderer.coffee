@@ -13,21 +13,24 @@ define ["jquery",
       @$domElement = $("<canvas/>", tabindex: 0)
       @domElement = @$domElement.get(0)
 
-      @_devicePixelRatio = window.devicePixelRatio
-      @$domElement.attr
-        width: options.width*@_devicePixelRatio
-        height: options.height*@_devicePixelRatio
-      @_context = @domElement.getContext "2d"
+      @resize options.width, options.height
       @autoClear = options.autoClear ?= true
-
-      @_width = options.width
-      @_height = options.height
-
-      @_disableImageSmoothing()
 
     getAspectRatio: -> @domElement.width / @domElement.height
     getWidth: -> @_width
     getHeight: -> @_height
+
+    resize: (width, height) ->
+      @_devicePixelRatio = window.devicePixelRatio
+      @_width = width
+      @_height = height
+
+      @$domElement.attr
+        width: width*@_devicePixelRatio
+        height: height*@_devicePixelRatio
+
+      @_context = @domElement.getContext "2d"
+      @_disableImageSmoothing()
 
     getDevicePixelRatio: -> @_devicePixelRatio
 

@@ -9,9 +9,7 @@ define ["gl-matrix"], (gl) ->
 
     setWidth: (@_width) ->
       @_height = @_width / @_aspectRatio
-      @_projectionMatrix = null
-      @_projectionMatrixInverse = null
-      @_viewProjectionMatrix = null
+      @_invalidateViewProjection()
 
     getWidth: -> @_width
     getHeight: -> @_height
@@ -22,6 +20,10 @@ define ["gl-matrix"], (gl) ->
       @_worldMatrix = null
       @_viewMatrix = null
       @_viewProjectionMatrix = null
+
+    setAspectRatio: (value) ->
+      @_aspectRatio = value
+      @setWidth @_width
 
     translate: (dx, dy) ->
       @setPosition [@_x + dx, @_y + dy]
@@ -97,3 +99,7 @@ define ["gl-matrix"], (gl) ->
       gl.mat2d.multiply viewProjection, view, projection
       viewProjection
 
+    _invalidateViewProjection: ->
+      @_projectionMatrix = null
+      @_projectionMatrixInverse = null
+      @_viewProjectionMatrix = null

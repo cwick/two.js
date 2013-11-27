@@ -54,6 +54,7 @@ define (require) ->
       @$domElement.html(@$canvas)
 
       new EditorInput(@on, @canvas)
+      @_listenForResize()
 
       @on.cursorStyleChanged.add @onCursorStyleChanged, @
 
@@ -166,3 +167,21 @@ define (require) ->
     _clearQuickTool: ->
       @_quickTool = null
       @getCurrentTool()?.onSelected()
+
+    _listenForResize: ->
+      oldWidth = @$domElement.width()
+      oldHeight = @$domElement.height()
+
+      window.setInterval (=>
+        newWidth = @$domElement.width()
+        newHeight = @$domElement.height()
+
+        if oldWidth != newWidth || oldHeight != newHeight
+          @renderer.resize newWidth, newHeight
+          @camera.setAspectRatio @renderer.getWidth() / @renderer.getHeight()
+          oldWidth = newWidth
+          oldHeight = newHeight
+          console.log 'resize'
+          @render()
+      ), 100
+
