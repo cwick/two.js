@@ -45,7 +45,7 @@ define (require) ->
       @_selectionBox = new SelectionBox(@on)
 
       $("#show-grid").change (e) => @on.gridChanged.dispatch(isVisible: $(e.target).is(':checked'))
-      $("#snap-to-grid").change (e) => @on.gridSnappingChanged.dispatch(enabled: $(e.target).is(':checked'))
+      $("#snap-to-grid").change (e) => @on.gridSnappingChanged.dispatch($(e.target).is(':checked'))
       $("#grab-tool").click => @on.toolSelected.dispatch "grab"
       $("#select-tool").click => @on.toolSelected.dispatch "select"
       $("#stamp-tool").click => @on.toolSelected.dispatch "stamp"
