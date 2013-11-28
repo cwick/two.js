@@ -21,8 +21,8 @@ define (require) ->
         """
       )
 
-      gridWidth = new NumberInput(id: "tileset-grid-width", digits: 3, value: 32)
-      gridHeight = new NumberInput(id: "tileset-grid-height", digits: 3, value: 32)
+      gridWidth = new NumberInput(id: "tileset-grid-width", digits: 3, value: 32, minimum: 1)
+      gridHeight = new NumberInput(id: "tileset-grid-height", digits: 3, value: 32, minimum: 1)
       gridWidth.addClass "right-align"
 
       gridWidth.$domElement.insertAfter @$domElement.find("[for='tileset-grid-width']")

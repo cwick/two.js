@@ -82,9 +82,3 @@ define (require) ->
         @on.objectSelected.dispatch sprite
         @render()
 
-    onGridChanged: (options) ->
-      if options.isVisible?
-        o.setVisible(options.isVisible) for o in @sceneGrid.getChildren()
-
-      super
-

@@ -64,16 +64,13 @@ define (require) ->
       @_currentTile
 
     onGridChanged: (options) ->
-      if options.horizontalSize?
-        @grid.setHorizontalSize options.horizontalSize
-      if options.verticalSize?
-        @grid.setVerticalSize options.verticalSize
+      super
 
-      @grid.setHorizontalCells Math.round(@_tileset.getWidth()/@grid.getHorizontalSize())
-      @grid.setVerticalCells Math.round(@_tileset.getHeight()/@grid.getVerticalSize())
+      @grid.setHorizontalCells Math.ceil(@_tileset.getWidth()/@grid.getHorizontalSize())
+      @grid.setVerticalCells Math.ceil(@_tileset.getHeight()/@grid.getVerticalSize())
       @grid.setOrigin [-@grid.getWidth()/2, -@grid.getHeight()/2]
       @grid.build()
-      super
+      @render()
 
     onTileSelected: (selectionBox) ->
       @_currentTile = new Sprite

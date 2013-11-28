@@ -64,6 +64,7 @@ define (require) ->
       @on.objectDeselected.add @onObjectDeselected, @, -1
 
       @on.gridChanged.add @onGridChanged, @
+      @on.gridSnappingChanged.add @onGridSnappingChanged, @
 
       @on.quickToolDeselected.add @onQuickToolDeselected, @
       @on.quickToolSelected.add @onQuickToolSelected, @
@@ -77,6 +78,14 @@ define (require) ->
       @on.toolActivated.add @onToolActivated, @
 
     render: ->
+      return if @_isRenderPending
+
+      @_isRenderPending = true
+      window.setTimeout (=>
+        @_renderScenes()
+        @_isRenderPending = false), 0
+
+    _renderScenes: ->
       @renderer.clear()
       @renderer.render(@scene, @camera)
       @renderer.render(@sceneGrid, @camera)
@@ -98,6 +107,7 @@ define (require) ->
 
     onStylusDragged: (e) ->
       e.calculateWorldCoordinates(@projector)
+      e.editor = @
       tool = @getCurrentTool()
       if tool?.isActive()
         tool.onDragged(e)
@@ -120,7 +130,20 @@ define (require) ->
       @render()
 
     onGridChanged: (options) ->
+      if options.isVisible?
+        @grid.setVisible options.isVisible
+
+      if options.horizontalSize?
+        @grid.setHorizontalSize options.horizontalSize
+
+      if options.verticalSize?
+        @grid.setVerticalSize options.verticalSize
+
+      @grid.build()
       @render()
+
+    onGridSnappingChanged: (isEnabled) ->
+      @_isGridSnappingEnabled = isEnabled
 
     onQuickToolDeselected: ->
       return unless @_quickTool?
@@ -161,6 +184,14 @@ define (require) ->
     pickSceneObject: (canvasPoint) ->
       @projector.pick(canvasPoint, @scene)
 
+    snapToGrid: (point, mode="nearest") ->
+      return point unless @_isGridSnappingEnabled
+
+      switch mode
+        when "nearest" then point
+        when "lower-left" then point
+        else point
+
     _setCursor: (cursor) ->
       @$canvas.css "cursor", cursor
 
@@ -181,7 +212,6 @@ define (require) ->
           @camera.setAspectRatio @renderer.getWidth() / @renderer.getHeight()
           oldWidth = newWidth
           oldHeight = newHeight
-          console.log 'resize'
           @render()
       ), 100
 

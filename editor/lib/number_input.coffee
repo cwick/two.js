@@ -9,8 +9,15 @@ define ["jquery", "signals", "./control", "../key_codes"], ($, Signal, Control, 
 
       if options.digits?
         @$domElement.addClass "digit-#{options.digits}"
+
       if options.value?
         @setValue options.value
+
+      if options.minimum?
+        @$domElement.attr "min",options.minimum
+
+      if options.maximum?
+        @$domElement.attr "max",options.maximum
 
       @_decimalPlaces = options.decimalPlaces
       @changed = new Signal()

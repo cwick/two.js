@@ -11,12 +11,14 @@ define ["two/line_group", "two/color", "two/line_material"], (LineGroup, Color, 
       @build()
 
     setHorizontalSize: (value) ->
+      value = 1 unless value > 0
       @_horizontalSize = value
 
     getHorizontalSize: ->
       @_horizontalSize
 
     setVerticalSize: (value) ->
+      value = 1 unless value > 0
       @_verticalSize = value
 
     getVerticalSize: ->
@@ -44,6 +46,7 @@ define ["two/line_group", "two/color", "two/line_material"], (LineGroup, Color, 
       for x in [minX..maxX] by horizontalStep
         vertices.push [x, minY]
         vertices.push [x, maxY]
+
       for y in [minY..maxY] by verticalStep
         vertices.push [minX, y]
         vertices.push [maxX, y]

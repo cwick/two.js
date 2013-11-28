@@ -15,7 +15,6 @@ define (require) ->
       super options
 
       @on.objectChanged.add @_onObjectChanged, @
-      @on.gridSnappingChanged.add @_onGridSnappingChanged, @
       @_buildResizeHandles()
       @_buildOriginPoint()
 
@@ -111,10 +110,7 @@ define (require) ->
     onDragged: (e) ->
       newPosition = gl.vec2.create()
       gl.vec2.add newPosition, e.worldTranslation, @_initialPosition
-
-      if @_isGridSnappingEnabled
-        newPosition[0] = Math.round(newPosition[0])
-        newPosition[1] = Math.round(newPosition[1])
+      newPosition = e.editor.snapToGrid newPosition
 
       @setPosition newPosition
       @_object.setPosition newPosition
@@ -125,9 +121,6 @@ define (require) ->
 
     _onObjectChanged: (object) ->
       @shrinkWrap object if object is @_object
-
-    _onGridSnappingChanged: (e) ->
-      @_isGridSnappingEnabled = e.enabled
 
   class ResizeHandle extends Box
     constructor: (options) ->
@@ -212,6 +205,7 @@ define (require) ->
           strokeColor: Styles.SELECTION_COLOR
           isFixedSize: true)
 
+    # TODO: this doesn't behave like a gizmo so we shouldn't need these methods
     attachTo: ->
     detach: ->
     onStylusMoved: ->

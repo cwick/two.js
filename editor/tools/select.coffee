@@ -15,7 +15,6 @@ define (require) ->
       else if object?
         @editor.on.objectSelected.dispatch(object)
         @onMoved(e)
-        @editor.render()
       else
         @editor.on.objectDeselected.dispatch()
 
