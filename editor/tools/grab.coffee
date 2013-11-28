@@ -4,22 +4,14 @@ define (require) ->
 
   class GrabTool extends Tool
     name: "grab"
+    cursors:
+      normal: "-webkit-grab"
+      activated: "-webkit-grabbing"
 
     onActivated: ->
       super
 
       @_initialCameraPosition = @editor.camera.getPosition()
-
-      @editor.on.cursorStyleChanged.dispatch "-webkit-grabbing"
-
-    onDeactivated: ->
-      super
-      @editor.on.cursorStyleChanged.dispatch "-webkit-grab"
-
-    onSelected: ->
-      super
-      unless @isActive()
-        @editor.on.cursorStyleChanged.dispatch "-webkit-grab"
 
     onDragged: (e) ->
       super

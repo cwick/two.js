@@ -27,7 +27,9 @@ define ["gl-matrix",
       return false if deltaY == 0
       return false unless @_shouldHandleInput(e)
 
-      @signals.toolActivated.dispatch("zoom", @_getStylusPosition(e), deltaY*0.006)
+      @signals.toolApplied.dispatch("zoom",
+        canvasPoint: @_getStylusPosition(e).canvasPoint
+        amount: deltaY*0.006)
       return true
 
     _onKeydown: (e) ->

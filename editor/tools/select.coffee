@@ -24,10 +24,6 @@ define (require) ->
         @editor.on.gizmoDeactivated.dispatch @_activeGizmo
         @_activeGizmo = null
 
-    onSelected: ->
-      super
-      @editor.on.cursorStyleChanged.dispatch "auto"
-
     onMoved: (e) ->
       super
       gizmo = @editor.pickGizmo(e.canvasPoint)
@@ -35,7 +31,7 @@ define (require) ->
       if gizmo?
         gizmo.onStylusMoved()
       else
-        @editor.on.cursorStyleChanged.dispatch "auto"
+        @setCursor "normal"
 
     onDragged: (e) ->
       super

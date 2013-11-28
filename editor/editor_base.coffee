@@ -34,6 +34,7 @@ define (require) ->
         stylusTouched: new Signal()
         toolSelected: new Signal()
         toolActivated: new Signal()
+        toolApplied: new Signal()
 
     run: ->
       @renderer = new CanvasRenderer
@@ -76,6 +77,7 @@ define (require) ->
 
       @on.toolSelected.add @onToolSelected, @
       @on.toolActivated.add @onToolActivated, @
+      @on.toolApplied.add @onToolApplied, @
 
     render: ->
       return if @_isRenderPending
@@ -167,10 +169,15 @@ define (require) ->
       @_tool = tool
       @_tool?.onSelected()
 
-    onToolActivated: (which, e, toolArguments) ->
+    onToolActivated: (which, e) ->
       tool = @getTool(which)
       if tool?
-        tool.onActivated(e, toolArguments)
+        tool.onActivated(e)
+
+    onToolApplied: (which, options) ->
+      tool = @getTool(which)
+      if tool?
+        tool[which](options)
 
     getTool: (name) ->
       (t for t in @tools when t.name == name)[0]
