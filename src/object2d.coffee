@@ -78,6 +78,7 @@ define ["gl-matrix", "./material", "./utils", "./bounding_box"], \
         x: @_x
         y: @_y
         material: @material
+        origin: @_origin
         pixelOffsetX: @pixelOffsetX
         pixelOffsetY: @pixelOffsetY, overrides
 
