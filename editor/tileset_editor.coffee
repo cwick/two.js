@@ -5,10 +5,12 @@ define (require) ->
   GrabTool = require "./tools/grab"
   Image = require "two/image"
   ShapeMaterial = require "two/shape_material"
+  Signal = require "signals"
   Sprite = require "two/sprite"
   SpriteMaterial = require "two/sprite_material"
   Styles = require "./styles"
   Tool = require "./tools/tool"
+  Utils = require "two/utils"
   ZoomTool = require "./tools/zoom"
 
   class TileSelectTool extends Tool
@@ -38,7 +40,7 @@ define (require) ->
         origin: [-gridWidth/2, -gridHeight/2]
 
       @editor.sceneGrid.add @_selectionBox
-      @editor.on.objectChanged.dispatch @_selectionBox
+      @editor.on.tileSelected.dispatch @_selectionBox
 
   class TilesetEditor extends EditorBase
     constructor: ->
@@ -47,11 +49,19 @@ define (require) ->
       @tools.push new TileSelectTool(@)
       @tools.push new ZoomTool(@)
 
+      Utils.merge @on,
+        tileSelected: new Signal()
+
+      @on.tileSelected.add @onTileSelected, @
+
     run: ->
       super
       @on.toolSelected.dispatch "tileSelect"
       @grid.material.color = new Color("black")
       @_loadImage "assets/mario_tileset.png"
+
+    getCurrentTile: ->
+      @_currentTile
 
     onGridChanged: (options) ->
       if options.horizontalSize?
@@ -64,6 +74,17 @@ define (require) ->
       @grid.setOrigin [-@grid.getWidth()/2, -@grid.getHeight()/2]
       @grid.build()
       super
+
+    onTileSelected: (selectionBox) ->
+      @_currentTile = new Sprite
+        material: new SpriteMaterial
+          image: @_tileset.material.image
+          offsetX: selectionBox.getX()
+          offsetY: selectionBox.getY()
+          width: selectionBox.getWidth()
+          height: selectionBox.getHeight()
+
+      @render()
 
     _loadImage: (path) ->
       image = new Image(path)

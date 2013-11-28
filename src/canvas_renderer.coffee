@@ -138,15 +138,7 @@ define ["jquery",
         throw new Error("Unknown object type #{object.constructor.name}")
 
       if object instanceof Sprite
-        image = object.material.image
-        if image?
-          @_context.scale 1, -1
-          @_context.drawImage(
-            image.getImageData(),
-            -object.getWidth()/2,
-            -object.getHeight()/2,
-            object.getWidth(),
-            object.getHeight())
+        @_drawSprite object
 
       if object instanceof Shape
         @_context.fill() unless object.material.fillColor.a is 0
@@ -167,3 +159,33 @@ define ["jquery",
       @_context.imageSmoothingEnabled = false
       @_context.mozImageSmoothingEnabled = false
       @_context.webkitImageSmoothingEnabled = false
+
+    _drawSprite: (sprite) ->
+      material = sprite.material
+      image = material.image
+
+      return unless image
+
+      imageData = image.getImageData()
+
+      sourceWidth = material.width || image.getWidth()
+      sourceHeight = material.height || image.getHeight()
+      sourceX = sprite.material.offsetX
+      sourceY = image.getHeight() - material.offsetY - sourceHeight
+
+      destinationX = -sprite.getWidth()/2
+      destinationY = -sprite.getHeight()/2
+      destinationWidth = sprite.getWidth()
+      destinationHeight = sprite.getHeight()
+
+      @_context.scale 1, -1
+      @_context.drawImage(
+        image.getImageData(),
+        sourceX
+        sourceY,
+        sourceWidth,
+        sourceHeight,
+        destinationX,
+        destinationY,
+        destinationWidth,
+        destinationHeight)

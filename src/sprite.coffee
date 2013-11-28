@@ -12,3 +12,6 @@ define ["./box", "./sprite_material"], (Box, SpriteMaterial) ->
         else
           @setName "Sprite (#{@getId()})"
 
+    clone: (overrides) ->
+      new Sprite(@cloneProperties overrides)
+

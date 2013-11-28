@@ -12,6 +12,7 @@ define (require) ->
   SelectTool = require "./tools/select"
   Signal = require "signals"
   Sprite = require "two/sprite"
+  StampTool = require "./tools/stamp"
   TilesetEditorDialog = require "./tileset_editor_dialog"
   Utils = require "two/utils"
   ZoomTool = require "./tools/zoom"
@@ -23,8 +24,14 @@ define (require) ->
       Utils.merge @on,
         spriteCreated: new Signal()
 
+      @tilesetDialog = new TilesetEditorDialog()
+      @tilesetDialog.setWidth 400
+      @tilesetDialog.setHeight 400
+      @tilesetEditor = @tilesetDialog.editor
+
       @tools.push new GrabTool(@)
       @tools.push new SelectTool(@)
+      @tools.push new StampTool(@)
       @tools.push new ZoomTool(@)
 
     run: ->
@@ -41,16 +48,13 @@ define (require) ->
       $("#snap-to-grid").change (e) => @on.gridSnappingChanged.dispatch(enabled: $(e.target).is(':checked'))
       $("#grab-tool").click => @on.toolSelected.dispatch "grab"
       $("#select-tool").click => @on.toolSelected.dispatch "select"
+      $("#stamp-tool").click => @on.toolSelected.dispatch "stamp"
       $("#zoom-tool").click => @on.toolSelected.dispatch "zoom"
       $("#new-sprite").click => @on.spriteCreated.dispatch()
 
-      tilesetEditor = new TilesetEditorDialog()
-      tilesetEditor.setWidth 400
-      tilesetEditor.setHeight 400
-
       $("#editor").append new Inspector(@on).domElement
-      $("#editor").append tilesetEditor.domElement
-      tilesetEditor.run()
+      $("#editor").append @tilesetDialog.domElement
+      @tilesetEditor.run()
 
       @on.spriteCreated.add @onSpriteCreated, @
       @on.toolSelected.dispatch "select"

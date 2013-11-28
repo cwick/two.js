@@ -33,6 +33,4 @@ define (require) ->
 
       @editor = new TilesetEditor()
       @setBody @editor.domElement
-
-    run: ->
-      @editor.run()
+      @setTranslation 50, 150
