@@ -12,8 +12,3 @@ define ["./box", "./sprite_material"], (Box, SpriteMaterial) ->
         else
           @setName "Sprite (#{@getId()})"
 
-    autoSize: ->
-      image = @material.image
-      if image?
-        @setWidth((image.getWidth() / image.getHeight())*@getHeight())
-

@@ -1,5 +1,5 @@
-define ["jquery", "./lib/dialog", "./lib/number_input", "./lib/image_input", "two/image", "two/sprite"], \
-       ($, Dialog, NumberInput, ImageInput, Image, Sprite) ->
+define ["jquery", "./lib/dialog", "./lib/number_input", "./lib/image_input", "two/image"], \
+       ($, Dialog, NumberInput, ImageInput, Image) ->
   class Inspector extends Dialog
     constructor: (@on) ->
       super
@@ -13,7 +13,6 @@ define ["jquery", "./lib/dialog", "./lib/number_input", "./lib/image_input", "tw
       @objectPositionX = new NumberInput(digits: 7, decimalPlaces: 2)
       @objectPositionY = new NumberInput(digits: 7, decimalPlaces: 2)
       @objectScale = new NumberInput(digits: 7, decimalPlaces: 2)
-      @spriteImage = new ImageInput()
 
       @setWidth 200
       @setTranslation 50, 50
@@ -48,10 +47,6 @@ define ["jquery", "./lib/dialog", "./lib/number_input", "./lib/image_input", "tw
             <tr>
               <td>Visible</td>
               <td><input type="checkbox"/></td>
-            </tr>
-            <tr>
-              <td>Image</td>
-              <td id="inspector-sprite-image"></td>
             </tr>
           </table>
           <table style="display:none">
@@ -111,17 +106,11 @@ define ["jquery", "./lib/dialog", "./lib/number_input", "./lib/image_input", "tw
       scaleRow.append @objectScale.domElement
 
       @$domElement.find("input").change (e) => @_onInputChanged(e)
-      @spriteImage.changed.add @_onInputChanged, @
-      body.find("#inspector-sprite-image").append @spriteImage.domElement
 
     _onObjectSelected: (object) ->
       @_object = object
       @_copyFromObject object
       @$domElement.find("input").blur()
-      if @_object instanceof Sprite
-        @spriteImage.show()
-      else
-        @spriteImage.hide()
       @show()
 
     _onObjectDeselected: ->
@@ -145,10 +134,6 @@ define ["jquery", "./lib/dialog", "./lib/number_input", "./lib/image_input", "tw
       object.setY @objectPositionY.getValue()
       object.setScale @objectScale.getValue()
 
-      if object instanceof Sprite
-        object.material.image = new Image(@spriteImage.getValue())
-        object.autoSize()
-
       @on.objectChanged.dispatch object
 
     _copyFromObject: (object) ->
@@ -156,6 +141,4 @@ define ["jquery", "./lib/dialog", "./lib/number_input", "./lib/image_input", "tw
       @objectPositionX.setValue object.getX()
       @objectPositionY.setValue object.getY()
       @objectScale.setValue object.getScale()
-      if @_object instanceof Sprite
-        @spriteImage.setValue object.material.image.getImageData()
 
