@@ -18,7 +18,9 @@ define (require) ->
       worldPoint = @editor.projector.unproject(e.canvasPoint)
       worldPoint = @editor.snapToGrid(worldPoint, "lower-left")
 
-      tile.setOrigin [-tile.getWidth()/2, -tile.getHeight()/2]
+      if @editor.isGridSnappingEnabled()
+        tile.setOrigin [-tile.getWidth()/2, -tile.getHeight()/2]
+
       tile.setPosition [worldPoint[0], worldPoint[1]]
 
       @editor.on.objectChanged.dispatch(@editor.scene.add tile)

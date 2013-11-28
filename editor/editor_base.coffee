@@ -203,6 +203,8 @@ define (require) ->
           [Math.floor(gridPoint[0]), Math.floor(gridPoint[1])]
         else point
 
+    isGridSnappingEnabled: -> @_isGridSnappingEnabled
+
     _setCursor: (cursor) ->
       @$canvas.css "cursor", cursor
 
