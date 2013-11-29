@@ -129,3 +129,10 @@ input[type="number"] {
     background-image: icon-url("pointer-active.png");
   }
 }
+
+.icon-stamp {
+  background-image: icon-url("stamp.png");
+  &.active {
+    background-image: icon-url("stamp-active.png");
+  }
+}

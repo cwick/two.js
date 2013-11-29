@@ -9,7 +9,7 @@ define ["jquery", "./lib/toolbar"], ($, Toolbar) ->
         ["select", "pointer"],
         ["zoom"],
         ["grab", "hand"],
-        ["stamp", "pointer"]]
+        ["stamp"]]
 
     _onToolSelected: (which) ->
       item = @$domElement.find "##{which}-tool"
