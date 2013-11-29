@@ -69,6 +69,13 @@ define (require) ->
       @_selectionBox.detach()
       super
 
+
+    onToolSelected: (which) ->
+      super
+
+      if which == "stamp"
+        @on.objectDeselected.dispatch()
+
     onSpriteCreated: ->
       image = new Image "assets/default.png"
       sprite = new Sprite(material: new SpriteMaterial(image: image))
