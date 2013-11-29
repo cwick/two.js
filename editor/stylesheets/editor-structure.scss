@@ -180,6 +180,8 @@ input::-webkit-inner-spin-button {
   $handle_width: 4px;
   %resize {
     border-radius: inherit;
+    background-color: transparent;
+    z-index: 999;
   }
 
   %vertical-resize {
