@@ -14,7 +14,9 @@ $light-border-color: rgb(226, 226, 226);
     style: solid;
     color: $color;
     width: $width;
-    radius: $radius;
+    @if $type == border {
+      radius: $radius;
+    }
     @if $type == outline {
       offset: $offset;
     }
@@ -118,4 +120,9 @@ input[type="number"] {
 .icon-hand {
   @extend .icon;
   background-image: icon-url("hand.png");
+}
+
+.icon-select {
+  @extend .icon;
+  background-image: icon-url("select.png");
 }

@@ -105,6 +105,13 @@ label {
 .toolbar-vertical {
   @extend .toolbar;
   text-align: center;
+
+  li {
+    &:first-child {
+      margin-top: 0;
+    }
+    margin-top: 2px;
+  }
 }
 
 input, select, textarea {
