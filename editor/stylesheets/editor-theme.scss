@@ -115,33 +115,19 @@ input[type="number"] {
   }
 }
 
-.icon-zoom {
-  background-image: icon-url("zoom.png");
-  &.active {
-    background-image: icon-url("zoom-active.png");
+@mixin icon($name) {
+  .icon-#{$name} {
+    background-image: icon-url("#{$name}.png");
+    &.active {
+      background-image: icon-url("#{$name}-active.png");
+    }
   }
 }
 
-.icon-hand {
-  background-image: icon-url("hand.png");
-  &.active {
-    background-image: icon-url("hand-active.png");
-  }
-}
-
-.icon-pointer {
-  background-image: icon-url("pointer.png");
-  &.active {
-    background-image: icon-url("pointer-active.png");
-  }
-}
-
-.icon-stamp {
-  background-image: icon-url("stamp.png");
-  &.active {
-    background-image: icon-url("stamp-active.png");
-  }
-}
+@include icon("zoom");
+@include icon("hand");
+@include icon("pointer");
+@include icon("stamp");
 
 .toolbar-divider {
   @include border($type: border-top, $color: $dark-border-color);
