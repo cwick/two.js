@@ -64,7 +64,6 @@ canvas {
   @include border($type: border-bottom, $radius: 0, $color: $light-border-color, $width: 2px);
 }
 .toolbar-vertical {
-  @extend .toolbar;
   border: none;
   @include border($type: border-right, $radius: 0, $color: $light-border-color, $width: 2px);
 }
