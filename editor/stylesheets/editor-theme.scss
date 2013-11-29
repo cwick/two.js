@@ -124,6 +124,9 @@ input[type="number"] {
 
 .icon-hand {
   background-image: icon-url("hand.png");
+  &.active {
+    background-image: icon-url("hand-active.png");
+  }
 }
 
 .icon-pointer {
@@ -138,4 +141,8 @@ input[type="number"] {
   &.active {
     background-image: icon-url("stamp-active.png");
   }
+}
+
+.toolbar-divider {
+  @include border($type: border-top, $color: $dark-border-color);
 }

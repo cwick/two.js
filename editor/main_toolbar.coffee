@@ -8,8 +8,9 @@ define ["jquery", "./lib/toolbar"], ($, Toolbar) ->
       @_addTool(t[0], t[1]) for t in [
         ["select", "pointer"],
         ["zoom"],
-        ["grab", "hand"],
-        ["stamp"]]
+        ["grab", "hand"]]
+      @addItem $("<div/>", class: "toolbar-divider")
+      @_addTool "stamp"
 
     _onToolSelected: (which) ->
       item = @$domElement.find "##{which}-tool"
