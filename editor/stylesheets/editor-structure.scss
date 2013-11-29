@@ -7,7 +7,7 @@ h1 {
 }
 
 canvas {
-  -webkit-border-radius: inherit;
+  border-radius: inherit;
   outline: none;
   flex: 1;
 }
@@ -42,7 +42,12 @@ label {
 
 .viewport {
   width: 100%;
-  -webkit-border-radius: inherit;
+  border-radius: inherit;
+  overflow: hidden;
+
+  // Fix for overflow: hidden not working in Chrome:
+  // http://stackoverflow.com/questions/15007903/html5-canvas-with-rounded-corner
+  -webkit-mask-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAA5JREFUeNpiYGBgAAgwAAAEAAGbA+oJAAAAAElFTkSuQmCC);
 }
 
 .dialog {
@@ -55,13 +60,13 @@ label {
 
 .dialog-header {
   min-height: 15px;
-  -webkit-border-top-left-radius: inherit;
-  -webkit-border-top-right-radius: inherit;
+  border-top-left-radius: inherit;
+  border-top-right-radius: inherit;
 }
 
 .dialog-footer, .dialog-body.no-footer {
-  -webkit-border-bottom-left-radius: inherit;
-  -webkit-border-bottom-right-radius: inherit;
+  border-bottom-left-radius: inherit;
+  border-bottom-right-radius: inherit;
 }
 
 .dialog-body {
@@ -99,10 +104,11 @@ label {
 }
 .toolbar-vertical {
   @extend .toolbar;
+  text-align: center;
 }
 
 input, select, textarea {
-  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
   width: 100%;
   margin: auto;
   font-size: inherit;
@@ -117,10 +123,12 @@ input[type="number"] {
   &:focus {
     cursor: auto;
     box-shadow: none;
-    -webkit-box-shadow: none;
   }
   &.digit-7 {
     width: 4em;
+  }
+  &.digit-5 {
+    width: 3.2em;
   }
   &.digit-3 {
     width: 2em;
@@ -160,7 +168,7 @@ input::-webkit-inner-spin-button {
 .resizable {
   $handle_width: 4px;
   %resize {
-    -webkit-border-radius: inherit;
+    border-radius: inherit;
   }
 
   %vertical-resize {

@@ -12,7 +12,7 @@ define ["jquery", "./lib/dialog", "./lib/number_input", "./lib/image_input", "tw
 
       @objectPositionX = new NumberInput(digits: 7, decimalPlaces: 2)
       @objectPositionY = new NumberInput(digits: 7, decimalPlaces: 2)
-      @objectScale = new NumberInput(digits: 7, decimalPlaces: 2)
+      @objectScale = new NumberInput(digits: 5, decimalPlaces: 2)
 
       @setWidth 200
       @setTranslation 50, 50

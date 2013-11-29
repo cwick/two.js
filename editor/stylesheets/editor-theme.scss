@@ -1,3 +1,17 @@
+@import "functions";
+
+@mixin light-border($type: border, $radius: 4px, $offset: 0px, $width: 1px) {
+  #{$type}: {
+    style: solid;
+    color: rgb(160,160,160);
+    width: $width;
+    @if $type == outline {
+      offset: $offset;
+    }
+  }
+  border-radius: $radius;
+}
+
 body {
   font: {
     family: Helvetica, Arial, sans-serif;
@@ -13,13 +27,23 @@ h1 {
   }
 }
 
+button {
+  border: none;
+  outline: none;
+  background-color: transparent;
+}
+
+canvas {
+  background-color: white;
+}
+
 .dialog {
   border: {
     color: #999999;
     width: 1px;
     style: solid;
   }
-  -webkit-border-radius: 8px;
+  border-radius: 8px;
 }
 
 .dialog-header, .dialog-footer, .toolbar {
@@ -27,7 +51,7 @@ h1 {
 }
 
 .toolbar {
-  -webkit-border-radius: 0;
+  border-radius: 0;
 }
 
 .dialog-header, .toolbar {
@@ -52,12 +76,7 @@ h1 {
 }
 
 input, select, textarea {
-  border: {
-    style: solid;
-    color: rgb(160,160,160);
-    width: 1px;
-  }
-  -webkit-border-radius: 4px;
+  @include light-border;
 }
 
 input[type="number"] {
@@ -65,13 +84,7 @@ input[type="number"] {
   background-color: transparent;
   &:focus {
     color: #111211;
-    -webkit-border-radius: 0;
-    outline: {
-      width: 1px;
-      color: rgb(160,160,160);
-      style: solid;
-      offset: 3px;
-    }
+    @include light-border($type: outline, $offset: 3px);
   }
 }
 
@@ -88,6 +101,43 @@ input[type="number"] {
   }
 }
 
-canvas {
-  background-color: white;
+.icon-hand {
+  background: {
+    image: url("../../editor/icons/hand.png");
+    size: 25px 25px;
+    repeat: no-repeat;
+    position: center center;
+  }
+
+  width: 25px;
+  height: 25px;
+  padding: 15px;
+
+  &:hover {
+    @include light-border;
+    margin: -1px;
+  }
+}
+
+.icon {
+  background: {
+    size: 25px 25px;
+    repeat: no-repeat;
+    position: center center;
+  }
+
+  width: 25px;
+  height: 25px;
+  padding: 15px;
+
+  &:hover {
+    @include light-border;
+    margin: -1px;
+  }
+}
+
+
+.icon-zoom {
+  @extend .icon;
+  background-image: icon-url("zoom.png");
 }
