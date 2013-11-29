@@ -1,15 +1,24 @@
 @import "functions";
 
-@mixin light-border($type: border, $radius: 4px, $offset: 0px, $width: 1px) {
+$dark-border-color: rgb(153, 153, 153);
+$light-border-color: rgb(226, 226, 226);
+
+@mixin border(
+  $color,
+  $type: border,
+  $radius: 4px,
+  $offset: 0px,
+  $width: 1px)
+{
   #{$type}: {
     style: solid;
-    color: rgb(160,160,160);
+    color: $color;
     width: $width;
+    radius: $radius;
     @if $type == outline {
       offset: $offset;
     }
   }
-  border-radius: $radius;
 }
 
 body {
@@ -38,12 +47,7 @@ canvas {
 }
 
 .dialog {
-  border: {
-    color: #999999;
-    width: 1px;
-    style: solid;
-  }
-  border-radius: 8px;
+  @include border($color: $dark-border-color, $radius: 8px);
 }
 
 .dialog-header, .dialog-footer, .toolbar {
@@ -55,20 +59,12 @@ canvas {
 }
 
 .dialog-header, .toolbar {
-  border-bottom: {
-    color: #E2E3E2;
-    style: solid;
-    width: 2px;
-  }
+  @include border($type: border-bottom, $radius: 0, $color: $light-border-color, $width: 2px);
 }
 .toolbar-vertical {
   @extend .toolbar;
   border: none;
-  border-right: {
-    color: #E2E3E2;
-    style: solid;
-    width: 2px;
-  }
+  @include border($type: border-right, $radius: 0, $color: $light-border-color, $width: 2px);
 }
 
 .dialog-body {
@@ -76,7 +72,7 @@ canvas {
 }
 
 input, select, textarea {
-  @include light-border;
+  @include border($dark-border-color);
 }
 
 input[type="number"] {
@@ -84,7 +80,7 @@ input[type="number"] {
   background-color: transparent;
   &:focus {
     color: #111211;
-    @include light-border($type: outline, $offset: 3px);
+    @include border($color: $dark-border-color, $type: outline, $offset: 3px);
   }
 }
 
@@ -94,29 +90,7 @@ input[type="number"] {
 
 .tabs {
   justify-content: space-between;
-  border-top: {
-    color: #E2E3E2;
-    style: solid;
-    width: 2px;
-  }
-}
-
-.icon-hand {
-  background: {
-    image: url("../../editor/icons/hand.png");
-    size: 25px 25px;
-    repeat: no-repeat;
-    position: center center;
-  }
-
-  width: 25px;
-  height: 25px;
-  padding: 15px;
-
-  &:hover {
-    @include light-border;
-    margin: -1px;
-  }
+  @include border($type: border-top, $color: $light-border-color, $width: 2px);
 }
 
 .icon {
@@ -131,13 +105,17 @@ input[type="number"] {
   padding: 15px;
 
   &:hover {
-    @include light-border;
+    @include border($dark-border-color);
     margin: -1px;
   }
 }
 
-
 .icon-zoom {
   @extend .icon;
   background-image: icon-url("zoom.png");
+}
+
+.icon-hand {
+  @extend .icon;
+  background-image: icon-url("hand.png");
 }
