@@ -124,5 +124,8 @@ input[type="number"] {
 }
 
 .icon-pointer {
-  background-image: icon-url("pointer-selected2.png");
+  background-image: icon-url("pointer.png");
+  &.active {
+    background-image: icon-url("pointer-active.png");
+  }
 }

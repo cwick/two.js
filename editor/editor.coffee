@@ -46,10 +46,6 @@ define (require) ->
 
       $("#show-grid").change (e) => @on.gridChanged.dispatch(isVisible: $(e.target).is(':checked'))
       $("#snap-to-grid").change (e) => @on.gridSnappingChanged.dispatch($(e.target).is(':checked'))
-      $("#grab-tool").click => @on.toolSelected.dispatch "grab"
-      $("#select-tool").click => @on.toolSelected.dispatch "select"
-      $("#stamp-tool").click => @on.toolSelected.dispatch "stamp"
-      $("#zoom-tool").click => @on.toolSelected.dispatch "zoom"
       $("#new-sprite").click => @on.spriteCreated.dispatch()
 
       $("#editor").append new Inspector(@on).domElement

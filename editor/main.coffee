@@ -7,9 +7,12 @@ require.config
     "signals": "../lib/signals"
     "two": "."
 
-require ["editor/editor"], (Editor) ->
+require ["editor/editor", "editor/main_toolbar"], (Editor, MainToolbar) ->
   editor = new Editor()
 
+  toolbar = new MainToolbar(editor.on)
+
+  $(".main-view").append toolbar.domElement
   $(".main-view").append editor.domElement
   editor.run()
 
