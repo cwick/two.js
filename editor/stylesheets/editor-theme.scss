@@ -110,19 +110,20 @@ input[type="number"] {
     @include border($dark-border-color);
     margin: -1px;
   }
+  &.active {
+    @extend .icon:hover;
+    background-color: rgb(221, 221, 221);
+  }
 }
 
 .icon-zoom {
-  @extend .icon;
   background-image: icon-url("zoom.png");
 }
 
 .icon-hand {
-  @extend .icon;
   background-image: icon-url("hand.png");
 }
 
-.icon-select {
-  @extend .icon;
-  background-image: icon-url("select.png");
+.icon-pointer {
+  background-image: icon-url("pointer-selected2.png");
 }
