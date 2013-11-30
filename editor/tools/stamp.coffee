@@ -50,14 +50,13 @@ define (require) ->
 
     _onTileSelected: ->
       return unless @isSelected()
+      @_setPreviewTile @tileset.getCurrentTile().clone()
+
+    _setPreviewTile: (tile) ->
       @_removePreviewTile()
-
-      @_previewTile = @tileset.getCurrentTile().clone()
-
-      @_addPreviewTile()
-
-    _addPreviewTile: ->
+      @_previewTile = tile
       return unless @_previewTile?
+
       @editor.sceneGizmos.add @_previewTile
       @editor.on.objectChanged.dispatch @_previewTile
 
@@ -65,6 +64,7 @@ define (require) ->
       return unless @_previewTile?
       @editor.sceneGizmos.remove @_previewTile
       @editor.on.objectChanged.dispatch @_previewTile
+      @_previewTile = null
 
     _snapToGrid: (worldPoint) ->
       @editor.snapToGrid(worldPoint, "lower-left")
