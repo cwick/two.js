@@ -2,6 +2,7 @@ define (require) ->
   $ = require "jquery"
   Camera = require "two/camera"
   CanvasRenderer = require "two/canvas_renderer"
+  CommonInputBindings = require "./common_input_bindings"
   Control = require "./lib/control"
   EditorInput = require "./editor_input"
   Grid = require "./grid"
@@ -36,6 +37,8 @@ define (require) ->
         toolActivated: new Signal()
         toolApplied: new Signal()
 
+      @inputBindings = new CommonInputBindings(@on)
+
     run: ->
       @renderer = new CanvasRenderer
         width: @$domElement.width()
@@ -54,7 +57,7 @@ define (require) ->
       @$canvas = $(@canvas)
       @$domElement.html(@$canvas)
 
-      new EditorInput(@on, @canvas)
+      new EditorInput(@canvas, @inputBindings)
       @_listenForResize()
 
       @on.cursorStyleChanged.add @onCursorStyleChanged, @

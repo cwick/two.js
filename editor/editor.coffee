@@ -4,7 +4,9 @@ define (require) ->
   Disc = require "two/disc"
   EditorBase = require "./editor_base"
   GrabTool = require "./tools/grab"
+  KeyCodes = require "./key_codes"
   Image = require "two/image"
+  InputBindings = require "./input_bindings"
   Inspector = require "./inspector"
   ShapeMaterial = require "two/shape_material"
   SpriteMaterial = require "two/sprite_material"
@@ -14,15 +16,13 @@ define (require) ->
   Sprite = require "two/sprite"
   StampTool = require "./tools/stamp"
   TilesetEditorDialog = require "./tileset_editor_dialog"
-  Utils = require "two/utils"
   ZoomTool = require "./tools/zoom"
 
   class Editor extends EditorBase
     constructor: ->
       super
 
-      Utils.merge @on,
-        spriteCreated: new Signal()
+      @on.spriteCreated = new Signal()
 
       @tilesetDialog = new TilesetEditorDialog()
       @tilesetDialog.setWidth 400
@@ -33,6 +33,10 @@ define (require) ->
       @tools.push new SelectTool(@)
       @tools.push new StampTool(@)
       @tools.push new ZoomTool(@)
+
+      @inputBindings.addKeyBinding
+        keyCode: KeyCodes.S
+        onKeyDown: => @on.toolSelected.dispatch "stamp"
 
     run: ->
       super
@@ -68,7 +72,6 @@ define (require) ->
       @sceneGizmos.remove @_selectionBox
       @_selectionBox.detach()
       super
-
 
     onToolSelected: (which) ->
       super

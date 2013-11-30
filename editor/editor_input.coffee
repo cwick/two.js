@@ -9,7 +9,8 @@ define ["gl-matrix",
   class EditorInput
     @capturingCanvas = null
 
-    constructor: (@signals, @canvas) ->
+    constructor: (@canvas, @inputBindings) ->
+      @signals = @inputBindings.signals
       $(document).on "mousewheel keydown keyup mousedown mouseup mousemove", => @_onUserInput.apply @, arguments
       $(@canvas).mouseenter => @canvas.focus()
 
@@ -27,23 +28,25 @@ define ["gl-matrix",
       return false if deltaY == 0
       return false unless @_shouldHandleInput(e)
 
-      @signals.toolApplied.dispatch("zoom",
-        canvasPoint: @_getStylusPosition(e).canvasPoint
-        amount: deltaY*0.006)
+      eventInfo = @_getStylusPosition(e)
+      eventInfo.amount = deltaY
+
+      @inputBindings.onMouseWheelMoved eventInfo
+
       return true
 
     _onKeydown: (e) ->
       return false unless @_shouldHandleInput(e)
 
-      if e.keyCode == KeyCodes.SHIFT
-        @signals.quickToolSelected.dispatch "grab"
+      eventInfo = @_getStylusPosition(e)
+      eventInfo.keyCode = e.keyCode
+
+      @inputBindings.onKeyDown eventInfo
 
       return false
 
     _onKeyup: (e) ->
-      if e.keyCode == KeyCodes.SHIFT
-        @signals.quickToolDeselected.dispatch()
-
+      @inputBindings.onKeyUp keyCode: e.keyCode
       return false
 
     _onMousedown: (e) ->
