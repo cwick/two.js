@@ -58,6 +58,8 @@ define (require) ->
       @on.spriteCreated.add @onSpriteCreated, @
       @on.objectDeleted.add @onObjectDeleted, @
       @on.toolSelected.dispatch "select"
+      @on.gridSnappingChanged.dispatch true
+      @on.gridChanged.dispatch isVisible: true
       @render()
 
     onObjectSelected: (object) ->
@@ -91,6 +93,15 @@ define (require) ->
     onObjectDeleted: (object) ->
       @on.objectDeselected.dispatch()
       @scene.remove object
+
+    onGridSnappingChanged: (isEnabled) ->
+      super
+      $("#snap-to-grid").attr "checked", isEnabled
+
+    onGridChanged: (e) ->
+      super
+      if e.isVisible?
+        $("#show-grid").attr "checked", e.isVisible
 
     _addKeyBindings: ->
       @inputBindings.addKeyBinding
