@@ -147,6 +147,7 @@ define ["jquery",
       @_context.closePath()
 
     _applyObjectMaterial: (material) ->
+      @_context.globalAlpha = material.opacity
       if material instanceof ShapeMaterial
         @_context.fillStyle = material.fillColor.css()
         @_context.strokeStyle = material.strokeColor.css()

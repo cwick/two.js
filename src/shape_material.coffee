@@ -1,4 +1,4 @@
-define ["./material", "./color"], (Material, Color) ->
+define ["./material", "./color", "./utils"], (Material, Color, Utils) ->
   class ShapeMaterial extends Material
     constructor: (options={}) ->
       @fillColor = @_makeColor(options.fillColor)
@@ -6,4 +6,11 @@ define ["./material", "./color"], (Material, Color) ->
 
       super options
 
+    clone: (overrides) ->
+      new ShapeMaterial(@cloneProperties overrides)
+
+    cloneProperties: (overrides) ->
+      super Utils.merge(
+        fillColor: @fillColor
+        strokeColor: @strokeColor, overrides)
 

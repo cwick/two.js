@@ -1,4 +1,4 @@
-define ["./shape_material", "./color"], (ShapeMaterial, Color) ->
+define ["./shape_material", "./color", "./utils"], (ShapeMaterial, Color, Utils) ->
   class SpriteMaterial extends ShapeMaterial
     constructor: (options={}) ->
       options.fillColor ?= new Color(a: 0)
@@ -21,3 +21,14 @@ define ["./shape_material", "./color"], (ShapeMaterial, Color) ->
       delete options.height
 
       super
+
+    clone: (overrides) ->
+      new SpriteMaterial(@cloneProperties overrides)
+
+    cloneProperties: (overrides) ->
+      super Utils.merge(
+        offsetX: @offsetX
+        offsetY: @offsetY
+        width: @width
+        height: @height,
+        image: @image, overrides)
