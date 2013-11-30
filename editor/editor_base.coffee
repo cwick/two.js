@@ -30,12 +30,14 @@ define (require) ->
         quickToolDeselected: new Signal()
         quickToolSelected: new Signal()
         stylusDragged: new Signal()
+        stylusEntered: new Signal()
+        stylusLeft: new Signal()
         stylusMoved: new Signal()
         stylusReleased: new Signal()
         stylusTouched: new Signal()
-        toolSelected: new Signal()
         toolActivated: new Signal()
         toolApplied: new Signal()
+        toolSelected: new Signal()
 
       @inputBindings = new CommonInputBindings(@on)
 
@@ -76,6 +78,8 @@ define (require) ->
       @on.stylusMoved.add @onStylusMoved, @
       @on.stylusReleased.add @onStylusReleased, @
       @on.stylusTouched.add @onStylusTouched, @
+      @on.stylusEntered.add @onStylusEntered, @
+      @on.stylusLeft.add @onStylusLeft, @
 
       @on.toolSelected.add @onToolSelected, @
       @on.toolActivated.add @onToolActivated, @
@@ -128,6 +132,12 @@ define (require) ->
         @_clearQuickTool()
 
       return
+
+    onStylusEntered: ->
+      @getCurrentTool()?.onEnteredCanvas()
+
+    onStylusLeft: ->
+      @getCurrentTool()?.onLeftCanvas()
 
     onObjectSelected: (object) ->
       @selectedObject = object

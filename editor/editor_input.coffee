@@ -12,10 +12,12 @@ define ["gl-matrix",
     constructor: (@canvas, @inputBindings) ->
       @signals = @inputBindings.signals
       $(document).on "mousewheel keydown keyup mousedown mouseup mousemove", => @_onUserInput.apply @, arguments
-      $(@canvas).mouseenter => @canvas.focus()
+      $(@canvas).mouseenter => @signals.stylusEntered.dispatch()
+      $(@canvas).mouseleave => @signals.stylusLeft.dispatch()
 
       @signals.stylusTouched.add @_onStylusTouched, @
       @signals.stylusReleased.add @_onStylusReleased, @
+      @signals.stylusEntered.add @_onStylusEntered, @
 
     _onUserInput: (e) ->
       shouldPreventDefault = @["_on#{e.type.charAt(0).toUpperCase() + e.type.slice(1)}"].apply @, arguments
@@ -78,6 +80,9 @@ define ["gl-matrix",
         @_dispatchStylusMoved(e)
 
       return false
+
+    _onStylusEntered: ->
+      @canvas.focus()
 
     _shouldHandleInput: (e) ->
       EditorInput.capturingCanvas == @canvas || (!EditorInput.capturingCanvas? && e.target == @canvas)

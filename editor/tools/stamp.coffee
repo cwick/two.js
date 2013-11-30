@@ -30,7 +30,16 @@ define (require) ->
     onMoved: (e) ->
       return unless @_previewTile?
 
+      @_previewTile.setVisible true
       @_positionTile @_previewTile, e.worldPoint
+      @editor.on.objectChanged.dispatch @_previewTile
+
+    onLeftCanvas: ->
+      @_previewTile?.setVisible false
+      @editor.on.objectChanged.dispatch @_previewTile
+
+    onEnteredCanvas: ->
+      @_previewTile?.setVisible true
       @editor.on.objectChanged.dispatch @_previewTile
 
     _placeCurrentTileInScene: (worldPoint) ->
@@ -57,6 +66,7 @@ define (require) ->
       @_previewTile = tile
       return unless @_previewTile?
 
+      @_previewTile.setVisible false
       @editor.sceneGizmos.add @_previewTile
       @editor.on.objectChanged.dispatch @_previewTile
 

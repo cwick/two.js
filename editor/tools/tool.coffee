@@ -21,6 +21,9 @@ define ->
     onDragged: ->
     onMoved: ->
 
+    onEnteredCanvas: ->
+    onLeftCanvas: ->
+
     isActive: -> @_isActive
     isSelected: -> @_isSelected
 
