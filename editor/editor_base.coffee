@@ -161,6 +161,7 @@ define (require) ->
         @_clearQuickTool()
 
     onQuickToolSelected: (which) ->
+      return if @getCurrentTool()?.isActive()
       quickTool = @getTool(which)
 
       @_quickTool?.onDeselected() unless quickTool == @_quickTool

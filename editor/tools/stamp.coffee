@@ -50,7 +50,7 @@ define (require) ->
 
     _onTileSelected: ->
       return unless @isSelected()
-      @_setPreviewTile @tileset.getCurrentTile().clone()
+      @_setPreviewTile @tileset.getCurrentTile()?.clone()
 
     _setPreviewTile: (tile) ->
       @_removePreviewTile()
