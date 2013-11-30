@@ -13,16 +13,15 @@ define (require) ->
 
     onActivated: (e) ->
       super
-      @_placeTile e.worldPoint
+      @_placeCurrentTileInScene e.worldPoint
 
     onDragged: (e) ->
       super
-      @_placeTile e.worldEndPoint
+      @_placeCurrentTileInScene e.worldEndPoint
 
     onDeselected: ->
       super
-      @editor.sceneGizmos.remove @_previewTile
-      @editor.on.objectChanged.dispatch @_previewTile
+      @_removePreviewTile()
 
     onSelected: ->
       super
@@ -31,23 +30,17 @@ define (require) ->
     onMoved: (e) ->
       return unless @_previewTile?
 
-      if @editor.isGridSnappingEnabled()
-        @_previewTile.setOrigin [-@_previewTile.getWidth()/2, -@_previewTile.getHeight()/2]
-
-      @_previewTile.setPosition @editor.snapToGrid(e.worldPoint, "lower-left")
+      @_positionTile @_previewTile, e.worldPoint
       @editor.on.objectChanged.dispatch @_previewTile
 
-    _placeTile: (worldPoint) ->
+    _placeCurrentTileInScene: (worldPoint) ->
       tile = @tileset.getCurrentTile()?.clone()
       return unless tile?
 
-      worldPoint = @editor.snapToGrid(worldPoint, "lower-left")
+      @_positionTile tile, worldPoint
 
       if @editor.isGridSnappingEnabled()
-        @_removeExistingTiles worldPoint
-        tile.setOrigin [-tile.getWidth()/2, -tile.getHeight()/2]
-
-      tile.setPosition [worldPoint[0], worldPoint[1]]
+        @_removeExistingTiles @_snapToGrid(worldPoint)
 
       @editor.on.objectChanged.dispatch(@editor.scene.add tile)
 
@@ -56,8 +49,28 @@ define (require) ->
       @editor.scene.remove tile for tile in tiles
 
     _onTileSelected: ->
-      @editor.sceneGizmos.remove @_previewTile if @_previewTile?
+      return unless @isSelected()
+      @_removePreviewTile()
 
       @_previewTile = @tileset.getCurrentTile().clone()
 
+      @_addPreviewTile()
+
+    _addPreviewTile: ->
+      return unless @_previewTile?
       @editor.sceneGizmos.add @_previewTile
+      @editor.on.objectChanged.dispatch @_previewTile
+
+    _removePreviewTile: ->
+      return unless @_previewTile?
+      @editor.sceneGizmos.remove @_previewTile
+      @editor.on.objectChanged.dispatch @_previewTile
+
+    _snapToGrid: (worldPoint) ->
+      @editor.snapToGrid(worldPoint, "lower-left")
+
+    _positionTile: (tile, worldPoint) ->
+      if @editor.isGridSnappingEnabled()
+        tile.setOrigin [-tile.getWidth()/2, -tile.getHeight()/2]
+
+      tile.setPosition @_snapToGrid(worldPoint)
