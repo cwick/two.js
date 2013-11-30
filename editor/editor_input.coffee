@@ -41,11 +41,17 @@ define ["gl-matrix",
       eventInfo = @_getStylusPosition(e)
       eventInfo.keyCode = e.keyCode
 
+      if e.keyCode in [KeyCodes.LEFT_COMMAND, KeyCodes.RIGHT_COMMAND]
+        @_commandPressed = true
+      else if e.keyCode == KeyCodes.BACKSPACE
+        eventInfo.keyCode = KeyCodes.DELETE if @_commandPressed && @_isMacintosh()
+
       @inputBindings.onKeyDown eventInfo
 
       return false
 
     _onKeyup: (e) ->
+      @_commandPressed = false if e.keyCode in [KeyCodes.LEFT_COMMAND, KeyCodes.RIGHT_COMMAND]
       @inputBindings.onKeyUp keyCode: e.keyCode
       return false
 
@@ -112,3 +118,5 @@ define ["gl-matrix",
       @_stylusPageTouchPoint = @_stylusCanvasTouchPoint = null
       EditorInput.capturingCanvas = null
 
+    _isMacintosh: ->
+      navigator.appVersion.indexOf("Macintosh") != -1

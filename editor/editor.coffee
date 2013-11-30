@@ -23,6 +23,7 @@ define (require) ->
       super
 
       @on.spriteCreated = new Signal()
+      @on.objectDeleted = new Signal()
 
       @tilesetDialog = new TilesetEditorDialog()
       @tilesetDialog.setWidth 400
@@ -34,9 +35,7 @@ define (require) ->
       @tools.push new StampTool(@)
       @tools.push new ZoomTool(@)
 
-      @inputBindings.addKeyBinding
-        keyCode: KeyCodes.S
-        onKeyDown: => @on.toolSelected.dispatch "stamp"
+      @_addKeyBindings()
 
     run: ->
       super
@@ -57,6 +56,7 @@ define (require) ->
       @tilesetEditor.run()
 
       @on.spriteCreated.add @onSpriteCreated, @
+      @on.objectDeleted.add @onObjectDeleted, @
       @on.toolSelected.dispatch "select"
       @render()
 
@@ -88,3 +88,15 @@ define (require) ->
         @on.objectSelected.dispatch sprite
         @render()
 
+    onObjectDeleted: (object) ->
+      @on.objectDeselected.dispatch()
+      @scene.remove object
+
+    _addKeyBindings: ->
+      @inputBindings.addKeyBinding
+        keyCode: KeyCodes.S
+        onKeyDown: => @on.toolSelected.dispatch "stamp"
+
+      @inputBindings.addKeyBinding
+        keyCode: KeyCodes.DELETE
+        onKeyDown: => @on.objectDeleted.dispatch @selectedObject if @selectedObject?

@@ -62,10 +62,9 @@ define (require) ->
 
       @on.cursorStyleChanged.add @onCursorStyleChanged, @
 
-      # Set low priority so rendering is the last thing that happens after object change
-      @on.objectChanged.add @onObjectChanged, @, -1
-      @on.objectSelected.add @onObjectSelected, @, -1
-      @on.objectDeselected.add @onObjectDeselected, @, -1
+      @on.objectChanged.add @onObjectChanged, @
+      @on.objectSelected.add @onObjectSelected, @
+      @on.objectDeselected.add @onObjectDeselected, @
 
       @on.gridChanged.add @onGridChanged, @
       @on.gridSnappingChanged.add @onGridSnappingChanged, @
@@ -129,6 +128,7 @@ define (require) ->
       return
 
     onObjectSelected: (object) ->
+      @selectedObject = object
       @render()
 
     onObjectDeselected: ->
