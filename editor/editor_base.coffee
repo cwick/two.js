@@ -102,9 +102,11 @@ define (require) ->
       @render()
 
     onStylusMoved: (e) ->
+      e.worldPoint = @projector.unproject(e.canvasPoint)
       @getCurrentTool()?.onMoved(e)
 
     onStylusTouched: (e) ->
+      e.worldPoint = @projector.unproject(e.canvasPoint)
       tool = @getCurrentTool()
       if tool?
         @on.toolActivated.dispatch tool.name, e
