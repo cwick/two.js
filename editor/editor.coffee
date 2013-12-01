@@ -112,6 +112,6 @@ define (require) ->
         onKeyDown: => @on.objectDeleted.dispatch @selectedObject if @selectedObject?
 
     _startAutosaving: ->
-      window.setInterval (=>
-        window.localStorage.setItem "scene", JSON.stringify(new ObjectExporter().export(@scene))
-      ), 10 * 1000
+      save = => window.localStorage.setItem "scene", JSON.stringify(new ObjectExporter().export(@scene))
+      window.setInterval save, 10 * 1000
+      $(window).on "unload", save
