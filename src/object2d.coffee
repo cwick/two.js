@@ -4,7 +4,7 @@ define ["gl-matrix", "./material", "./utils", "./bounding_box"], \
     @_nextId = 1
 
     constructor: (options={}) ->
-      @material = options.material ?= new Material()
+      @material = options.material
       @_x = options.x ?= 0
       @_y = options.y ?= 0
       @pixelOffsetX = options.pixelOffsetX ?= 0
@@ -46,12 +46,16 @@ define ["gl-matrix", "./material", "./utils", "./bounding_box"], \
 
       @_boundingBox
 
+    getBoundingWidth: -> 0
+    getBoundingHeight: -> 0
+
     getOrigin: -> @_origin
     setOrigin: (value) ->
       @_origin = value
       @invalidateWorldTransform()
 
     add: (child) ->
+      child.getParent()?.remove child
       child._parent = @
       @_children.push child
       child

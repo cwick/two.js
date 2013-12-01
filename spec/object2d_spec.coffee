@@ -88,6 +88,22 @@ define (require) ->
       it "sets the 'parent' property of its children", ->
         expect(child.getParent()).toBe parent
 
+    describe "when adding a child to multiple parents", ->
+      parent1 = parent2 = child = null
+
+      beforeEach ->
+        child = new Object2d()
+        parent1 = new Object2d()
+        parent2 = new Object2d()
+
+        parent1.add child
+        parent2.add child
+
+      it "gets removed from its former parent", ->
+        expect(child.getParent()).toBe parent2
+        expect(parent1.getChildren()).toEqual []
+        expect(parent2.getChildren()).toEqual [child]
+
     describe "when removing children", ->
       parent = child = null
 

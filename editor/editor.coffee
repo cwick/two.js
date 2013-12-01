@@ -8,6 +8,7 @@ define (require) ->
   Image = require "two/image"
   InputBindings = require "./input_bindings"
   Inspector = require "./inspector"
+  ObjectExporter = require "two/object_exporter"
   ShapeMaterial = require "two/shape_material"
   SpriteMaterial = require "two/sprite_material"
   SelectionBox = require "./selection_box"
@@ -60,6 +61,9 @@ define (require) ->
       @on.toolSelected.dispatch "select"
       @on.gridSnappingChanged.dispatch true
       @on.gridChanged.dispatch isVisible: true
+
+      @_startAutosaving()
+
       @render()
 
     onObjectSelected: (object) ->
@@ -111,3 +115,6 @@ define (require) ->
       @inputBindings.addKeyBinding
         keyCode: KeyCodes.DELETE
         onKeyDown: => @on.objectDeleted.dispatch @selectedObject if @selectedObject?
+
+    _startAutosaving: ->
+      window.setInterval (=> console.log new ObjectExporter().export(@scene)), 1 * 1000

@@ -1,4 +1,4 @@
-define ->
+define ["./object2d"], (Object2d) ->
   class Scene
     constructor: ->
       @objects = []
