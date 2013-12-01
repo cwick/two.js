@@ -1,7 +1,5 @@
 define (require) ->
   $ = require "jquery"
-  Box = require "two/box"
-  Disc = require "two/disc"
   EditorBase = require "./editor_base"
   GrabTool = require "./tools/grab"
   KeyCodes = require "./key_codes"
@@ -9,7 +7,7 @@ define (require) ->
   InputBindings = require "./input_bindings"
   Inspector = require "./inspector"
   ObjectExporter = require "two/object_exporter"
-  ShapeMaterial = require "two/shape_material"
+  ObjectImporter = require "two/object_importer"
   SpriteMaterial = require "two/sprite_material"
   SelectionBox = require "./selection_box"
   SelectTool = require "./tools/select"
@@ -41,10 +39,7 @@ define (require) ->
     run: ->
       super
 
-      @scene.add new Disc(radius: 3, scale: 0.7, material: new ShapeMaterial(fillColor: "#BE0028"))
-      @scene.add new Disc(x:5, y:-3, radius: 2, material: new ShapeMaterial(fillColor: "green"))
-      @scene.add new Box(x:-5, y:-1, width: 4, height: 6, material: new ShapeMaterial(fillColor: "yellow", strokeColor: "red"))
-      @scene.add new Sprite(origin: [0, -1.93], width: 2, height: 3.86, material: new SpriteMaterial(image: new Image("assets/mario.png", => @render())))
+      @scene = new ObjectImporter().import(JSON.parse(window.localStorage.getItem("scene")))
 
       @_selectionBox = new SelectionBox(@on)
 

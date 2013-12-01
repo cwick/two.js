@@ -1,9 +1,13 @@
-define ["gl-matrix", "./material", "./utils", "./bounding_box"], \
-       (gl, Material, Utils, BoundingBox) ->
-  class Object2d
-    @_nextId = 1
+define (require) ->
+  gl = require "gl-matrix"
+  uuid = require "uuid"
+  Material = require "./material"
+  Utils = require "./utils"
+  BoundingBox = require "./bounding_box"
 
+  class Object2d
     constructor: (options={}) ->
+      @_parent = null
       @_material = options.material ?= null
       @_x = options.x ?= 0
       @_y = options.y ?= 0
@@ -15,7 +19,7 @@ define ["gl-matrix", "./material", "./utils", "./bounding_box"], \
       @_children = []
       @_isVisible = true
       @_isBoundingBoxValid = false
-      @_id = Object2d._nextId++
+      @_id = options.id ?= uuid.v4()
 
       options.parent?.add @
 
@@ -100,6 +104,7 @@ define ["gl-matrix", "./material", "./utils", "./bounding_box"], \
         y: @_y
         material: @_material
         origin: @_origin
+        scale: @_scale
         pixelOffsetX: @_pixelOffsetX
         pixelOffsetY: @_pixelOffsetY, overrides
 

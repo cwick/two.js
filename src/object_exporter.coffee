@@ -4,6 +4,7 @@ define ->
     export: (material) ->
       data = material.cloneProperties()
       data.id = material.getId()
+      data.type = material.constructor.name
       data
 
   materialExporters.ShapeMaterialExporter = class extends materialExporters.MaterialExporter
@@ -35,7 +36,6 @@ define ->
       objectList.push @_exportObject(object, materialList)
 
       @_export o, objectList, materialList for o in object.getChildren()
-
 
     _exportObject: (object, materialList) ->
       data = object.cloneProperties()

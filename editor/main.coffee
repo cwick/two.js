@@ -5,6 +5,7 @@ require.config
     "jquery.mousewheel": "../lib/jquery.mousewheel"
     "gl-matrix": "../lib/gl-matrix"
     "signals": "../lib/signals"
+    "uuid": "../lib/uuid"
     "two": "."
 
 require ["editor/editor", "editor/main_toolbar"], (Editor, MainToolbar) ->

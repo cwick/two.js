@@ -1,11 +1,13 @@
-define ["./color", "./utils"], (Color, Utils) ->
-  class Material
-    @_nextId = 1
+define (require) ->
+  uuid = require "uuid"
+  Color = require "./color"
+  Utils = require "./utils"
 
+  class Material
     constructor: (options) ->
       @isFixedSize = options.isFixedSize ?= false
       @opacity = options.opacity ?= 1
-      @_id = Material._nextId++
+      @_id = options.id ?= uuid.v4()
 
     cloneProperties: (overrides) ->
       Utils.merge
