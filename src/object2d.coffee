@@ -60,6 +60,17 @@ define ["gl-matrix", "./material", "./utils", "./bounding_box"], \
     getMaterial: -> @_material
     setMaterial: (value) -> @_material = value
 
+    getChildren: -> @_children
+    getParent: -> @_parent
+    getName: -> @_name
+    setName: (value) -> @_name = value
+
+    getId: -> @_id
+
+    getWorldMatrix: ->
+      @_updateWorldMatrix() unless @_isWorldMatrixValid
+      @_worldMatrix
+
     add: (child) ->
       child.getParent()?.remove child
       child._parent = @
@@ -72,17 +83,6 @@ define ["gl-matrix", "./material", "./utils", "./bounding_box"], \
       if idx != -1
         @_children.splice(idx, 1)
         child._parent = null
-
-    getChildren: -> @_children
-    getParent: -> @_parent
-    getName: -> @_name
-    setName: (value) -> @_name = value
-
-    getId: -> @_id
-
-    getWorldMatrix: ->
-      @_updateWorldMatrix() unless @_isWorldMatrixValid
-      @_worldMatrix
 
     cloneProperties: (overrides) ->
       Utils.merge
