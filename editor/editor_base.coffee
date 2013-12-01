@@ -59,7 +59,7 @@ define (require) ->
       @$canvas = $(@canvas)
       @$domElement.html(@$canvas)
 
-      new EditorInput(@canvas, @inputBindings)
+      @_input = new EditorInput(@canvas, @inputBindings)
       @_listenForResize()
 
       @on.cursorStyleChanged.add @onCursorStyleChanged, @
@@ -92,6 +92,11 @@ define (require) ->
       window.setTimeout (=>
         @_renderScenes()
         @_isRenderPending = false), 0
+
+    getStylusPosition: ->
+      e = @_input.getStylusPosition()
+      e.worldPoint = @projector.unproject e.canvasPoint
+      e
 
     _renderScenes: ->
       @renderer.clear()

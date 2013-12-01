@@ -19,6 +19,9 @@ define ["gl-matrix",
       @signals.stylusReleased.add @_onStylusReleased, @
       @signals.stylusEntered.add @_onStylusEntered, @
 
+    getStylusPosition: ->
+      @_stylusPosition
+
     _onUserInput: (e) ->
       shouldPreventDefault = @["_on#{e.type.charAt(0).toUpperCase() + e.type.slice(1)}"].apply @, arguments
 
@@ -72,6 +75,7 @@ define ["gl-matrix",
       return false
 
     _onMousemove: (e) ->
+      @_stylusPosition = @_getStylusPosition(e)
       return unless @_shouldHandleInput(e)
 
       if @_isStylusTouching()

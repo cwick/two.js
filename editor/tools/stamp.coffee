@@ -25,9 +25,12 @@ define (require) ->
 
     onSelected: ->
       super
-      @_onTileSelected()
+      unless @_previewTile?
+        @_onTileSelected()
+        @onMoved @editor.getStylusPosition()
 
     onMoved: (e) ->
+      super
       return unless @_previewTile?
 
       @_previewTile.setVisible true
