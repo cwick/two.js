@@ -8,6 +8,7 @@ define (require) ->
   Inspector = require "./inspector"
   ObjectExporter = require "two/object_exporter"
   ObjectImporter = require "two/object_importer"
+  SceneMaterial = require "two/scene_material"
   SpriteMaterial = require "two/sprite_material"
   SelectionBox = require "./selection_box"
   SelectTool = require "./tools/select"
@@ -40,6 +41,7 @@ define (require) ->
       super
 
       @scene = new ObjectImporter().import(JSON.parse(window.localStorage.getItem("scene")))
+      @scene.setMaterial new SceneMaterial(backgroundColor: "#6989FF")
 
       @_selectionBox = new SelectionBox(@on)
 

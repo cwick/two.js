@@ -20,6 +20,12 @@ define ->
       data.image = material.image.getPath()
       data
 
+  materialExporters.SceneMaterialExporter = class extends materialExporters.MaterialExporter
+    export: (material) ->
+      data = super
+      data.filbackgroundColor = material.backgroundColor.toArray()
+      data
+
   class ObjectExporter
     export: (object) ->
       objectList = []
@@ -54,6 +60,6 @@ define ->
 
     _exportMaterial: (material) ->
       Exporter = materialExporters["#{material.constructor.name}Exporter"]
-      throw Error("Unknown material type #{material.constructor.name}") unless Exporter?
+      throw new Error("Unknown material type #{material.constructor.name}") unless Exporter?
 
       new Exporter().export material

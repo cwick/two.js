@@ -26,6 +26,12 @@ define (require) ->
       imported.image = new Image(data.image)
       imported
 
+  materialImporters.SceneMaterialImporter = class extends materialImporters.MaterialImporter
+    import: (data) ->
+      imported = super
+      imported.backgroundColor = @makeColor data.backgroundColor
+      imported
+
   class ObjectImporter
     import: (data) ->
       materialList = {}
@@ -38,7 +44,7 @@ define (require) ->
 
     _importMaterial: (data) ->
       Importer = materialImporters["#{data.type}Importer"]
-      throw Error("Unknown material type #{data.type}") unless Importer?
+      throw new Error("Unknown material type #{data.type}") unless Importer?
 
       Material = require @_getModuleName(data.type)
       new Material(new Importer().import data)
@@ -60,10 +66,10 @@ define (require) ->
       for data in objectData
         for childID in data.children
           child = objectList[childID]
-          throw Error("Missing object #{childID}") unless child?
+          throw new Error("Missing object #{childID}") unless child?
           objectList[data.id].add child
 
       root = (o for _,o of objectList when o.getParent() is null)
-      throw Error("No root node found") if root.length == 0
-      throw Error("Multiple root nodes found") if root.length != 1
+      throw new Error("No root node found") if root.length == 0
+      throw new Error("Multiple root nodes found") if root.length != 1
       root[0]

@@ -5,9 +5,11 @@ define ["jquery",
         "./sprite",
         "./line_group",
         "./shape",
+        "./scene",
         "./shape_material",
-        "./line_material"], \
-       ($, gl, Box, Disc, Sprite, LineGroup, Shape, ShapeMaterial, LineMaterial) ->
+        "./line_material",
+        "./scene_material"], \
+       ($, gl, Box, Disc, Sprite, LineGroup, Shape, Scene, ShapeMaterial, LineMaterial, SceneMaterial) ->
   class CanvasRenderer
     constructor: (options) ->
       @$domElement = $("<canvas/>", tabindex: 0)
@@ -36,16 +38,17 @@ define ["jquery",
 
     render: (scene, camera) ->
       @_prepareToRender(camera)
+      @_renderTree scene
 
-      for object in scene.getChildren()
-        continue unless object.isVisible()
-        @_renderObject(object)
-        @_renderObject(child) for child in object.getChildren()
+    _renderTree: (root) ->
+      @_renderObject root
+      @_renderTree(c) for c in root.getChildren()
 
       # Don't collect results into an array
       return
 
     _renderObject: (object) ->
+      return unless object.isVisible()
       @_context.save()
 
       # Avoid blurry lines
@@ -106,7 +109,7 @@ define ["jquery",
     _applyWorldTransform: (object, material, viewScaleFactor) ->
       @_applyMatrix object.getWorldMatrix()
 
-      if material.isFixedSize
+      if material?.isFixedSize
         @_context.scale @_devicePixelRatio/viewScaleFactor, @_devicePixelRatio/viewScaleFactor
         @_context.lineWidth = 1
 
@@ -136,6 +139,8 @@ define ["jquery",
           begin = !begin
 
         @_context.stroke()
+      else if object instanceof Scene
+        "adsf"
       else
         throw new Error("Unknown object type #{object.constructor.name}")
 
@@ -149,12 +154,15 @@ define ["jquery",
       @_context.closePath()
 
     _applyObjectMaterial: (material) ->
+      return unless material?
       @_context.globalAlpha = material.opacity
       if material instanceof ShapeMaterial
         @_context.fillStyle = material.fillColor.toCSS()
         @_context.strokeStyle = material.strokeColor.toCSS()
       else if material instanceof LineMaterial
         @_context.strokeStyle = material.color.toCSS()
+      else if material instanceof SceneMaterial
+        "sadf"
       else
         throw new Error("Unknown material type #{material.constructor.name}")
 
