@@ -24,7 +24,7 @@ define ["jquery", "../mouse_buttons", "../utils"], ($, MouseButtons, Utils) ->
       y = Math.max(0, y)
 
       x = Math.min(parentWidth  - outerWidth, x)
-      y = Math.min(parentHeight - outerHeight+1, y)
+      y = Math.min(parentHeight - outerHeight, y)
 
       Utils.setTranslation $draggable, x, y
 

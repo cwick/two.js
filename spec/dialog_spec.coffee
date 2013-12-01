@@ -1,4 +1,4 @@
-define ["editor/dialog", "jquery", "jquery.simulate"], (Dialog, $) ->
+define ["editor/lib/dialog", "jquery", "jquery.simulate"], (Dialog, $) ->
   describe 'Dialog', ->
     dialog = $container = $domElement = null
 

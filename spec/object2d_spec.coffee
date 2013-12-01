@@ -12,13 +12,12 @@ define (require) ->
 
     it "caches its bounding box", ->
       object = new Object2d()
-      object.updateBoundingBox = ->
-      spyOn(object, "updateBoundingBox")
+      spyOn(object, "_recomputeBoundingBox").andCallThrough()
 
       object.getBoundingBox()
       object.getBoundingBox()
 
-      expect(object.updateBoundingBox.callCount).toEqual 1
+      expect(object._recomputeBoundingBox.callCount).toEqual 1
 
     describe "when its position changes", ->
       object = null
@@ -51,10 +50,8 @@ define (require) ->
         parent.add child1
         parent.add child2
 
-        child1.updateBoundingBox = ->
-        child2.updateBoundingBox = ->
-        spyOn child1, "updateBoundingBox"
-        spyOn child2, "updateBoundingBox"
+        spyOn(child1, "_recomputeBoundingBox").andCallThrough()
+        spyOn(child2, "_recomputeBoundingBox").andCallThrough()
 
       it "the children's world matrices are updated", ->
         child1.getWorldMatrix()
@@ -73,8 +70,8 @@ define (require) ->
         child1.getBoundingBox()
         child2.getBoundingBox()
 
-        expect(child1.updateBoundingBox.callCount).toEqual 2
-        expect(child2.updateBoundingBox.callCount).toEqual 2
+        expect(child1._recomputeBoundingBox.callCount).toEqual 2
+        expect(child2._recomputeBoundingBox.callCount).toEqual 2
 
     describe "when adding children", ->
       parent = child = null
