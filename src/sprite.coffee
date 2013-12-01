@@ -7,8 +7,8 @@ define ["./box", "./sprite_material"], (Box, SpriteMaterial) ->
       super
 
       unless options.name
-        if @material.image?
-          @setName "#{@material.image.getPath()} (#{@getId()})"
+        if @getMaterial().image?
+          @setName "#{@getMaterial().image.getPath()} (#{@getId()})"
         else
           @setName "Sprite (#{@getId()})"
 

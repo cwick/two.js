@@ -27,7 +27,7 @@ define ["gl-matrix", "./bounding_box"], (gl, BoundingBox) ->
       screenBoundingBox = new BoundingBox()
       screenBoundingBox.setPosition(@project worldBoundingBox.getPosition())
 
-      if object.material.isFixedSize
+      if object.getMaterial().isFixedSize
         screenBoundingBox.setWidth(worldBoundingBox.getWidth())
         screenBoundingBox.setHeight(worldBoundingBox.getHeight())
       else
@@ -46,7 +46,7 @@ define ["gl-matrix", "./bounding_box"], (gl, BoundingBox) ->
       worldPoint = @unproject screenPoint
 
       for object in scene.getChildren()
-        if object.material.isFixedSize
+        if object.getMaterial().isFixedSize
           if @getScreenBoundingBox(object).containsPoint(screenPoint)
             return object
 

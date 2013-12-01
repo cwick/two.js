@@ -57,7 +57,7 @@ define (require) ->
     run: ->
       super
       @on.toolSelected.dispatch "tileSelect"
-      @grid.material.color = new Color("black")
+      @grid.getMaterial().color = new Color("black")
       @_loadImage "assets/mario_tileset.png"
 
     getCurrentTile: ->
@@ -75,7 +75,7 @@ define (require) ->
     onTileSelected: (selectionBox) ->
       @_currentTile = new Sprite
         material: new SpriteMaterial
-          image: @_tileset.material.image
+          image: @_tileset.getMaterial().image
           offsetX: selectionBox.getX()
           offsetY: selectionBox.getY()
           width: selectionBox.getWidth()

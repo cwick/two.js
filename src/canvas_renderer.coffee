@@ -61,7 +61,7 @@ define ["jquery",
       # Don't scale line width with object or view scale
       @_context.lineWidth = 1/(viewProjection[0] * object.getScale())
 
-      material = object.material
+      material = object.getMaterial()
 
       @_applyWorldTransform object, material, viewProjection[0]
       @_applyObjectMaterial material
@@ -143,8 +143,8 @@ define ["jquery",
         @_drawSprite object
 
       if object instanceof Shape
-        @_context.fill() unless object.material.fillColor.a is 0
-        @_context.stroke() unless object.material.strokeColor.a is 0
+        @_context.fill() unless object.getMaterial().fillColor.a is 0
+        @_context.stroke() unless object.getMaterial().strokeColor.a is 0
 
       @_context.closePath()
 
@@ -164,7 +164,7 @@ define ["jquery",
       @_context.webkitImageSmoothingEnabled = false
 
     _drawSprite: (sprite) ->
-      material = sprite.material
+      material = sprite.getMaterial()
       image = material.image
 
       return unless image
@@ -173,7 +173,7 @@ define ["jquery",
 
       sourceWidth = material.width || image.getWidth()
       sourceHeight = material.height || image.getHeight()
-      sourceX = sprite.material.offsetX
+      sourceX = material.offsetX
       sourceY = image.getHeight() - material.offsetY - sourceHeight
 
       destinationX = -sprite.getWidth()/2

@@ -4,7 +4,7 @@ define ["gl-matrix", "./material", "./utils", "./bounding_box"], \
     @_nextId = 1
 
     constructor: (options={}) ->
-      @material = options.material
+      @_material = options.material
       @_x = options.x ?= 0
       @_y = options.y ?= 0
       @_pixelOffsetX = options.pixelOffsetX ?= 0
@@ -57,6 +57,9 @@ define ["gl-matrix", "./material", "./utils", "./bounding_box"], \
       @_origin = value
       @invalidateWorldTransform()
 
+    getMaterial: -> @_material
+    setMaterial: (value) -> @_material = value
+
     add: (child) ->
       child.getParent()?.remove child
       child._parent = @
@@ -85,7 +88,7 @@ define ["gl-matrix", "./material", "./utils", "./bounding_box"], \
       Utils.merge
         x: @_x
         y: @_y
-        material: @material
+        material: @_material
         origin: @_origin
         pixelOffsetX: @_pixelOffsetX
         pixelOffsetY: @_pixelOffsetY, overrides

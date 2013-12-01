@@ -70,8 +70,7 @@ define (require) ->
       return unless @_previewTile?
 
       @_previewTile.setVisible false
-      @_previewTile.material = @_previewTile.material.clone()
-      @_previewTile.material.opacity = 0.5
+      @_previewTile.setMaterial @_previewTile.getMaterial().clone(opacity: 0.5)
       @editor.sceneGizmos.add @_previewTile
       @editor.on.objectChanged.dispatch @_previewTile
 
