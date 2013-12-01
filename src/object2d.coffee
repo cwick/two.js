@@ -58,6 +58,7 @@ define ["gl-matrix", "./material", "./utils", "./bounding_box"], \
       child.getParent()?.remove child
       child._parent = @
       @_children.push child
+      child.invalidateWorldTransform()
       child
 
     remove: (child) ->

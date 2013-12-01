@@ -79,6 +79,7 @@ define (require) ->
       beforeEach ->
         parent = new Object2d()
         child = new Object2d()
+        spyOn(child, "invalidateWorldTransform").andCallThrough()
         parent.add child
 
       it "updates its 'children' collection", ->
@@ -87,6 +88,9 @@ define (require) ->
 
       it "sets the 'parent' property of its children", ->
         expect(child.getParent()).toBe parent
+
+      it "invalidates the child's world transform", ->
+        expect(child.invalidateWorldTransform.callCount).toEqual 1
 
     describe "when adding a child to multiple parents", ->
       parent1 = parent2 = child = null
