@@ -107,13 +107,18 @@ define ["jquery",
       return m
 
     _applyWorldTransform: (object, material, viewScaleFactor) ->
-      @_applyMatrix object.getWorldMatrix()
+      if object instanceof Scene
+        @_applyMatrix @_camera.getWorldMatrix()
+      else
+        @_applyMatrix object.getWorldMatrix()
 
       if material?.isFixedSize
         @_context.scale @_devicePixelRatio/viewScaleFactor, @_devicePixelRatio/viewScaleFactor
         @_context.lineWidth = 1
 
     _drawObjectShape: (object) ->
+      return unless object.getMaterial()?
+
       @_context.beginPath()
 
       if object instanceof Disc
@@ -140,7 +145,13 @@ define ["jquery",
 
         @_context.stroke()
       else if object instanceof Scene
-        "adsf"
+        if object.getMaterial().backgroundColor.a isnt 0
+          @_context.rect(
+            -@_camera.getWidth()/2,
+            -@_camera.getHeight()/2,
+            @_camera.getWidth(),
+            @_camera.getHeight())
+          @_context.fill()
       else
         throw new Error("Unknown object type #{object.constructor.name}")
 
@@ -162,7 +173,7 @@ define ["jquery",
       else if material instanceof LineMaterial
         @_context.strokeStyle = material.color.toCSS()
       else if material instanceof SceneMaterial
-        "sadf"
+        @_context.fillStyle = material.backgroundColor.toCSS()
       else
         throw new Error("Unknown material type #{material.constructor.name}")
 

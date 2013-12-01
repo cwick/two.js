@@ -40,8 +40,8 @@ define (require) ->
     run: ->
       super
 
-      @scene = new ObjectImporter().import(JSON.parse(window.localStorage.getItem("scene")))
-      @scene.setMaterial new SceneMaterial(backgroundColor: "#6989FF")
+      @_loadScene()
+      @scene.setMaterial new SceneMaterial(backgroundColor: "#6B8CFF")
 
       @_selectionBox = new SelectionBox(@on)
 
@@ -117,3 +117,8 @@ define (require) ->
       save = => window.localStorage.setItem "scene", JSON.stringify(new ObjectExporter().export(@scene))
       window.setInterval save, 10 * 1000
       $(window).on "unload", save
+
+    _loadScene: ->
+      sceneData = window.localStorage.getItem "scene"
+      if sceneData?
+        @scene = new ObjectImporter().import(JSON.parse(sceneData))
