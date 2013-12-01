@@ -38,8 +38,8 @@ define ["gl-matrix", "./bounding_box"], (gl, BoundingBox) ->
           @project([worldBoundingBox.getX(), worldBoundingBox.getY() + worldBoundingBox.getHeight()]) -
           screenBoundingBox.getY())
 
-      screenBoundingBox.setX(screenBoundingBox.getX() + object.pixelOffsetX)
-      screenBoundingBox.setY(screenBoundingBox.getY() + object.pixelOffsetY)
+      screenBoundingBox.setX(screenBoundingBox.getX() + object.getPixelOffsetX())
+      screenBoundingBox.setY(screenBoundingBox.getY() + object.getPixelOffsetY())
       screenBoundingBox
 
     _pickScreenObjects: (screenPoint, scene) ->

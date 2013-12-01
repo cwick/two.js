@@ -7,8 +7,8 @@ define ["gl-matrix", "./material", "./utils", "./bounding_box"], \
       @material = options.material
       @_x = options.x ?= 0
       @_y = options.y ?= 0
-      @pixelOffsetX = options.pixelOffsetX ?= 0
-      @pixelOffsetY = options.pixelOffsetY ?= 0
+      @_pixelOffsetX = options.pixelOffsetX ?= 0
+      @_pixelOffsetY = options.pixelOffsetY ?= 0
       @_origin = options.origin ?= [0,0]
       @_name = options.name ?= ""
       @_scale = options.scale ?= 1
@@ -49,6 +49,9 @@ define ["gl-matrix", "./material", "./utils", "./bounding_box"], \
     getBoundingWidth: -> 0
     getBoundingHeight: -> 0
 
+    getPixelOffsetX: -> @_pixelOffsetX
+    getPixelOffsetY: -> @_pixelOffsetY
+
     getOrigin: -> @_origin
     setOrigin: (value) ->
       @_origin = value
@@ -84,8 +87,8 @@ define ["gl-matrix", "./material", "./utils", "./bounding_box"], \
         y: @_y
         material: @material
         origin: @_origin
-        pixelOffsetX: @pixelOffsetX
-        pixelOffsetY: @pixelOffsetY, overrides
+        pixelOffsetX: @_pixelOffsetX
+        pixelOffsetY: @_pixelOffsetY, overrides
 
     invalidateWorldTransform: ->
       @_isWorldMatrixValid = false

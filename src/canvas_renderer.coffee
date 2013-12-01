@@ -51,8 +51,10 @@ define ["jquery",
       # Avoid blurry lines
       @_context.translate 0.5, 0.5 if object instanceof LineGroup
 
-      if object.pixelOffsetX != 0 || object.pixelOffsetY != 0
-        @_context.translate object.pixelOffsetX*@_devicePixelRatio, object.pixelOffsetY*@_devicePixelRatio
+      if object.getPixelOffsetX() != 0 || object.getPixelOffsetY() != 0
+        @_context.translate(
+          object.getPixelOffsetX()*@_devicePixelRatio,
+          object.getPixelOffsetY()*@_devicePixelRatio)
 
       viewProjection = @_applyMatrix(@_getViewProjectionMatrix())
 
