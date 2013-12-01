@@ -4,7 +4,7 @@ define ["gl-matrix", "./material", "./utils", "./bounding_box"], \
     @_nextId = 1
 
     constructor: (options={}) ->
-      @_material = options.material
+      @_material = options.material ?= null
       @_x = options.x ?= 0
       @_y = options.y ?= 0
       @_pixelOffsetX = options.pixelOffsetX ?= 0
@@ -16,6 +16,11 @@ define ["gl-matrix", "./material", "./utils", "./bounding_box"], \
       @_isVisible = true
       @_isBoundingBoxValid = false
       @_id = Object2d._nextId++
+
+      options.parent?.add @
+
+      unless options.name
+        @setName "Object (#{@getId()})"
 
     isVisible: -> @_isVisible
     setVisible: (value) -> @_isVisible = value
@@ -84,8 +89,13 @@ define ["gl-matrix", "./material", "./utils", "./bounding_box"], \
         @_children.splice(idx, 1)
         child._parent = null
 
+    clone: (overrides) ->
+      new Object2d(@cloneProperties overrides)
+
     cloneProperties: (overrides) ->
       Utils.merge
+        parent: @_parent
+        name: @_name
         x: @_x
         y: @_y
         material: @_material

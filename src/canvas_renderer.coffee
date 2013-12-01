@@ -151,10 +151,10 @@ define ["jquery",
     _applyObjectMaterial: (material) ->
       @_context.globalAlpha = material.opacity
       if material instanceof ShapeMaterial
-        @_context.fillStyle = material.fillColor.css()
-        @_context.strokeStyle = material.strokeColor.css()
+        @_context.fillStyle = material.fillColor.toCSS()
+        @_context.strokeStyle = material.strokeColor.toCSS()
       else if material instanceof LineMaterial
-        @_context.strokeStyle = material.color.css()
+        @_context.strokeStyle = material.color.toCSS()
       else
         throw new Error("Unknown material type #{material.constructor.name}")
 

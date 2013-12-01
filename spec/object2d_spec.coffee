@@ -122,3 +122,20 @@ define (require) ->
 
       it "clears the 'parent' property of its former children", ->
         expect(child.getParent()).toBeNull()
+
+    describe "when cloning", ->
+      parent = original = clone = null
+
+      beforeEach ->
+        parent = new Object2d()
+        original = new Object2d(name: "original")
+        parent.add original
+
+        clone = original.clone()
+
+      it "the clone has the same parent as the original", ->
+        expect(clone.getParent()).toBe parent
+
+      it "name", ->
+        expect(clone.getName()).toEqual original.getName()
+

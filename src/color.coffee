@@ -35,8 +35,11 @@ define ->
         @b = options.b ?= 255
         @a = options.a ?= 1
 
-    css: ->
+    toCSS: ->
       @_css || "rgba(#{@r}, #{@g}, #{@b}, #{@a})"
+
+    toArray: ->
+      [@r, @g, @b, @a]
 
     clone: (options={}) ->
       new Color

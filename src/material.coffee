@@ -1,13 +1,18 @@
 define ["./color", "./utils"], (Color, Utils) ->
   class Material
+    @_nextId = 1
+
     constructor: (options) ->
       @isFixedSize = options.isFixedSize ?= false
       @opacity = options.opacity ?= 1
+      @_id = Material._nextId++
 
     cloneProperties: (overrides) ->
       Utils.merge
         isFixedSize: @isFixedSize
         opacity: @opacity, overrides
+
+    getId: -> @_id
 
     _makeColor: (color, _default) ->
       _default = "black" if _default is undefined

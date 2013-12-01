@@ -16,25 +16,25 @@ define (require) ->
       @color.g = 59
       @color.b = 11
       @color.a = 0.2
-      expect(@color.css()).toEqual "rgba(#{@color.r}, #{@color.g}, #{@color.b}, #{@color.a})"
+      expect(@color.toCSS()).toEqual "rgba(#{@color.r}, #{@color.g}, #{@color.b}, #{@color.a})"
 
     it "should parse css color words", ->
       @color = new Color("blue")
-      expect(@color.css()).toEqual "blue"
+      expect(@color.toCSS()).toEqual "blue"
       expect(@color.r).toEqual 0
       expect(@color.g).toEqual 0
       expect(@color.b).toEqual 255
 
     it "should parse css rgb", ->
       @color = new Color("rgb(1,2,3)")
-      expect(@color.css()).toEqual "rgb(1,2,3)"
+      expect(@color.toCSS()).toEqual "rgb(1,2,3)"
       expect(@color.r).toEqual 1
       expect(@color.g).toEqual 2
       expect(@color.b).toEqual 3
 
     it "should parse css rgba", ->
       @color = new Color("rgba(1,2,3, 0.3)")
-      expect(@color.css()).toEqual "rgba(1,2,3, 0.3)"
+      expect(@color.toCSS()).toEqual "rgba(1,2,3, 0.3)"
       expect(@color.r).toEqual 1
       expect(@color.g).toEqual 2
       expect(@color.b).toEqual 3
