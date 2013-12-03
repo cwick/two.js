@@ -4,6 +4,7 @@ define ->
   SHIFT: 16
   ESCAPE: 27
   DELETE: 46
+  E: 69
   S: 83
   LEFT_COMMAND: 91
   RIGHT_COMMAND: 93

@@ -1,6 +1,7 @@
 define (require) ->
   $ = require "jquery"
   EditorBase = require "./editor_base"
+  EraseTool = require "./tools/erase"
   GrabTool = require "./tools/grab"
   KeyCodes = require "./key_codes"
   Image = require "two/image"
@@ -30,6 +31,7 @@ define (require) ->
       @tilesetDialog.setHeight 400
       @tilesetEditor = @tilesetDialog.editor
 
+      @tools.push new EraseTool(@)
       @tools.push new GrabTool(@)
       @tools.push new SelectTool(@)
       @tools.push new StampTool(@)
@@ -105,6 +107,10 @@ define (require) ->
         $("#show-grid").attr "checked", e.isVisible
 
     _addKeyBindings: ->
+      @inputBindings.addKeyBinding
+        keyCode: KeyCodes.E
+        onKeyDown: => @on.toolSelected.dispatch "erase"
+
       @inputBindings.addKeyBinding
         keyCode: KeyCodes.S
         onKeyDown: => @on.toolSelected.dispatch "stamp"
