@@ -92,6 +92,11 @@ define (require) ->
       it "invalidates the child's world transform", ->
         expect(child.invalidateWorldTransform.callCount).toEqual 1
 
+      it "the same child can't be added twice", ->
+        parent.add child
+        expect(parent.getChildren().length).toEqual 1
+        expect(parent.getChildren()[0]).toBe child
+
     describe "when adding a child to multiple parents", ->
       parent1 = parent2 = child = null
 
