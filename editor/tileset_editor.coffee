@@ -34,10 +34,7 @@ define (require) ->
       gridWidth = @editor.grid.getHorizontalSize()
       gridHeight = @editor.grid.getVerticalSize()
 
-      gridX = Math.floor(e.worldPoint[0] / gridWidth) * gridWidth
-      gridY = Math.floor(e.worldPoint[1] / gridHeight) * gridHeight
-
-      @_selectionBox.setPosition [gridX, gridY]
+      @_selectionBox.setPosition @editor.snapToGrid(e.worldPoint, "lower-left")
       @_selectionBox.setWidth gridWidth
       @_selectionBox.setHeight gridHeight
       @_selectionBox.setOrigin [-gridWidth/2, -gridHeight/2]
@@ -59,6 +56,7 @@ define (require) ->
     run: ->
       super
       @on.toolSelected.dispatch "tileSelect"
+      @on.gridSnappingChanged.dispatch true
       @grid.getMaterial().color = new Color("black")
       @_loadImage "assets/mario_tileset.png"
 
