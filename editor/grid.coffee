@@ -61,6 +61,10 @@ define ["two/line_group", "two/color", "two/line_material"], (LineGroup, Color, 
           [Math.round(gridPoint[0]), Math.round(gridPoint[1])]
         when "lower-left"
           [Math.floor(gridPoint[0]), Math.floor(gridPoint[1])]
+        when "upper-left"
+          [Math.floor(gridPoint[0]), Math.ceil(gridPoint[1])]
+        when "lower-right"
+          [Math.ceil(gridPoint[0]), Math.floor(gridPoint[1])]
         else throw new Error("Invalid snap mode #{mode}")
 
       [snapped[0]*@getHorizontalSize(), snapped[1]*@getVerticalSize()]

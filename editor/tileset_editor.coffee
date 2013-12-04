@@ -31,15 +31,27 @@ define (require) ->
     onActivated: (e) ->
       super
 
-      gridWidth = @editor.grid.getHorizontalSize()
-      gridHeight = @editor.grid.getVerticalSize()
+      @_selectionStartPoint = @editor.snapToGrid(e.worldPoint, "upper-left")
+      @_selectionEndPoint = @editor.snapToGrid(e.worldPoint, "lower-right")
 
-      @_selectionBox.setPosition @editor.snapToGrid(e.worldPoint, "lower-left")
-      @_selectionBox.setWidth gridWidth
-      @_selectionBox.setHeight gridHeight
-      @_selectionBox.setOrigin [-gridWidth/2, -gridHeight/2]
-
+      @_drawSelectionBox()
       @editor.on.tileSelected.dispatch @_selectionBox
+
+    onDragged: (e) ->
+      super
+
+      @_selectionEndPoint = @editor.snapToGrid(e.worldEndPoint, "lower-right")
+      @_drawSelectionBox()
+      @editor.on.tileSelected.dispatch @_selectionBox
+
+    _drawSelectionBox: ->
+      width = Math.abs(@_selectionEndPoint[0] - @_selectionStartPoint[0])
+      height = Math.abs(@_selectionEndPoint[1] - @_selectionStartPoint[1])
+
+      @_selectionBox.setPosition [@_selectionStartPoint[0], @_selectionEndPoint[1]]
+      @_selectionBox.setWidth width
+      @_selectionBox.setHeight height
+      @_selectionBox.setOrigin [-width/2, -height/2]
 
   class TilesetEditor extends EditorBase
     constructor: ->
@@ -75,6 +87,8 @@ define (require) ->
 
     onTileSelected: (selectionBox) ->
       @_currentTile = new Sprite
+        width: selectionBox.getWidth() / @grid.getHorizontalSize()
+        height: selectionBox.getHeight() / @grid.getVerticalSize()
         material: new SpriteMaterial
           image: @_tileset.getMaterial().image
           offsetX: selectionBox.getX()

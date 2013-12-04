@@ -80,11 +80,12 @@ define (require) ->
       @editor.on.objectChanged.dispatch @_previewTile
       @_previewTile = null
 
-    _snapToGrid: (worldPoint) ->
-      @editor.snapToGrid(worldPoint, "lower-left")
-
     _positionTile: (tile, worldPoint) ->
       if @editor.isGridSnappingEnabled()
         tile.setOrigin [-tile.getWidth()/2, -tile.getHeight()/2]
 
       tile.setPosition @_snapToGrid(worldPoint)
+
+    _snapToGrid: (worldPoint) ->
+      @editor.snapToGrid(worldPoint, "lower-left")
+
