@@ -31,24 +31,51 @@ define (require) ->
     onActivated: (e) ->
       super
 
-      @_selectionStartPoint = @editor.snapToGrid(e.worldPoint, "upper-left")
-      @_selectionEndPoint = @editor.snapToGrid(e.worldPoint, "lower-right")
-
-      @_drawSelectionBox()
-      @editor.on.tileSelected.dispatch @_selectionBox
+      @_selectionStartPoint = @_selectionEndPoint = e.worldPoint
+      @_selectTile()
 
     onDragged: (e) ->
       super
 
-      @_selectionEndPoint = @editor.snapToGrid(e.worldEndPoint, "lower-right")
+      @_selectionEndPoint = e.worldEndPoint
+      @_selectTile()
+
+    _selectTile: ->
+      @_normalizeSelectionPoints()
       @_drawSelectionBox()
+
       @editor.on.tileSelected.dispatch @_selectionBox
 
-    _drawSelectionBox: ->
-      width = Math.abs(@_selectionEndPoint[0] - @_selectionStartPoint[0])
-      height = Math.abs(@_selectionEndPoint[1] - @_selectionStartPoint[1])
+    _normalizeSelectionPoints: ->
+      # upper-right
+      if @_selectionEndPoint[0] >= @_selectionStartPoint[0] &&
+         @_selectionEndPoint[1] >= @_selectionStartPoint[1]
+        @_normalizedStartPoint = @_selectionStartPoint
+        @_normalizedEndPoint = @_selectionEndPoint
+      # lower-left
+      else if @_selectionEndPoint[0] <= @_selectionStartPoint[0] &&
+              @_selectionEndPoint[1] <= @_selectionStartPoint[1]
+        @_normalizedStartPoint = @_selectionEndPoint
+        @_normalizedEndPoint = @_selectionStartPoint
+      # lower-right
+      else if @_selectionEndPoint[0] >= @_selectionStartPoint[0] &&
+              @_selectionEndPoint[1] <= @_selectionStartPoint[1]
+        @_normalizedStartPoint = [@_selectionStartPoint[0], @_selectionEndPoint[1]]
+        @_normalizedEndPoint = [@_selectionEndPoint[0], @_selectionStartPoint[1]]
+      # upper-left
+      else if @_selectionEndPoint[0] <= @_selectionStartPoint[0] &&
+              @_selectionEndPoint[1] >= @_selectionStartPoint[1]
+        @_normalizedStartPoint = [@_selectionEndPoint[0], @_selectionStartPoint[1]]
+        @_normalizedEndPoint = [@_selectionStartPoint[0], @_selectionEndPoint[1]]
 
-      @_selectionBox.setPosition [@_selectionStartPoint[0], @_selectionEndPoint[1]]
+      @_normalizedStartPoint = @editor.snapToGrid @_normalizedStartPoint, "lower-left"
+      @_normalizedEndPoint = @editor.snapToGrid @_normalizedEndPoint, "upper-right"
+
+    _drawSelectionBox: ->
+      width = @_normalizedEndPoint[0] - @_normalizedStartPoint[0]
+      height = @_normalizedEndPoint[1] - @_normalizedStartPoint[1]
+
+      @_selectionBox.setPosition @_normalizedStartPoint
       @_selectionBox.setWidth width
       @_selectionBox.setHeight height
       @_selectionBox.setOrigin [-width/2, -height/2]
