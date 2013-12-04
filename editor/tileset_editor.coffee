@@ -31,12 +31,11 @@ define (require) ->
     onActivated: (e) ->
       super
 
-      worldPoint = @editor.projector.unproject(e.canvasPoint)
       gridWidth = @editor.grid.getHorizontalSize()
       gridHeight = @editor.grid.getVerticalSize()
 
-      gridX = Math.floor(worldPoint[0] / gridWidth) * gridWidth
-      gridY = Math.floor(worldPoint[1] / gridHeight) * gridHeight
+      gridX = Math.floor(e.worldPoint[0] / gridWidth) * gridWidth
+      gridY = Math.floor(e.worldPoint[1] / gridHeight) * gridHeight
 
       @_selectionBox.setPosition [gridX, gridY]
       @_selectionBox.setWidth gridWidth

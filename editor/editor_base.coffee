@@ -215,14 +215,7 @@ define (require) ->
     snapToGrid: (point, mode="nearest") ->
       return point unless @_isGridSnappingEnabled
 
-      gridPoint = [point[0]/@grid.getVerticalSize(), point[1]/@grid.getHorizontalSize()]
-
-      switch mode
-        when "nearest"
-          [Math.round(gridPoint[0]), Math.round(gridPoint[1])]
-        when "lower-left"
-          [Math.floor(gridPoint[0]), Math.floor(gridPoint[1])]
-        else point
+      @grid.snap point, mode
 
     isGridSnappingEnabled: -> @_isGridSnappingEnabled
 

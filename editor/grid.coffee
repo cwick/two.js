@@ -53,3 +53,12 @@ define ["two/line_group", "two/color", "two/line_material"], (LineGroup, Color, 
 
       @setVertices vertices
 
+    snap: (point, mode) ->
+      gridPoint = [point[0]/@getVerticalSize(), point[1]/@getHorizontalSize()]
+
+      switch mode
+        when "nearest"
+          [Math.round(gridPoint[0]), Math.round(gridPoint[1])]
+        when "lower-left"
+          [Math.floor(gridPoint[0]), Math.floor(gridPoint[1])]
+        else point
