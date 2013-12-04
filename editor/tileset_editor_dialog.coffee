@@ -21,16 +21,20 @@ define (require) ->
         """
       )
 
-      gridWidth = new NumberInput(id: "tileset-grid-width", digits: 3, value: 32, minimum: 1)
-      gridHeight = new NumberInput(id: "tileset-grid-height", digits: 3, value: 32, minimum: 1)
-      gridWidth.addClass "right-align"
+      @gridWidth = new NumberInput(id: "tileset-grid-width", digits: 3, value: 32, minimum: 1)
+      @gridHeight = new NumberInput(id: "tileset-grid-height", digits: 3, value: 32, minimum: 1)
+      @gridWidth.addClass "right-align"
 
-      gridWidth.$domElement.insertAfter @$domElement.find("[for='tileset-grid-width']")
-      gridHeight.$domElement.insertAfter @$domElement.find("[for='tileset-grid-height']")
+      @gridWidth.$domElement.insertAfter @$domElement.find("[for='tileset-grid-width']")
+      @gridHeight.$domElement.insertAfter @$domElement.find("[for='tileset-grid-height']")
 
-      gridWidth.changed.add => @editor.on.gridChanged.dispatch(horizontalSize: gridWidth.getValue())
-      gridHeight.changed.add => @editor.on.gridChanged.dispatch(verticalSize: gridHeight.getValue())
+      @gridWidth.changed.add => @editor.on.gridChanged.dispatch(horizontalSize: @gridWidth.getValue())
+      @gridHeight.changed.add => @editor.on.gridChanged.dispatch(verticalSize: @gridHeight.getValue())
 
       @editor = new TilesetEditor()
       @setBody @editor.domElement
       @setTranslation 50, 150
+
+    run: ->
+      @editor.run()
+      @editor.on.gridChanged.dispatch horizontalSize: @gridWidth.getValue(), verticalSize: @gridHeight.getValue()

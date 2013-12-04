@@ -53,7 +53,7 @@ define (require) ->
 
       $("#editor").append new Inspector(@on).domElement
       $("#editor").append @tilesetDialog.domElement
-      @tilesetEditor.run()
+      @tilesetDialog.run()
 
       @on.spriteCreated.add @onSpriteCreated, @
       @on.objectDeleted.add @onObjectDeleted, @
