@@ -1,6 +1,6 @@
 define (require) ->
   gl = require "gl-matrix"
-  uuid = require "uuid"
+  Math = require "./math"
   Material = require "./material"
   Utils = require "./utils"
   BoundingBox = require "./bounding_box"
@@ -19,7 +19,7 @@ define (require) ->
       @_children = []
       @_isVisible = true
       @_isBoundingBoxValid = false
-      @_id = options.id ?= uuid.v4()
+      @_id = options.id ?= Math.uuid()
 
       options.parent?.add @
 

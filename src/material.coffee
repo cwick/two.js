@@ -1,5 +1,5 @@
 define (require) ->
-  uuid = require "uuid"
+  Math = require "./math"
   Color = require "./color"
   Utils = require "./utils"
 
@@ -7,7 +7,7 @@ define (require) ->
     constructor: (options) ->
       @isFixedSize = options.isFixedSize ?= false
       @opacity = options.opacity ?= 1
-      @_id = options.id ?= uuid.v4()
+      @_id = options.id ?= Math.uuid()
 
     cloneProperties: (overrides) ->
       Utils.merge
