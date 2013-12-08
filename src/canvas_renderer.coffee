@@ -61,8 +61,8 @@ define ["jquery",
 
       viewProjection = @_applyMatrix(@_getViewProjectionMatrix())
 
-      # Don't scale line width with object or view scale
-      @_context.lineWidth = 1/(viewProjection[0] * object.getScale())
+      # Don't scale line width with view
+      @_context.lineWidth = 1/viewProjection[0]
 
       material = object.getMaterial()
 

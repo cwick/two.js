@@ -149,8 +149,8 @@ define (require) ->
         scaleDirectionY: @_scaleDirectionY
         signals: @on, overrides)
 
-    getBoundingWidth: -> @width * 2
-    getBoundingHeight: -> @height * 2
+    getBoundingWidth: -> @getWidth() * 2
+    getBoundingHeight: -> @getHeight() * 2
 
     attachTo: (object) ->
       @_object = object
@@ -159,42 +159,52 @@ define (require) ->
       @_object = null
 
     onActivated: ->
-      @_initialScale = @_object.getScale()
       @_initialWidth = @getParent().getWidth()
+      @_initialHeight = @getParent().getHeight()
       @_initialPosition = @getParent().getPosition()
 
     onDragged: (e) ->
-      e.setWorldEndPoint(@_adjustStylusForUniformScale(e.worldEndPoint))
+      # e.setWorldEndPoint(@_adjustStylusForUniformScale(e.worldEndPoint))
 
-      worldTranslation = gl.vec2.clone(e.worldTranslation)
+      # worldTranslation = gl.vec2.clone(e.worldTranslation)
 
-      worldTranslation[0] *= @_scaleDirectionX
+      # worldTranslation[0] *= @_scaleDirectionX
 
-      newScale = @_initialScale * (1 - worldTranslation[0]/@_initialWidth)
-      @_object.setScale newScale
-      @_object.setPosition [
-        @_initialPosition[0] + @_scaleDirectionX*worldTranslation[0]/2,
-        @_initialPosition[1] + @_scaleDirectionY*worldTranslation[0]/2
-      ]
+      console.log e.worldTranslation
+      newWidth = @_initialWidth + e.worldTranslation[0]
+      newHeight = @_initialHeight + e.worldTranslation[1]
 
+      console.log newWidth
+      # @_object.setSize [newWidth, newHeight]
+      @_object.setWidth newWidth
       @getParent().shrinkWrap @_object
       @on.objectChanged.dispatch @_object
+
+      # newScale = @_initialScale * (1 - worldTranslation[0]/@_initialWidth)
+      # @_object.setScale newScale
+      # @_object.setPosition [
+      #   @_initialPosition[0] + @_scaleDirectionX*worldTranslation[0]/2,
+      #   @_initialPosition[1] + @_scaleDirectionY*worldTranslation[0]/2
+      # ]
+
+      # @getParent().shrinkWrap @_object
+      # @on.objectChanged.dispatch @_object
 
     onStylusMoved: ->
       @on.cursorStyleChanged.dispatch @getName()
 
     _adjustStylusForUniformScale: (stylusPosition) ->
-      boundingBox = @getParent().getBoundingBox()
-      slope = boundingBox.getHeight() / boundingBox.getWidth()
-      slope *= @_scaleDirectionX * @_scaleDirectionY
+      # boundingBox = @getParent().getBoundingBox()
+      # slope = boundingBox.getHeight() / boundingBox.getWidth()
+      # slope *= @_scaleDirectionX * @_scaleDirectionY
 
-      stylusX = stylusPosition[0]
-      stylusY = stylusPosition[1]
+      # stylusX = stylusPosition[0]
+      # stylusY = stylusPosition[1]
 
-      snapX = 0.5*(stylusX + boundingBox.getX()) + (stylusY - boundingBox.getY())/(2*slope)
-      snapY = slope*(snapX - boundingBox.getX()) + boundingBox.getY()
+      # snapX = 0.5*(stylusX + boundingBox.getX()) + (stylusY - boundingBox.getY())/(2*slope)
+      # snapY = slope*(snapX - boundingBox.getX()) + boundingBox.getY()
 
-      [snapX, snapY]
+      # [snapX, snapY]
 
   class OriginMarker extends Disc
     constructor: ->

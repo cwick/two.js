@@ -2,30 +2,38 @@ define ["gl-matrix", "./shape", "./utils"], (gl, Shape, Utils) ->
   class Box extends Shape
     constructor: (options={}) ->
       super
-      @width = options.width ?= 1
-      @height = options.height ?= 1
+      @_width = options.width ?= 1
+      @_height = options.height ?= 1
+
       unless options.name
         @setName "Box (#{@getId()})"
 
     cloneProperties: (overrides) ->
       super Utils.merge(
-        width: @width
-        height: @height, overrides)
+        width: @_width
+        height: @_height, overrides)
 
     clone: (overrides) ->
       new Box(@cloneProperties overrides)
 
-    getWidth: -> @width
-    getHeight: -> @height
+    setSize: (width, height) ->
+      @_width = width
+      @_height = height
+
+    getSize: ->
+      [@_width, @_height]
+
+    getWidth: -> @_width
+    getHeight: -> @_height
 
     setWidth: (value) ->
-      @width = value
+      @_width = value
       @invalidateBoundingGeometry()
 
     setHeight: (value) ->
-      @height = value
+      @_height = value
       @invalidateBoundingGeometry()
 
-    getBoundingWidth: -> @width
-    getBoundingHeight: -> @height
+    getBoundingWidth: -> @_width
+    getBoundingHeight: -> @_height
 
