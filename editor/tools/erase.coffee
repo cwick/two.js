@@ -3,6 +3,8 @@ define (require) ->
 
   class EraseTool extends Tool
     name: "erase"
+    cursors:
+      normal: "url(editor/cursors/eraser.png) 2 18, auto"
 
     onActivated: (e) ->
       super

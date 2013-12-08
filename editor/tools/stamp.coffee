@@ -5,6 +5,8 @@ define (require) ->
 
   class StampTool extends Tool
     name: "stamp"
+    cursors:
+      normal: "url(editor/cursors/stamp.png) 12 23, auto"
 
     constructor: ->
       super
