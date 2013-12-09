@@ -12,6 +12,10 @@ define ["jquery", "./lib/dialog", "./lib/number_input", "./lib/image_input", "tw
 
       @objectPositionX = new NumberInput(digits: 7, decimalPlaces: 2)
       @objectPositionY = new NumberInput(digits: 7, decimalPlaces: 2)
+      @objectWidth = new NumberInput(digits: 7, decimalPlaces: 2)
+      @objectHeight = new NumberInput(digits: 7, decimalPlaces: 2)
+      @objectOriginX = new NumberInput(digits: 7, decimalPlaces: 2)
+      @objectOriginY = new NumberInput(digits: 7, decimalPlaces: 2)
 
       @setWidth 200
       @setTranslation 50, 50
@@ -34,14 +38,12 @@ define ["jquery", "./lib/dialog", "./lib/number_input", "./lib/image_input", "tw
               <td id="inspector-object-position"></td>
             </tr>
             <tr>
-              <td>Rotation</td>
-              <td>
-                <input class="format-degrees" type="number" value="3"></input>
-              </td>
+              <td>Origin</td>
+              <td id="inspector-object-origin"></td>
             </tr>
             <tr>
-              <td>Visible</td>
-              <td><input type="checkbox"/></td>
+              <td>Size</td>
+              <td id="inspector-object-size"></td>
             </tr>
           </table>
         """)
@@ -59,6 +61,14 @@ define ["jquery", "./lib/dialog", "./lib/number_input", "./lib/image_input", "tw
       positionRow = body.find("#inspector-object-position")
       positionRow.append @objectPositionX.domElement
       positionRow.append @objectPositionY.domElement
+
+      sizeRow = body.find("#inspector-object-size")
+      sizeRow.append @objectWidth.domElement
+      sizeRow.append @objectHeight.domElement
+
+      originRow = body.find("#inspector-object-origin")
+      originRow.append @objectOriginX.domElement
+      originRow.append @objectOriginY.domElement
 
       @$domElement.find("input").change (e) => @_onInputChanged(e)
 
@@ -87,6 +97,8 @@ define ["jquery", "./lib/dialog", "./lib/number_input", "./lib/image_input", "tw
       object.setName @$domElement.find(".inspector-object-name").val()
       object.setX @objectPositionX.getValue()
       object.setY @objectPositionY.getValue()
+      object.setSize @objectWidth.getValue(), @objectHeight.getValue()
+      object.setOrigin [@objectOriginX.getValue(), @objectOriginY.getValue()]
 
       @on.objectChanged.dispatch object
 
@@ -94,4 +106,8 @@ define ["jquery", "./lib/dialog", "./lib/number_input", "./lib/image_input", "tw
       @$domElement.find(".inspector-object-name").val object.getName()
       @objectPositionX.setValue object.getX()
       @objectPositionY.setValue object.getY()
+      @objectWidth.setValue object.getWidth()
+      @objectHeight.setValue object.getHeight()
+      @objectOriginX.setValue object.getOrigin()[0]
+      @objectOriginY.setValue object.getOrigin()[1]
 
