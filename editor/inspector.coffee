@@ -1,5 +1,5 @@
-define ["jquery", "./lib/dialog", "./lib/number_input", "./lib/image_input", "two/image"], \
-       ($, Dialog, NumberInput, ImageInput, Image) ->
+define ["jquery", "./lib/dialog", "./lib/number_input"], \
+       ($, Dialog, NumberInput) ->
   class Inspector extends Dialog
     constructor: (@on) ->
       super
