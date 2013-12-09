@@ -6,7 +6,7 @@ define (require) ->
   class StampTool extends Tool
     name: "stamp"
     cursors:
-      normal: "url(editor/cursors/stamp.png) 12 23, auto"
+      normal: "url(editor/cursors/stamp.png) 12 19, auto"
 
     constructor: ->
       super
@@ -16,6 +16,11 @@ define (require) ->
     onActivated: (e) ->
       super
       @_placeCurrentTileInScene e.worldPoint
+      @_previewTile?.setVisible false
+
+    onDeactivated: ->
+      super
+      @_previewTile?.setVisible true
 
     onDragged: (e) ->
       super
