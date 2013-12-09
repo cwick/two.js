@@ -59,29 +59,29 @@ define (require) ->
 
       @_NEResizeHandle = @add(largeHandle.clone(
         name: "nesw-resize"
-        scaleDirectionX: -1
-        scaleDirectionY: -1
+        horizontalResizeFactor: 1
+        verticalResizeFactor: 1
         pixelOffsetX: Styles.LARGE_HANDLE_PADDING
         pixelOffsetY: -Styles.LARGE_HANDLE_PADDING))
 
       @_NWResizeHandle = @add(largeHandle.clone(
         name: "nwse-resize"
-        scaleDirectionX: 1
-        scaleDirectionY: -1
+        horizontalResizeFactor: -1
+        verticalResizeFactor: 1
         pixelOffsetX: -Styles.LARGE_HANDLE_PADDING
         pixelOffsetY: -Styles.LARGE_HANDLE_PADDING))
 
       @_SEResizeHandle = @add(largeHandle.clone(
         name: "nwse-resize"
-        scaleDirectionX: -1
-        scaleDirectionY: 1
+        horizontalResizeFactor: 1
+        verticalResizeFactor: -1
         pixelOffsetX: Styles.LARGE_HANDLE_PADDING
         pixelOffsetY: Styles.LARGE_HANDLE_PADDING))
 
       @_SWResizeHandle = @add(largeHandle.clone(
         name: "nesw-resize"
-        scaleDirectionX: 1
-        scaleDirectionY: 1
+        horizontalResizeFactor: -1
+        verticalResizeFactor: -1
         pixelOffsetX: -Styles.LARGE_HANDLE_PADDING
         pixelOffsetY: Styles.LARGE_HANDLE_PADDING))
 
@@ -177,13 +177,11 @@ define (require) ->
 
       newOrigin[0] = @_initialOrigin[0]*newWidth / @_initialWidth
       newPosition[0] = @_initialPosition[0] +
-        Math.abs(@_horizontalResizeFactor) *
         @_horizontalResizeFactor*(newWidth - @_initialWidth) *
         (0.5 + @_horizontalResizeFactor*@_initialOrigin[0]/@_initialWidth)
 
       newOrigin[1] = @_initialOrigin[1]*newHeight / @_initialHeight
       newPosition[1] = @_initialPosition[1] +
-        Math.abs(@_verticalResizeFactor) *
         @_verticalResizeFactor*(newHeight - @_initialHeight) *
         (0.5 + @_verticalResizeFactor*@_initialOrigin[1]/@_initialHeight)
 
