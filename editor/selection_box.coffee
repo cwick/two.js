@@ -87,18 +87,22 @@ define (require) ->
 
       @_NResizeHandle = @add(smallHandle.clone(
         name: "ns-resize"
+        verticalResizeFactor: 1
         pixelOffsetY: -Styles.SMALL_HANDLE_PADDING))
 
       @_EResizeHandle = @add(smallHandle.clone(
         name: "ew-resize"
+        horizontalResizeFactor: 1
         pixelOffsetX: Styles.SMALL_HANDLE_PADDING))
 
       @_SResizeHandle = @add(smallHandle.clone(
         name: "ns-resize"
+        verticalResizeFactor: -1
         pixelOffsetY: Styles.SMALL_HANDLE_PADDING))
 
       @_WResizeHandle = @add(smallHandle.clone(
         name: "ew-resize"
+        horizontalResizeFactor: -1
         pixelOffsetX: -Styles.SMALL_HANDLE_PADDING))
 
     _buildOriginPoint: ->
@@ -131,12 +135,11 @@ define (require) ->
           isFixedSize: true
 
       @on = options.signals
-      @_scaleDirectionY = options.scaleDirectionY
-      @_scaleDirectionX = options.scaleDirectionX
+      @_horizontalResizeFactor = options.horizontalResizeFactor ?= 0
+      @_verticalResizeFactor = options.verticalResizeFactor ?= 0
 
       delete options.signals
-      delete options.scaleDirectionX
-      delete options.scaleDirectionY
+      delete options.horizontalResizeFactor
 
       super options
 
@@ -145,8 +148,8 @@ define (require) ->
 
     cloneProperties: (overrides) ->
       super Utils.merge(
-        scaleDirectionX: @_scaleDirectionX
-        scaleDirectionY: @_scaleDirectionY
+        horizontalResizeFactor: @_horizontalResizeFactor
+        verticalResizeFactor: @_verticalResizeFactor
         signals: @on, overrides)
 
     getBoundingWidth: -> @getWidth() * 2
@@ -159,52 +162,39 @@ define (require) ->
       @_object = null
 
     onActivated: ->
-      @_initialWidth = @getParent().getWidth()
-      @_initialHeight = @getParent().getHeight()
-      @_initialPosition = @getParent().getPosition()
+      @_initialWidth = @_object.getWidth()
+      @_initialHeight = @_object.getHeight()
+      @_initialPosition = @_object.getPosition()
+      @_initialOrigin = @_object.getOrigin()
 
     onDragged: (e) ->
-      # e.setWorldEndPoint(@_adjustStylusForUniformScale(e.worldEndPoint))
+      newPosition = gl.vec2.create()
+      newOrigin = gl.vec2.create()
 
-      # worldTranslation = gl.vec2.clone(e.worldTranslation)
+      newWidth = @_initialWidth + e.worldTranslation[0]*@_horizontalResizeFactor
+      newHeight = @_initialHeight + e.worldTranslation[1]*@_verticalResizeFactor
+      [newWidth, newHeight] = e.editor.snapToGrid [newWidth, newHeight]
 
-      # worldTranslation[0] *= @_scaleDirectionX
+      newOrigin[0] = @_initialOrigin[0]*newWidth / @_initialWidth
+      newPosition[0] = @_initialPosition[0] +
+        Math.abs(@_horizontalResizeFactor) *
+        @_horizontalResizeFactor*(newWidth - @_initialWidth) *
+        (0.5 + @_horizontalResizeFactor*@_initialOrigin[0]/@_initialWidth)
 
-      console.log e.worldTranslation
-      newWidth = @_initialWidth + e.worldTranslation[0]
-      newHeight = @_initialHeight + e.worldTranslation[1]
+      newOrigin[1] = @_initialOrigin[1]*newHeight / @_initialHeight
+      newPosition[1] = @_initialPosition[1] +
+        Math.abs(@_verticalResizeFactor) *
+        @_verticalResizeFactor*(newHeight - @_initialHeight) *
+        (0.5 + @_verticalResizeFactor*@_initialOrigin[1]/@_initialHeight)
 
-      console.log newWidth
-      # @_object.setSize [newWidth, newHeight]
-      @_object.setWidth newWidth
+      @_object.setSize newWidth, newHeight
+      @_object.setOrigin newOrigin
+      @_object.setPosition newPosition
       @getParent().shrinkWrap @_object
       @on.objectChanged.dispatch @_object
 
-      # newScale = @_initialScale * (1 - worldTranslation[0]/@_initialWidth)
-      # @_object.setScale newScale
-      # @_object.setPosition [
-      #   @_initialPosition[0] + @_scaleDirectionX*worldTranslation[0]/2,
-      #   @_initialPosition[1] + @_scaleDirectionY*worldTranslation[0]/2
-      # ]
-
-      # @getParent().shrinkWrap @_object
-      # @on.objectChanged.dispatch @_object
-
     onStylusMoved: ->
       @on.cursorStyleChanged.dispatch @getName()
-
-    _adjustStylusForUniformScale: (stylusPosition) ->
-      # boundingBox = @getParent().getBoundingBox()
-      # slope = boundingBox.getHeight() / boundingBox.getWidth()
-      # slope *= @_scaleDirectionX * @_scaleDirectionY
-
-      # stylusX = stylusPosition[0]
-      # stylusY = stylusPosition[1]
-
-      # snapX = 0.5*(stylusX + boundingBox.getX()) + (stylusY - boundingBox.getY())/(2*slope)
-      # snapY = slope*(snapX - boundingBox.getX()) + boundingBox.getY()
-
-      # [snapX, snapY]
 
   class OriginMarker extends Disc
     constructor: ->
