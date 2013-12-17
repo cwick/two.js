@@ -8,11 +8,12 @@ define ["jquery", "./control"], ($, Control) ->
         @$domElement.removeClass "toolbar"
 
     addItem: (item) ->
-      wrapper = $("<li/>")
+      wrapper = $("<li/>", class: "toolbar-item")
       wrapper.append item
       @$domElement.append wrapper
       item
 
     activate: (item) ->
-      @$domElement.find("button").removeClass "active"
-      $(item).addClass "active"
+      toolbarItem = $(item).closest(".toolbar-item")
+      toolbarItem.siblings().removeClass "active"
+      toolbarItem.addClass "active"

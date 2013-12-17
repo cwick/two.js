@@ -74,6 +74,16 @@ canvas {
 }
 
 .menubar {
+  @extend .toolbar;
+  background-color: white;
+  & > li.active {
+    border: 1px solid red;
+    border-bottom: none;
+  }
+}
+
+.submenu {
+  border: 1px solid red;
   background-color: white;
 }
 
@@ -118,7 +128,7 @@ input[type="number"] {
     @include border($dark-border-color);
     margin: -1px;
   }
-  &.active {
+  &.active, .toolbar-item.active > & {
     @extend .icon:hover;
     background-color: rgb(221, 221, 221);
   }
@@ -127,7 +137,7 @@ input[type="number"] {
 @mixin icon($name) {
   .icon-#{$name} {
     background-image: icon-url("#{$name}.png");
-    &.active {
+    &.active, .toolbar-item.active > & {
       background-image: icon-url("#{$name}-active.png");
     }
   }
