@@ -5,6 +5,7 @@ define ["jquery", "./control"], ($, Control) ->
 
       if options.orientation == "vertical"
         @$domElement.addClass "toolbar-vertical"
+        @$domElement.removeClass "toolbar"
 
     addItem: (item) ->
       wrapper = $("<li/>")

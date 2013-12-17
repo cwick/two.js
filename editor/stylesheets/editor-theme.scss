@@ -64,8 +64,17 @@ canvas {
   @include border($type: border-bottom, $radius: 0, $color: $light-border-color, $width: 2px);
 }
 .toolbar-vertical {
+  @extend .toolbar;
   border: none;
   @include border($type: border-right, $radius: 0, $color: $light-border-color, $width: 2px);
+}
+
+.toolbar-divider {
+  @include border($type: border-top, $color: $dark-border-color);
+}
+
+.menubar {
+  background-color: white;
 }
 
 .dialog-body {
@@ -130,6 +139,3 @@ input[type="number"] {
 @include icon("stamp");
 @include icon("eraser");
 
-.toolbar-divider {
-  @include border($type: border-top, $color: $dark-border-color);
-}
