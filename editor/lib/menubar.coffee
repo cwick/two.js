@@ -19,11 +19,7 @@ define ["jquery", "./control"], ($, Control) ->
       menubarItem.siblings().removeClass "active"
       menubarItem.addClass "active"
 
-      @_openSubmenu(menubarItem, item.data "submenu")
-
-    deactivate: (item) ->
-      item.removeClass "active"
-      $("body").find(".submenu").detach()
+      @_openSubmenu(menubarItem, item.data("submenu"))
 
     close: ->
       $("body").find(".submenu").detach()
@@ -34,7 +30,7 @@ define ["jquery", "./control"], ($, Control) ->
         e.stopPropagation()
 
         if item.hasClass "active"
-          @deactivate item
+          @close()
         else
           @activate item
 
@@ -42,8 +38,5 @@ define ["jquery", "./control"], ($, Control) ->
         @activate(item) if item.siblings(".active").length > 0
 
     _openSubmenu: (menubarItem, submenu) ->
-      $("body").find(".submenu").detach()
-      $("body").append submenu.$domElement
-      submenu.$domElement.css "top", menubarItem.outerHeight() + menubarItem.position().top
-      submenu.$domElement.css "left", menubarItem.position().left
+      submenu.open(menubarItem.outerHeight() + menubarItem.position().top, menubarItem.position().left)
 

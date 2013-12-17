@@ -6,3 +6,8 @@ define ["jquery", "./control"], ($, Control) ->
       @name = options.name
       @$domElement.html @name
 
+      @$domElement.mousedown (e) -> e.stopPropagation()
+      @$domElement.mouseenter (e) =>
+        @$domElement.addClass "active"
+        @$domElement.siblings().removeClass "active"
+

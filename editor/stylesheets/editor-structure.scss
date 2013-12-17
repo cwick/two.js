@@ -145,6 +145,15 @@ label {
 
 .submenu {
   position: absolute;
+  & > li {
+    &:first-child {
+      margin-top: 4px;
+    }
+    &:last-child {
+      margin-bottom: 4px;
+    }
+    padding: 4px 20px;
+  }
 }
 
 input, select, textarea {
