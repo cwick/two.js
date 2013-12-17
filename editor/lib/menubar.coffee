@@ -3,6 +3,9 @@ define ["jquery", "./control"], ($, Control) ->
     constructor: (options) ->
       super $("<ul/>", class: "menubar")
 
+      $(document).mousedown (e) =>
+        @close()
+
     addItem: (item) ->
       wrapper = $("<li/>", class: "menubar-item")
       wrapper.append item.name
@@ -18,8 +21,25 @@ define ["jquery", "./control"], ($, Control) ->
 
       @_openSubmenu(menubarItem, item.data "submenu")
 
+    deactivate: (item) ->
+      item.removeClass "active"
+      $("body").find(".submenu").detach()
+
+    close: ->
+      $("body").find(".submenu").detach()
+      @$domElement.children(".active").removeClass "active"
+
     _bindMenuItemEventHandlers: (item) ->
-      item.click => @activate(item)
+      item.mousedown (e) =>
+        e.stopPropagation()
+
+        if item.hasClass "active"
+          @deactivate item
+        else
+          @activate item
+
+      item.mouseenter =>
+        @activate(item) if item.siblings(".active").length > 0
 
     _openSubmenu: (menubarItem, submenu) ->
       $("body").find(".submenu").detach()
