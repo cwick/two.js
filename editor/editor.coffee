@@ -3,6 +3,7 @@ define (require) ->
   EditorBase = require "./editor_base"
   EraseTool = require "./tools/erase"
   GrabTool = require "./tools/grab"
+  FileSelectionDialog = require "./file_selection_dialog"
   KeyCodes = require "./key_codes"
   Image = require "two/image"
   InputBindings = require "./input_bindings"
@@ -24,6 +25,7 @@ define (require) ->
       super
 
       @on.objectDeleted = new Signal()
+      @on.projectOpened = new Signal()
 
       @tilesetDialog = new TilesetEditorDialog()
       @tilesetDialog.setWidth 400
@@ -45,12 +47,14 @@ define (require) ->
       @scene.setMaterial new SceneMaterial(backgroundColor: "#6B8CFF")
 
       @_selectionBox = new SelectionBox(@on)
+      @mainView = $(".main-view .viewport")
 
-      $(".main-view .viewport").append new Inspector(@on).domElement
-      $(".main-view .viewport").append @tilesetDialog.domElement
+      new Inspector(@on).open @mainView
+      @tilesetDialog.open @mainView
       @tilesetDialog.run()
 
       @on.objectDeleted.add @onObjectDeleted, @
+      @on.projectOpened.add @onProjectOpened, @
       @on.toolSelected.dispatch "select"
       @on.gridSnappingChanged.dispatch true
       @on.gridChanged.dispatch isVisible: true
@@ -81,6 +85,10 @@ define (require) ->
     onObjectDeleted: (object) ->
       @on.objectDeselected.dispatch()
       @scene.remove object
+
+    onProjectOpened: ->
+      dialog = new FileSelectionDialog()
+      dialog.openModal(@mainView)
 
     _addKeyBindings: ->
       @inputBindings.addKeyBinding

@@ -26,6 +26,12 @@ define ["jquery", "../utils"], ($, Utils) ->
     setHeight: (value) ->
       @$domElement.height value
 
+    getWidth: ->
+      @$domElement.width()
+
+    getHeight: ->
+      @$domElement.height()
+
     setTranslation: (x,y) ->
       Utils.setTranslation @$domElement, x, y
 
