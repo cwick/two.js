@@ -1,9 +1,10 @@
-define ["jquery", "./control"], ($, Control) ->
+define ["jquery", "./control", "./menu_item"], ($, Control, MenuItem) ->
   class Menubar extends Control
     constructor: (options) ->
       super $("<ul/>", class: "menubar")
 
       $(document).mousedown (e) =>
+        return if MenuItem.isSelectionInProgress
         @close()
 
       $(document).on "menuItemSelected", => @close()
@@ -29,6 +30,7 @@ define ["jquery", "./control"], ($, Control) ->
 
     _bindMenuItemEventHandlers: (item) ->
       item.mousedown (e) =>
+        return if MenuItem.isSelectionInProgress
         e.stopPropagation()
 
         if item.hasClass "active"
@@ -37,6 +39,7 @@ define ["jquery", "./control"], ($, Control) ->
           @activate item
 
       item.mouseenter =>
+        return if MenuItem.isSelectionInProgress
         @activate(item) if item.siblings(".active").length > 0
 
     _openSubmenu: (menubarItem, submenu) ->

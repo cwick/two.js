@@ -28,26 +28,32 @@ define ["jquery", "signals", "./control"], ($, Signal, Control) ->
       @_isChecked
 
     _onMouseEnter: ->
+      return if MenuItem.isSelectionInProgress
       @_activate()
       @$domElement.siblings().removeClass "active"
 
     _onMouseLeave: ->
+      return if MenuItem.isSelectionInProgress
       @_deactivate()
 
     _onMouseDown: (e) ->
       e.stopPropagation()
 
     _onMouseUp: ->
+      return if MenuItem.isSelectionInProgress
+      MenuItem.isSelectionInProgress = true
+
       @_deactivate()
       setTimeout (=>
         @_activate()
         setTimeout (=>
+          MenuItem.isSelectionInProgress = false
           @$domElement.trigger "menuItemSelected"
           if @_isCheckable
             if @isChecked() then @uncheck() else @check()
           @selected.dispatch(@)
-        ), 100
-      ), 65
+        ), 90
+      ), 40
 
     _activate: ->
       @$domElement.addClass "active"
