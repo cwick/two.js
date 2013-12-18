@@ -4,7 +4,8 @@ define ["jquery", "./control"], ($, Control) ->
       super $("<li/>", class: "menu-item")
 
       @name = options.name
-      @$domElement.html @name
+      @$domElement.append $("<span/>", class: "submenu-gutter")
+      @$domElement.append $("<span/>", html: @name)
 
       @$domElement.mousedown (e) => @_onMouseDown(e)
       @$domElement.mouseenter (e) => @_onMouseEnter(e)
