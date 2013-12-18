@@ -152,15 +152,16 @@ label {
     &:last-child {
       margin-bottom: 4px;
     }
-    padding: 4px 20px;
-    padding-left: 4px;
+    line-height: 26px;
+    padding: 0px 4px;
+    padding-right: 16px;
   }
 }
 .submenu-gutter {
   width: 22px;
   display: inline-block;
   text-align: center;
-  max-height: 1em;
+  vertical-align: bottom;
 }
 
 input, select, textarea {

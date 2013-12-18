@@ -12,6 +12,12 @@ define ["jquery", "./control"], ($, Control) ->
       @$domElement.mouseleave (e) => @_onMouseLeave(e)
       @$domElement.mouseup (e) => @_onMouseUp(e)
 
+    check: ->
+      @$domElement.find(".submenu-gutter").html("&#x2713;")
+
+    uncheck: ->
+      @$domElement.find(".submenu-gutter").empty()
+
     _onMouseEnter: ->
       @_activate()
       @$domElement.siblings().removeClass "active"
