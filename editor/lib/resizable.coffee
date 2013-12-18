@@ -25,12 +25,12 @@ define ["jquery", "../mouse_buttons", "../utils"], ($, MouseButtons, Utils) ->
       if options.down
         $resizable.height(Math.min(metrics.startHeight + e.clientY - metrics.startY, metrics.maxHeight))
       if options.up
-        newTop = Math.max(metrics.startTop - (metrics.startY - e.clientY), 0)
+        newTop = Math.max(metrics.startTop - (metrics.startY - e.clientY), metrics.parentTop)
         newHeight = metrics.startHeight - newTop + metrics.startTop
 
         $resizable.height(newHeight)
       if options.left
-        newLeft = Math.max(metrics.startLeft - (metrics.startX - e.clientX), 0)
+        newLeft = Math.max(metrics.startLeft - (metrics.startX - e.clientX), metrics.parentLeft)
         newWidth = metrics.startWidth - newLeft + metrics.startLeft
 
         $resizable.width(newWidth)
@@ -55,13 +55,13 @@ define ["jquery", "../mouse_buttons", "../utils"], ($, MouseButtons, Utils) ->
       startHeight:  $resizable.height()
       startTop:     position.top
       startLeft:    position.left
-      parentWidth:  parent.width()
-      parentHeight: parent.height()
+      parentTop:    parent.position().top
+      parentLeft:   parent.position().left
       outerWidth:   outerWidth
       outerHeight:  outerHeight
       innerWidth:   innerWidth
       innerHeight:  innerHeight
-      maxWidth:     parent.width() - position.left - (outerWidth - innerWidth)
-      maxHeight:    parent.height() - position.top - (outerHeight - innerHeight)
+      maxWidth:     parent.width() - position.left - (outerWidth - innerWidth) + parent.position().left
+      maxHeight:    parent.height() - position.top - (outerHeight - innerHeight) + parent.position().top
     }
 

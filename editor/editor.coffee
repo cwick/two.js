@@ -46,8 +46,8 @@ define (require) ->
 
       @_selectionBox = new SelectionBox(@on)
 
-      $("#editor").append new Inspector(@on).domElement
-      $("#editor").append @tilesetDialog.domElement
+      $(".main-view .viewport").append new Inspector(@on).domElement
+      $(".main-view .viewport").append @tilesetDialog.domElement
       @tilesetDialog.run()
 
       @on.objectDeleted.add @onObjectDeleted, @
