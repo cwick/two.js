@@ -6,8 +6,30 @@ define ["jquery", "./control"], ($, Control) ->
       @name = options.name
       @$domElement.html @name
 
-      @$domElement.mousedown (e) -> e.stopPropagation()
-      @$domElement.mouseenter (e) =>
-        @$domElement.addClass "active"
-        @$domElement.siblings().removeClass "active"
+      @$domElement.mousedown (e) => @_onMouseDown(e)
+      @$domElement.mouseenter (e) => @_onMouseEnter(e)
+      @$domElement.mouseleave (e) => @_onMouseLeave(e)
+      @$domElement.mouseup (e) => @_onMouseUp(e)
 
+    _onMouseEnter: ->
+      @_activate()
+      @$domElement.siblings().removeClass "active"
+
+    _onMouseLeave: ->
+      @_deactivate()
+
+    _onMouseDown: (e) ->
+      e.stopPropagation()
+
+    _onMouseUp: ->
+      @_deactivate()
+      setTimeout (=>
+        @_activate()
+        setTimeout (=> @$domElement.trigger "menuItemSelected"), 100
+      ), 65
+
+    _activate: ->
+      @$domElement.addClass "active"
+
+    _deactivate: ->
+      @$domElement.removeClass "active"

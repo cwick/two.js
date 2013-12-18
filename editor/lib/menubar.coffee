@@ -6,6 +6,8 @@ define ["jquery", "./control"], ($, Control) ->
       $(document).mousedown (e) =>
         @close()
 
+      $(document).on "menuItemSelected", => @close()
+
     addItem: (item) ->
       wrapper = $("<li/>", class: "menubar-item")
       wrapper.append item.name
