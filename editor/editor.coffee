@@ -104,7 +104,9 @@ define (require) ->
     onGridChanged: (e) ->
       super
       if e.isVisible?
-        $("#show-grid").attr "checked", e.isVisible
+        $("#show-grid").prop "checked", e.isVisible
+
+      return true
 
     _addKeyBindings: ->
       @inputBindings.addKeyBinding

@@ -1,4 +1,4 @@
-define ["jquery", "./control"], ($, Control) ->
+define ["jquery", "signals", "./control"], ($, Signal, Control) ->
   class MenuItem extends Control
     constructor: (options) ->
       super $("<li/>", class: "menu-item")
@@ -12,11 +12,20 @@ define ["jquery", "./control"], ($, Control) ->
       @$domElement.mouseleave (e) => @_onMouseLeave(e)
       @$domElement.mouseup (e) => @_onMouseUp(e)
 
+      @selected = new Signal()
+      @_isChecked = false
+      @_isCheckable = options.isCheckable
+
     check: ->
       @$domElement.find(".submenu-gutter").html("&#x2713;")
+      @_isChecked = true
 
     uncheck: ->
       @$domElement.find(".submenu-gutter").empty()
+      @_isChecked = false
+
+    isChecked: ->
+      @_isChecked
 
     _onMouseEnter: ->
       @_activate()
@@ -32,7 +41,12 @@ define ["jquery", "./control"], ($, Control) ->
       @_deactivate()
       setTimeout (=>
         @_activate()
-        setTimeout (=> @$domElement.trigger "menuItemSelected"), 100
+        setTimeout (=>
+          @$domElement.trigger "menuItemSelected"
+          if @_isCheckable
+            if @isChecked() then @uncheck() else @check()
+          @selected.dispatch(@)
+        ), 100
       ), 65
 
     _activate: ->
