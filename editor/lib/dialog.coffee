@@ -2,31 +2,39 @@ define ["jquery", "../mouse_buttons", "./draggable", "./resizable", "./control"]
        ($, MouseButtons, Draggable, Resizable, Control) ->
   class Dialog extends Control
     constructor: (options={}) ->
-      super $("<div/>", class: "panel-vertical dialog resizable")
+      super $("<div/>", class: "panel-vertical dialog")
 
       options.draggable ?= true
+      options.resizable ?= true
+
+      if options.resizable
+        @$domElement.addClass "resizable"
+
+        @_appendElement(e) for e in [
+          "bottom-resize"
+          "top-resize",
+          "right-resize",
+          "left-resize",
+          "bottom-left-resize",
+          "bottom-right-resize",
+          "top-left-resize",
+          "top-right-resize"]
 
       header = @_appendElement "dialog-header"
+
       if options.draggable
         header.addClass "drag-handle"
         @$domElement.addClass "draggable"
 
-      for c in ["bottom-resize"
-                "top-resize",
-                "right-resize",
-                "left-resize",
-                "bottom-left-resize",
-                "bottom-right-resize",
-                "top-left-resize",
-                "top-right-resize",
-                "toolbar panel hidden",
-                "dialog-body panel no-footer",
-                "dialog-footer"]
-        @_appendElement c
+
+      @_appendElement(e) for e in [
+        "toolbar panel hidden",
+        "dialog-body panel no-footer",
+        "dialog-footer"]
 
 
       Draggable.enhance @domElement if options.draggable
-      Resizable.enhance @domElement
+      Resizable.enhance @domElement if options.resizable
 
       @setTitle options.title
 
