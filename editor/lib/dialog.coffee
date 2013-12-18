@@ -41,7 +41,7 @@ define ["jquery", "../mouse_buttons", "./draggable", "./resizable", "./control"]
       @$domElement.find(".dialog-body").html(value)
 
     getBody: ->
-      @$domElement.find(".dialog-body")
+      @$domElement.find(".dialog-body").children().first()
 
     setTitle: (title) ->
       @setHeader "<h1 class='title'>#{title}</h1>"
