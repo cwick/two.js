@@ -47,10 +47,10 @@ define (require) ->
       @scene.setMaterial new SceneMaterial(backgroundColor: "#6B8CFF")
 
       @_selectionBox = new SelectionBox(@on)
-      @mainView = $(".main-view .viewport")
+      mainView = $(".main-view .viewport")
 
-      new Inspector(@on).open @mainView
-      @tilesetDialog.open @mainView
+      new Inspector(@on).open mainView
+      @tilesetDialog.open mainView
       @tilesetDialog.run()
 
       @on.objectDeleted.add @onObjectDeleted, @
@@ -88,7 +88,7 @@ define (require) ->
 
     onProjectOpened: ->
       dialog = new FileSelectionDialog()
-      dialog.openModal(@mainView)
+      dialog.openModal()
 
     _addKeyBindings: ->
       @inputBindings.addKeyBinding

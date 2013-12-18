@@ -32,7 +32,6 @@ define ["jquery", "../mouse_buttons", "./draggable", "./resizable", "./control"]
         "dialog-body panel no-footer",
         "dialog-footer"]
 
-
       Draggable.enhance @domElement if options.draggable
       Resizable.enhance @domElement if options.resizable
 
@@ -70,9 +69,14 @@ define ["jquery", "../mouse_buttons", "./draggable", "./resizable", "./control"]
     open: (parent) ->
       parent.append @$domElement
 
-    openModal: (parent) ->
+    openModal: ->
+      parent = $("body")
+      overlay = $("<div/>", class: "modal-overlay", tabindex: 0)
+      parent.append overlay
+
       @open parent
-      @setTranslation parent.width()/2 - @getWidth()/2, parent.height()/2 - @getHeight()/2
+      @setTranslation $(document).width()/2 - @getWidth()/2, $(document).height()/2 - @getHeight()/2
+      overlay.focus()
 
     _appendElement: (klass) ->
       el = $("<div/>", class: klass)

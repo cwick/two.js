@@ -63,6 +63,11 @@ canvas {
 .dialog-header, .toolbar {
   @include border($type: border-bottom, $radius: 0, $color: $light-border-color, $width: 2px);
 }
+
+.modal-overlay {
+  background-color: rgba(0,0,0,0.38);
+}
+
 .toolbar-vertical {
   @extend .toolbar;
   border: none;
