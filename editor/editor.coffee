@@ -23,7 +23,6 @@ define (require) ->
     constructor: ->
       super
 
-      @on.spriteCreated = new Signal()
       @on.objectDeleted = new Signal()
 
       @tilesetDialog = new TilesetEditorDialog()
@@ -47,15 +46,10 @@ define (require) ->
 
       @_selectionBox = new SelectionBox(@on)
 
-      $("#show-grid").change (e) => @on.gridChanged.dispatch(isVisible: $(e.target).is(':checked'))
-      $("#snap-to-grid").change (e) => @on.gridSnappingChanged.dispatch($(e.target).is(':checked'))
-      $("#new-sprite").click => @on.spriteCreated.dispatch()
-
       $("#editor").append new Inspector(@on).domElement
       $("#editor").append @tilesetDialog.domElement
       @tilesetDialog.run()
 
-      @on.spriteCreated.add @onSpriteCreated, @
       @on.objectDeleted.add @onObjectDeleted, @
       @on.toolSelected.dispatch "select"
       @on.gridSnappingChanged.dispatch true
@@ -84,29 +78,9 @@ define (require) ->
       if which == "stamp"
         @on.objectDeselected.dispatch()
 
-    onSpriteCreated: ->
-      image = new Image "assets/default.png"
-      sprite = new Sprite(material: new SpriteMaterial(image: image))
-
-      image.loaded.add =>
-        @scene.add sprite
-        @on.objectSelected.dispatch sprite
-        @render()
-
     onObjectDeleted: (object) ->
       @on.objectDeselected.dispatch()
       @scene.remove object
-
-    onGridSnappingChanged: (isEnabled) ->
-      super
-      $("#snap-to-grid").attr "checked", isEnabled
-
-    onGridChanged: (e) ->
-      super
-      if e.isVisible?
-        $("#show-grid").prop "checked", e.isVisible
-
-      return true
 
     _addKeyBindings: ->
       @inputBindings.addKeyBinding
