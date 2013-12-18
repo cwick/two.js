@@ -78,6 +78,10 @@ define ["jquery", "../mouse_buttons", "./draggable", "./resizable", "./control"]
       @setTranslation $(document).width()/2 - @getWidth()/2, $(document).height()/2 - @getHeight()/2
       overlay.focus()
 
+    close: ->
+      @$domElement.remove()
+      $(".modal-overlay").remove()
+
     _appendElement: (klass) ->
       el = $("<div/>", class: klass)
       @$domElement.append el
