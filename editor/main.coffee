@@ -10,8 +10,12 @@ require.config
 
 require ["editor/main_editor_view", "editor/db", "editor/lib/dialog"], (MainEditorView, db, Dialog) ->
   db.root.getGlobalSettings (settings) ->
+    showEditor = ->
+      dialog.close()
+      $("body").append new MainEditorView().domElement
+
     if settings.mostRecentProject?
-      new MainEditorView().run()
+      showEditor()
     else
       dialog = new Dialog(draggable: false, resizable: false)
       dialog.setBody """
@@ -34,15 +38,17 @@ require ["editor/main_editor_view", "editor/db", "editor/lib/dialog"], (MainEdit
               background-color: rgb(230, 55, 55);
               border: none;
           ">Delete</button>
-          <button style="
+          <button id="new-project"style="
               color: #0076FF;
           ">New Project</button>
         </div>
       """
 
+      dialog.getBody().find("#new-project").click ->
+
+
       dialog.getBody().find("button").click ->
-        dialog.close()
-        new MainEditorView().run()
+        showEditor()
 
       dialog.openModal()
 

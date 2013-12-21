@@ -18,72 +18,16 @@ define (require) ->
       @minCameraWidth = 1
       @tools = []
 
-      @on =
-        cursorStyleChanged: new Signal()
-        gizmoDeactivated: new Signal()
-        gizmoDragged: new Signal()
-        gridChanged: new Signal()
-        gridSnappingChanged: new Signal()
-        objectChanged: new Signal()
-        objectDeselected: new Signal()
-        objectSelected: new Signal()
-        quickToolDeselected: new Signal()
-        quickToolSelected: new Signal()
-        stylusDragged: new Signal()
-        stylusEntered: new Signal()
-        stylusLeft: new Signal()
-        stylusMoved: new Signal()
-        stylusReleased: new Signal()
-        stylusTouched: new Signal()
-        toolActivated: new Signal()
-        toolApplied: new Signal()
-        toolSelected: new Signal()
+      _createEvents.call @
+      _addEventListeners.call @
+      _prepareScene.call @
+      window.setTimeout (=> _listenForResize.call @), 0
 
       @inputBindings = new CommonInputBindings(@on)
-
-    run: ->
-      @renderer = new CanvasRenderer
-        width: @$domElement.width()
-        height: @$domElement.height()
-        autoClear: false
-
-      @scene = new Scene()
-      @sceneGizmos = new Scene()
-      @sceneGrid = new Scene()
-      @camera = new Camera(width: 15, aspectRatio: @renderer.getWidth() / @renderer.getHeight())
-      @projector = new Projector(@camera, @renderer)
-
       @grid = @sceneGrid.add new Grid()
 
-      @canvas = @renderer.domElement
-      @$canvas = $(@canvas)
-      @$domElement.html(@$canvas)
 
       @_input = new EditorInput(@canvas, @inputBindings)
-      @_listenForResize()
-
-      @on.cursorStyleChanged.add @onCursorStyleChanged, @
-
-      @on.objectChanged.add @onObjectChanged, @
-      @on.objectSelected.add @onObjectSelected, @
-      @on.objectDeselected.add @onObjectDeselected, @
-
-      @on.gridChanged.add @onGridChanged, @
-      @on.gridSnappingChanged.add @onGridSnappingChanged, @
-
-      @on.quickToolDeselected.add @onQuickToolDeselected, @
-      @on.quickToolSelected.add @onQuickToolSelected, @
-
-      @on.stylusDragged.add @onStylusDragged, @
-      @on.stylusMoved.add @onStylusMoved, @
-      @on.stylusReleased.add @onStylusReleased, @
-      @on.stylusTouched.add @onStylusTouched, @
-      @on.stylusEntered.add @onStylusEntered, @
-      @on.stylusLeft.add @onStylusLeft, @
-
-      @on.toolSelected.add @onToolSelected, @
-      @on.toolActivated.add @onToolActivated, @
-      @on.toolApplied.add @onToolApplied, @
 
     render: ->
       return if @_isRenderPending
@@ -219,26 +163,91 @@ define (require) ->
 
     isGridSnappingEnabled: -> @_isGridSnappingEnabled
 
+    resizeCanvas: ->
+      @renderer.resize @$domElement.width(), @$domElement.height()
+      @camera.setAspectRatio @renderer.getWidth() / @renderer.getHeight()
+      @render()
+
     _setCursor: (cursor) ->
-      @$canvas.css "cursor", cursor
+      $(@canvas).css "cursor", cursor
 
     _clearQuickTool: ->
       @_quickTool = null
       @getCurrentTool()?.onSelected()
 
-    _listenForResize: ->
-      oldWidth = @$domElement.width()
-      oldHeight = @$domElement.height()
+  _listenForResize = ->
+    oldWidth = @$domElement.width()
+    oldHeight = @$domElement.height()
 
-      window.setInterval (=>
-        newWidth = @$domElement.width()
-        newHeight = @$domElement.height()
+    window.setInterval (=>
+      newWidth = @$domElement.width()
+      newHeight = @$domElement.height()
 
-        if oldWidth != newWidth || oldHeight != newHeight
-          @renderer.resize newWidth, newHeight
-          @camera.setAspectRatio @renderer.getWidth() / @renderer.getHeight()
-          oldWidth = newWidth
-          oldHeight = newHeight
-          @render()
-      ), 100
+      if oldWidth != newWidth || oldHeight != newHeight
+        @resizeCanvas()
+        oldWidth = newWidth
+        oldHeight = newHeight
+    ), 100
 
+  _prepareScene = ->
+    @renderer = new CanvasRenderer
+      width: 0
+      height: 0
+      autoClear: false
+
+    @canvas = @renderer.domElement
+    @$domElement.html(@canvas)
+    @scene = new Scene()
+    @sceneGizmos = new Scene()
+    @sceneGrid = new Scene()
+    @camera = new Camera(width: 15)
+    @projector = new Projector(@camera, @renderer)
+    @resizeCanvas()
+
+  _createEvents = ->
+    @on =
+      cursorStyleChanged: new Signal()
+      gizmoDeactivated: new Signal()
+      gizmoDragged: new Signal()
+      gridChanged: new Signal()
+      gridSnappingChanged: new Signal()
+      objectChanged: new Signal()
+      objectDeselected: new Signal()
+      objectSelected: new Signal()
+      quickToolDeselected: new Signal()
+      quickToolSelected: new Signal()
+      stylusDragged: new Signal()
+      stylusEntered: new Signal()
+      stylusLeft: new Signal()
+      stylusMoved: new Signal()
+      stylusReleased: new Signal()
+      stylusTouched: new Signal()
+      toolActivated: new Signal()
+      toolApplied: new Signal()
+      toolSelected: new Signal()
+
+  _addEventListeners = ->
+    @on.cursorStyleChanged.add @onCursorStyleChanged, @
+
+    @on.objectChanged.add @onObjectChanged, @
+    @on.objectSelected.add @onObjectSelected, @
+    @on.objectDeselected.add @onObjectDeselected, @
+
+    @on.gridChanged.add @onGridChanged, @
+    @on.gridSnappingChanged.add @onGridSnappingChanged, @
+
+    @on.quickToolDeselected.add @onQuickToolDeselected, @
+    @on.quickToolSelected.add @onQuickToolSelected, @
+
+    @on.stylusDragged.add @onStylusDragged, @
+    @on.stylusMoved.add @onStylusMoved, @
+    @on.stylusReleased.add @onStylusReleased, @
+    @on.stylusTouched.add @onStylusTouched, @
+    @on.stylusEntered.add @onStylusEntered, @
+    @on.stylusLeft.add @onStylusLeft, @
+
+    @on.toolSelected.add @onToolSelected, @
+    @on.toolActivated.add @onToolActivated, @
+    @on.toolApplied.add @onToolApplied, @
+
+  return EditorBase

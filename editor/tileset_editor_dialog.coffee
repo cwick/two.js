@@ -35,6 +35,5 @@ define (require) ->
       @setBody @editor.domElement
       @setTranslation 50, 150
 
-    run: ->
-      @editor.run()
       @editor.on.gridChanged.dispatch horizontalSize: @gridWidth.getValue(), verticalSize: @gridHeight.getValue()
+      window.setTimeout (=> @editor.resizeCanvas()), 0

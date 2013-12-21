@@ -92,8 +92,6 @@ define (require) ->
 
       @on.tileSelected.add @onTileSelected, @
 
-    run: ->
-      super
       @on.toolSelected.dispatch "tileSelect"
       @on.gridSnappingChanged.dispatch true
       @grid.getMaterial().color = new Color("black")

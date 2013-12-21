@@ -24,42 +24,20 @@ define (require) ->
     constructor: ->
       super
 
-      @on.objectDeleted = new Signal()
-      @on.projectOpened = new Signal()
-
-      @tilesetDialog = new TilesetEditorDialog()
-      @tilesetDialog.setWidth 400
-      @tilesetDialog.setHeight 400
-      @tilesetEditor = @tilesetDialog.editor
-
-      @tools.push new EraseTool(@)
-      @tools.push new GrabTool(@)
-      @tools.push new SelectTool(@)
-      @tools.push new StampTool(@)
-      @tools.push new ZoomTool(@)
-
-      @_addKeyBindings()
-
-    run: ->
-      super
-
-      @_loadScene()
-      @scene.setMaterial new SceneMaterial(backgroundColor: "#6B8CFF")
-
       @_selectionBox = new SelectionBox(@on)
-      mainView = $(".main-view .viewport")
 
-      new Inspector(@on).open mainView
-      @tilesetDialog.open mainView
-      @tilesetDialog.run()
+      @_createInspector()
+      @_createTilesetDialog()
+      @_createTools()
+      @_createEvents()
+      @_addKeyBindings()
+      @_addEventListeners()
+      @_startAutosaving()
+      @_loadScene()
 
-      @on.objectDeleted.add @onObjectDeleted, @
-      @on.projectOpened.add @onProjectOpened, @
       @on.toolSelected.dispatch "select"
       @on.gridSnappingChanged.dispatch true
       @on.gridChanged.dispatch isVisible: true
-
-      @_startAutosaving()
 
       @render()
 
@@ -69,11 +47,15 @@ define (require) ->
 
       @_selectionBox.attachTo object
 
+      @inspector.show()
+      @inspector.inspect(object)
       super
 
     onObjectDeselected: ->
       @sceneGizmos.remove @_selectionBox
       @_selectionBox.detach()
+      @inspector.clear()
+      @inspector.hide()
       super
 
     onToolSelected: (which) ->
@@ -90,6 +72,12 @@ define (require) ->
       dialog = new FileSelectionDialog()
       dialog.openModal()
 
+    onGizmoDragged: ->
+      @inspector.hide()
+
+    onGizmoDeactivated: ->
+      @inspector.show()
+
     _addKeyBindings: ->
       @inputBindings.addKeyBinding
         keyCode: KeyCodes.E
@@ -104,6 +92,7 @@ define (require) ->
         onKeyDown: => @on.objectDeleted.dispatch @selectedObject if @selectedObject?
 
     _startAutosaving: ->
+      return
       save = => window.localStorage.setItem "scene", JSON.stringify(new ObjectExporter().export(@scene))
       window.setInterval save, 10 * 1000
       $(window).on "unload", save
@@ -112,3 +101,34 @@ define (require) ->
       sceneData = window.localStorage.getItem "scene"
       if sceneData?
         @scene = new ObjectImporter().import(JSON.parse(sceneData))
+        # TODO: save this with the scene
+        @scene.setMaterial new SceneMaterial(backgroundColor: "#6B8CFF")
+
+    _createEvents: ->
+      @on.objectDeleted = new Signal()
+      @on.projectOpened = new Signal()
+
+    _createTilesetDialog: ->
+      @tilesetDialog = new TilesetEditorDialog()
+      @tilesetDialog.setWidth 400
+      @tilesetDialog.setHeight 400
+      @tilesetDialog.open @$domElement
+      @tilesetEditor = @tilesetDialog.editor
+
+    _createTools: ->
+      @tools.push new EraseTool(@)
+      @tools.push new GrabTool(@)
+      @tools.push new SelectTool(@)
+      @tools.push new StampTool(@)
+      @tools.push new ZoomTool(@)
+
+    _createInspector: ->
+      @inspector = new Inspector(@on)
+      @inspector.open @$domElement
+      @inspector.hide()
+
+    _addEventListeners: ->
+      @on.objectDeleted.add @onObjectDeleted, @
+      @on.projectOpened.add @onProjectOpened, @
+      @on.gizmoDragged.add @onGizmoDragged, @
+      @on.gizmoDeactivated.add @onGizmoDeactivated, @

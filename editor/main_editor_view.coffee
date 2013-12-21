@@ -1,26 +1,23 @@
 define (require) ->
+  Control = require "./lib/control"
   Editor = require "./editor"
   MainToolbar = require "./main_toolbar"
   MainMenubar = require "./main_menubar"
 
-  class MainEditorView
+  class MainEditorView extends Control
     constructor: ->
-      @editor = new Editor()
+      super
+      @$domElement.attr "id", "editor"
+      @$domElement.addClass "panel-vertical"
+      @$domElement.append $("<div/>", class: "panel main-view")
 
-      menubar = new MainMenubar(@editor.on)
-      toolbar = new MainToolbar(@editor.on)
+      editor = new Editor()
+      menubar = new MainMenubar(editor.on)
+      toolbar = new MainToolbar(editor.on)
 
-      $("body").append """
-        <div id="editor" class="panel-vertical">
-          <div class="panel main-view">
-          </div>
-        </div>
-      """
+      @$domElement.prepend menubar.domElement
+      @$domElement.find(".main-view").append toolbar.domElement
+      @$domElement.find(".main-view").append editor.domElement
 
-      $("#editor").prepend menubar.domElement
-      $(".main-view").append toolbar.domElement
-      $(".main-view").append @editor.domElement
-
-    run: ->
-      @editor.run()
+      window.setTimeout (-> editor.resizeCanvas()), 0
 

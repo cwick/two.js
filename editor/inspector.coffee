@@ -3,12 +3,7 @@ define ["jquery", "./lib/dialog", "./lib/number_input"], \
   class Inspector extends Dialog
     constructor: (@on) ->
       super
-      @hide()
-      @on.objectSelected.add @_onObjectSelected, @
-      @on.objectDeselected.add @_onObjectDeselected, @
       @on.objectChanged.add @_onObjectChanged, @
-      @on.gizmoDragged.add @_onGizmoDragged, @
-      @on.gizmoDeactivated.add @_onGizmoDeactivated, @
 
       @objectPositionX = new NumberInput(digits: 7, decimalPlaces: 2)
       @objectPositionY = new NumberInput(digits: 7, decimalPlaces: 2)
@@ -72,26 +67,19 @@ define ["jquery", "./lib/dialog", "./lib/number_input"], \
 
       @$domElement.find("input").change (e) => @_onInputChanged(e)
 
-    _onObjectSelected: (object) ->
+    inspect: (object) ->
       @_object = object
       @_copyFromObject object
       @$domElement.find("input").blur()
-      @show()
 
-    _onObjectDeselected: ->
+    clear: ->
       @_object = null
-      @hide()
 
     _onObjectChanged: (object) ->
       @_copyFromObject object if object is @_object
 
     _onInputChanged: (e) ->
       @_copyToObject(@_object)
-
-    _onGizmoDragged: ->
-      @hide()
-    _onGizmoDeactivated: ->
-      @show()
 
     _copyToObject: (object) ->
       object.setName @$domElement.find(".inspector-object-name").val()
