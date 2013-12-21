@@ -15,21 +15,34 @@ require ["editor/main_editor_view", "editor/db", "editor/lib/dialog"], (MainEdit
     else
       dialog = new Dialog(draggable: false, resizable: false)
       dialog.setBody """
-        <div><button style="
-            color: #0076FF;
-        ">New</button>
-        <button style="
-            color: #0076FF;
-        ">Open</button>
-        <button style="
-            color: white;
-            background-color: rgb(230, 55, 55);
-            border: none;
-        ">Delete</button>
-        <button style="
-            color: #0076FF;
-        ">New Project</button>
+        <div>
+          <div>
+            <select>
+              <option>Project 1</option>
+              <option>Project 2</option>
+              <option>Project 3</option>
+            </select>
+          </div>
+          <button style="
+              color: #0076FF;
+          ">New</button>
+          <button style="
+              color: #0076FF;
+          ">Open</button>
+          <button style="
+              color: white;
+              background-color: rgb(230, 55, 55);
+              border: none;
+          ">Delete</button>
+          <button style="
+              color: #0076FF;
+          ">New Project</button>
         </div>
       """
+
+      dialog.getBody().find("button").click ->
+        dialog.close()
+        new MainEditorView().run()
+
       dialog.openModal()
 
