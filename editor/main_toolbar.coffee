@@ -19,6 +19,6 @@ define ["jquery", "./lib/toolbar"], ($, Toolbar) ->
       @activate item
 
     _addTool: (name, icon=name) ->
-      tool = @addItem($("<button/>", id: "#{name}-tool", class: "icon icon-#{icon}"))
+      tool = @addItem($("<div/>", id: "#{name}-tool", class: "icon icon-#{icon}"))
       tool.click => @_signals.toolSelected.dispatch name
 

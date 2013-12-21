@@ -39,9 +39,11 @@ h1 {
 }
 
 button {
-  border: none;
   outline: none;
   background-color: transparent;
+  padding: 7px 10px;
+  border-radius: 2px;
+  border: 1px solid rgb(200,200,200);
 }
 
 canvas {
@@ -135,11 +137,12 @@ input[type="number"] {
 
   width: 25px;
   height: 25px;
-  padding: 15px;
+  padding: 3px;
+
+  border: 1px solid transparent;
 
   &:hover {
     @include border($dark-border-color);
-    margin: -1px;
   }
   &.active, .toolbar-item.active > & {
     @extend .icon:hover;

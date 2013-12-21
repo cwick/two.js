@@ -35,13 +35,14 @@ define ["jquery", "../mouse_buttons", "./draggable", "./resizable", "./control"]
       Draggable.enhance @domElement if options.draggable
       Resizable.enhance @domElement if options.resizable
 
-      @setTitle options.title
+      @setTitle options.title ?= ""
+      @setBody "<div/>"
 
     setBody: (value) ->
       @$domElement.find(".dialog-body").html(value)
 
     getBody: ->
-      @$domElement.find(".dialog-body").children().first()
+      @$domElement.find(".dialog-body").children()
 
     setTitle: (title) ->
       @setHeader "<h1 class='title'>#{title}</h1>"
