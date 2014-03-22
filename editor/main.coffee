@@ -30,7 +30,7 @@ require ["editor/main_editor_view", "editor/db", "editor/lib/dialog"], (MainEdit
           <button style="
               color: #0076FF;
           ">New</button>
-          <button style="
+          <button id="open-project" style="
               color: #0076FF;
           ">Open</button>
           <button style="
@@ -45,9 +45,7 @@ require ["editor/main_editor_view", "editor/db", "editor/lib/dialog"], (MainEdit
       """
 
       dialog.getBody().find("#new-project").click ->
-
-
-      dialog.getBody().find("button").click ->
+      dialog.getBody().find("#open-project").click ->
         showEditor()
 
       dialog.openModal()

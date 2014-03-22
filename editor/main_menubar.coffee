@@ -4,8 +4,8 @@ define ["jquery", "./lib/menubar", "./lib/submenu", "./lib/menu_item"], ($, Menu
       super
 
       fileMenu = new Submenu(name: "File")
-      fileMenu.addItem new MenuItem(name: "Close Project")
-      fileMenu.addItem( new MenuItem(name: "Open Project...")).selected.add =>
+      fileMenu.addItem(new MenuItem(name: "Close Project"))
+      fileMenu.addItem(new MenuItem(name: "Open Project...")).selected.add =>
         @_signals.projectOpened.dispatch()
 
       editMenu = new Submenu(name: "Edit")

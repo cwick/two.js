@@ -33,7 +33,6 @@ define (require) ->
       @_addKeyBindings()
       @_addEventListeners()
       @_startAutosaving()
-      @_loadScene()
 
       @on.toolSelected.dispatch "select"
       @on.gridSnappingChanged.dispatch true
@@ -78,6 +77,10 @@ define (require) ->
     onGizmoDeactivated: ->
       @inspector.show()
 
+    setScene: (@scene) ->
+      # TODO: save this with the scene
+      @scene.setMaterial new SceneMaterial(backgroundColor: "#6B8CFF")
+
     _addKeyBindings: ->
       @inputBindings.addKeyBinding
         keyCode: KeyCodes.E
@@ -96,13 +99,6 @@ define (require) ->
       save = => window.localStorage.setItem "scene", JSON.stringify(new ObjectExporter().export(@scene))
       window.setInterval save, 10 * 1000
       $(window).on "unload", save
-
-    _loadScene: ->
-      sceneData = window.localStorage.getItem "scene"
-      if sceneData?
-        @scene = new ObjectImporter().import(JSON.parse(sceneData))
-        # TODO: save this with the scene
-        @scene.setMaterial new SceneMaterial(backgroundColor: "#6B8CFF")
 
     _createEvents: ->
       @on.objectDeleted = new Signal()
