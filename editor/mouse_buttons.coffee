@@ -1,2 +1,0 @@
-define ->
-  LEFT: 1
