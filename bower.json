@@ -1,6 +1,0 @@
-{
-  "name": "two.js",
-  "dependencies": {
-    "gl-matrix": "2.2.0"
-  }
-}

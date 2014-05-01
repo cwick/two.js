@@ -1,0 +1,37 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>Jasmine Spec Runner v2.0.0</title>
+
+  <link rel="stylesheet" type="text/css" href="lib/jasmine-2.0.0/jasmine.css">
+
+  <script src="../lib/require.js"></script>
+  <script type="text/javascript" src="lib/jasmine-2.0.0/jasmine.js"></script>
+  <script type="text/javascript" src="lib/jasmine-2.0.0/jasmine-html.js"></script>
+  <script type="text/javascript" src="lib/jasmine-2.0.0/boot.js"></script>
+
+  <script>
+    require.config({
+      baseUrl: "/",
+      paths: {
+        "gl-matrix": "lib/gl-matrix"
+      }
+    });
+
+    (function(){
+      var jasmineBoot = window.onload;
+      window.onload = function(){};
+
+      require(["spec/src/FizzBuzzTest"], function(){
+        jasmineBoot();
+      });
+    })();
+  </script>
+
+</head>
+
+<body>
+</body>
+</html>
+
