@@ -4,22 +4,29 @@ var mergeTrees = require('broccoli-merge-trees');
 var filterES6Modules = require('broccoli-es6-module-filter');
 var pickFiles = require('broccoli-static-compiler');
 
+function processCoffeeFiles(tree) {
+  tree = filterCoffeeScript(tree, { bare: true });
+  tree = filterES6Modules(tree, { moduleType: 'amd' });
+  return tree;
+}
 
 function processSpecFiles() {
   var specRunner = pickFiles("spec", { srcDir: "/", destDir: "spec", files: ["index.html"] });
   var specLib = pickFiles("spec", { srcDir: "/lib", destDir: "spec/lib" });
   var specFiles = pickFiles("spec", { srcDir: "/src", destDir: "spec/src" });
 
-  specFiles = filterCoffeeScript(specFiles, { bare: true });
-  specFiles = filterES6Modules(specFiles, { moduleType: "amd" });
+  specFiles = processCoffeeFiles(specFiles);
 
   return mergeTrees([specRunner, specLib, specFiles]);
 }
 
-var src = filterCoffeeScript('src', { bare: true });
+var src = processCoffeeFiles("src");
 var dependencies = pickFiles("lib", { srcDir: "/", destDir: "lib" });
+var demo = [
+  pickFiles("demo", { srcDir: "/", destDir: "/", files: ["index.html"] }),
+  processCoffeeFiles(pickFiles("demo", { srcDir: "/", destDir: "/demo", files: ["**/*.coffee"] }))
+];
 
 spec = processSpecFiles();
-src = filterES6Modules(src, { moduleType: 'amd' });
 
-module.exports = mergeTrees([dependencies, src, spec]);
+module.exports = mergeTrees([dependencies, src, spec].concat(demo));

@@ -1,0 +1,15 @@
+<html>
+  <head>
+    <title>Kitchen Sink Demo</title>
+    <style>canvas { width: 100%; height: 100% }</style>
+  </head>
+  <body>
+    <script src="lib/require.js"></script>
+    <script>
+      require.config({
+        baseUrl: "/",
+      });
+      require(["demo/main"]);
+    </script>
+  </body>
+</html>
