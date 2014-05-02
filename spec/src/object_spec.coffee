@@ -86,16 +86,16 @@ describe "TwoObject", ->
 
     it "super methods can be accessed by subclasses multiple levels deep", ->
       Base = TwoObject.extend
-        a: (x) -> x+1
+        a: (x) -> x + " Base"
 
       Derived = Base.extend
-        a: (x) -> @_super(x) + 1
+        a: (x) -> @_super(x) + " Derived"
 
       MoreDerived = Derived.extend
-        a: (x) -> @_super(x) + 1
+        a: (x) -> @_super(x) + " MoreDerived"
 
-      derived = new Derived()
-      expect(derived.a(1)).toEqual 4
+      derived = new MoreDerived()
+      expect(derived.a("Hello")).toEqual "Hello Base Derived MoreDerived"
 
 
   describe "creating a subclass with mixins", ->

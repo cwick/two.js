@@ -11,16 +11,21 @@ initializeObject = (properties, object, mixin) ->
   PropertyMarker.setupProperties object
   object
 
-setupPrototype = (properties, proto) ->
-  copyOwnProperties(properties, proto)
-  wrapFunctionsForSuper(properties, proto)
+setupClass = (Constructor, properties) ->
+  Constructor.prototype.constructor = Constructor
+  Constructor.create = (properties) -> initializeObject(properties, new Constructor)
+  Constructor.extend = (properties) -> extendClass(properties, Constructor)
+  Constructor.toString = -> "Class"
 
-wrapFunctionsForSuper = (properties, proto) ->
-  for own k,v of properties
+  copyOwnProperties(properties, Constructor.prototype)
+  wrapFunctionsForSuper(Constructor)
+
+wrapFunctionsForSuper = (Constructor) ->
+  for own k,v of Constructor.prototype
     do (k,v) ->
       if typeof v == "function"
-        proto[k] = ->
-          @_super = -> _super(@constructor, k, @, arguments)
+        Constructor.prototype[k] = ->
+          @_super = -> _super(Constructor, k, @, arguments)
           v.apply @, arguments
 
 _super = (Parent, funcName, context, args) ->
@@ -30,17 +35,12 @@ extendClass = (properties, Base, mixin) ->
   Child = (properties={}) ->
     return initializeObject properties, @, mixin
 
-  Child.toString = -> "Class"
-
   copyOwnProperties(Base, Child)
 
   Child.prototype = Object.create(Base.prototype)
-  setupPrototype(properties, Child.prototype)
-  Child.prototype.constructor = Child
+  setupClass(Child, properties)
 
   Child.__super__ = Base.prototype
-  Child.create = (properties) -> initializeObject(properties, new Child)
-  Child.extend = (properties) -> extendClass(properties, Child)
   Child
 
 class TwoObject
