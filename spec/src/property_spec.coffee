@@ -31,3 +31,36 @@ describe "Property", ->
 
       expect(new Derived().foo).toEqual "hello"
 
+    it "can overwrite a property via the constructor", ->
+      Derived = TwoObject.extend
+        foo: Property
+          get: -> "hello"
+
+      object = new Derived
+        foo: Property
+          get: -> "goodbye"
+
+      expect(object.foo).toEqual "goodbye"
+
+    it "can overwrite a property in a derived class", ->
+      Base = TwoObject.extend
+        foo: Property
+          get: -> "hello"
+
+      Derived = Base.extend
+        foo: Property
+          get: -> "goodbye"
+
+      expect(new Derived().foo).toEqual "goodbye"
+
+    xit "can call a super class property", ->
+      Base = TwoObject.extend
+        foo: Property
+          get: -> "hello"
+
+      Derived = Base.extend
+        foo: Property
+          get: -> @_super() + " there"
+
+      expect(new Derived().foo).toEqual "hello there"
+

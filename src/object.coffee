@@ -13,7 +13,9 @@ initializeObject = (properties, object, mixin) ->
 
 setupPrototype = (properties, proto) ->
   copyOwnProperties(properties, proto)
+  wrapFunctionsForSuper(properties, proto)
 
+wrapFunctionsForSuper = (properties, proto) ->
   for own k,v of properties
     do (k,v) ->
       if typeof v == "function"
