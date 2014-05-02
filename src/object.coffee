@@ -1,11 +1,15 @@
 `import Mixin from "./mixin"`
+`import { PropertyMarker } from "./property"`
 
 copyOwnProperties = (source, destination) ->
   destination[k] = v for own k,v of source
   destination
 
-createObject = (properties, Constructor) ->
-  copyOwnProperties(properties, new Constructor())
+initializeObject = (properties, object, mixin) ->
+  mixin.apply object if mixin
+  copyOwnProperties(properties, object)
+  PropertyMarker.setupProperties object
+  object
 
 setupPrototype = (properties, proto) ->
   copyOwnProperties(properties, proto)
@@ -22,9 +26,8 @@ _super = (Parent, funcName, context, args) ->
 
 extendClass = (properties, Base, mixin) ->
   Child = (properties={}) ->
-    mixin.apply @ if mixin
-    copyOwnProperties(properties, @)
-    return
+    return initializeObject properties, @, mixin
+
   Child.toString = -> "Class"
 
   copyOwnProperties(Base, Child)
@@ -34,7 +37,7 @@ extendClass = (properties, Base, mixin) ->
   Child.prototype.constructor = Child
 
   Child.__super__ = Base.prototype
-  Child.create = (properties) -> createObject(properties, Child)
+  Child.create = (properties) -> initializeObject(properties, new Child)
   Child.extend = (properties) -> extendClass(properties, Child)
   Child
 
@@ -43,7 +46,7 @@ class TwoObject
     return TwoObject.create properties
 
   @create: (properties={}) ->
-    createObject properties, Object
+    initializeObject properties, new Object
 
   @extend: (mixin_or_properties={}, properties={}) ->
     if mixin_or_properties instanceof Mixin
