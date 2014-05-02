@@ -1,7 +1,7 @@
 INIT_FUNCTION = "initialize"
 
 class Mixin
-  @create: (properties) -> new Mixin(properties)
+  @create: (properties={}) -> new Mixin(properties)
   constructor: (@properties) ->
 
   apply: (base) ->
