@@ -16,6 +16,20 @@ describe "Property", ->
 
     expect(obj.foo).toEqual "hello"
 
+  describe "default property getter", ->
+    it "reads an instance variable", ->
+      obj = TwoObject.create
+        foo: Property readonly: true
+
+      obj._foo = "hello"
+      expect(obj.foo).toEqual "hello"
+
+    it "throws an error when attempting to write a readonly property", ->
+      obj = TwoObject.create
+        foo: Property readonly: true
+
+      expect(-> obj.foo = "bad").toThrow()
+
   describe "when extending from Object", ->
     it "and using #create, it can have a getter", ->
       Derived = TwoObject.extend

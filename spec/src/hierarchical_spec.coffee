@@ -9,8 +9,8 @@ describe "Hierarchical", ->
 
   xit "starts with no parent and zero children", ->
     node = new Node()
-    expect(node.getParent()).toBeNull()
-    expect(node.getChildren().length).toEqual 0
+    expect(node.parent).toBeNull()
+    expect(node.children.length).toEqual 0
 
   describe "when adding children", ->
     parent = child = null
