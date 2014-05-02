@@ -97,6 +97,18 @@ describe "TwoObject", ->
       derived = new MoreDerived()
       expect(derived.a("Hello")).toEqual "Hello Base Derived MoreDerived"
 
+    it "removes the _super property when not inside a method call", ->
+      Base = TwoObject.extend
+        a: (x) -> x + " Base"
+
+      Derived = Base.extend
+        a: (x) -> @_super(x) + " Derived"
+
+      d = new Derived()
+      d.a()
+
+      expect(d._super).toBeUndefined()
+
 
   describe "creating a subclass with mixins", ->
     it "can apply a mixin to the subclass", ->

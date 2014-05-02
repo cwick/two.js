@@ -2,7 +2,10 @@
 `import { PropertyMarker } from "./property"`
 
 copyOwnProperties = (source, destination) ->
-  destination[k] = v for own k,v of source
+  for own k,v of source
+    Object.defineProperty destination, k,
+      value: v, configurable: true, enumerable: true, writable: true
+
   destination
 
 initializeObject = (properties, object, mixin) ->
@@ -19,14 +22,17 @@ setupClass = (Constructor, properties) ->
 
   copyOwnProperties(properties, Constructor.prototype)
   wrapFunctionsForSuper(Constructor)
+  PropertyMarker.setupProperties Constructor.prototype
 
 wrapFunctionsForSuper = (Constructor) ->
-  for own k,v of Constructor.prototype
+  for own k,v of Constructor.prototype when k != "constructor"
     do (k,v) ->
       if typeof v == "function"
         Constructor.prototype[k] = ->
           @_super = -> _super(Constructor, k, @, arguments)
-          v.apply @, arguments
+          result = v.apply @, arguments
+          delete @_super
+          result
 
 _super = (Parent, funcName, context, args) ->
   Parent.__super__[funcName].apply context, args
