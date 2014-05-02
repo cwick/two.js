@@ -109,6 +109,11 @@ describe "TwoObject", ->
 
       expect(d._super).toBeUndefined()
 
+    it "throws TypeError when calling a super method that doesn't exist", ->
+      Base = TwoObject.extend
+        a: -> @_super()
+
+      expect(-> new Base().a()).toThrow(new TypeError("Superclass method 'a' does not exist."))
 
   describe "creating a subclass with mixins", ->
     it "can apply a mixin to the subclass", ->

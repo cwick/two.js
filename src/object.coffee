@@ -35,7 +35,9 @@ wrapFunctionsForSuper = (Constructor) ->
           result
 
 _super = (Parent, funcName, context, args) ->
-  Parent.__super__[funcName].apply context, args
+  func = Parent.__super__[funcName]
+  throw new TypeError("Superclass method '#{funcName}' does not exist.") unless func
+  func.apply context, args
 
 extendClass = (properties, Base, mixin) ->
   Child = (properties={}) ->
