@@ -8,15 +8,14 @@ createObject = (properties, Constructor) ->
   copyOwnProperties(properties, new Constructor())
 
 setupPrototype = (properties, proto) ->
-  newProperties = copyOwnProperties properties, {}
+  copyOwnProperties(properties, proto)
 
   for own k,v of properties
-    if typeof v == "function"
-      newProperties[k] = ->
-        @_super = -> _super(@constructor, k, @, arguments)
-        v.apply @, arguments
-
-  copyOwnProperties(newProperties, proto)
+    do (k,v) ->
+      if typeof v == "function"
+        proto[k] = ->
+          @_super = -> _super(@constructor, k, @, arguments)
+          v.apply @, arguments
 
 _super = (Parent, funcName, context, args) ->
   Parent.__super__[funcName].apply context, args

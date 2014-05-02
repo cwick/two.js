@@ -16,9 +16,36 @@ describe "Mixin", ->
 
   it "functions can access the base object's properties", ->
     base = { foo: "bar" }
-    mixin = Mixin.create getFoo: -> @foo
+    mixin = Mixin.create getFoo: -> @_base.foo
     mixin.apply base
     expect(base.getFoo()).toEqual "bar"
+
+  it "functions set instance variables in a private context", ->
+    base = { foo: "bar" }
+    mixin = Mixin.create
+      setPrivateFoo: (value) -> @foo = value
+      getPrivateFoo: -> @foo
+
+    mixin.apply base
+    base.setPrivateFoo("private")
+    expect(base.foo).toEqual "bar"
+    expect(base.getPrivateFoo()).toEqual "private"
+
+  it "the same mixin applied to different objects does not share private context", ->
+    base1 = new Object()
+    base2 = new Object()
+    mixin = Mixin.create
+      setPrivateFoo: (value) -> @foo = value
+      getPrivateFoo: -> @foo
+
+    mixin.apply base1
+    mixin.apply base2
+
+    base1.setPrivateFoo("private1")
+    base2.setPrivateFoo("private2")
+
+    expect(base1.getPrivateFoo()).toEqual "private1"
+    expect(base2.getPrivateFoo()).toEqual "private2"
 
   it "object values are shared between all instances", ->
     base1 = new Object()
