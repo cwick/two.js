@@ -125,3 +125,8 @@ describe "TwoObject", ->
       d = Derived.create()
       expect(d.getMixinValue()).toEqual "mixin"
       expect(d.getDerivedValue()).toEqual "derived"
+
+    it "can extend and create", ->
+      FooMixin = Mixin.create foo: -> "bar"
+      obj = TwoObject.createWithMixins FooMixin
+      expect(obj.foo()).toEqual "bar"

@@ -8,6 +8,13 @@ describe "Mixin", ->
   it "is instanceof Mixin", ->
     expect(Mixin.create() instanceof Mixin).toBe true
 
+  it "can detect if mixed into a base object", ->
+    base = new Object()
+    FooMixin = Mixin.create foo: "bar"
+    FooMixin.apply base
+
+    expect(FooMixin.detect base).toBe true
+
   it "can mix its properties into a base object", ->
     base = new Object()
     mixin = Mixin.create foo: "bar"

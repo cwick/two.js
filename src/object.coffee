@@ -66,5 +66,8 @@ class TwoObject
 
     extendClass properties, TwoObject, mixin
 
+  @createWithMixins: ->
+    TwoObject.extend.apply(TwoObject, arguments).create()
+
 `export default TwoObject`
 
