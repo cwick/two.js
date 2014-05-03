@@ -2,12 +2,11 @@
 
 render = ->
   requestAnimationFrame(render)
-  renderer.render()
+  renderer.render(root.matrix)
 
 canvas = new Two.Canvas(width: 640, height: 480)
 renderer = new Two.SceneRenderer(canvas: canvas)
 renderer.backend.imageSmoothingEnabled = false
-document.body.appendChild(canvas.domElement)
 
 root = new Two.Transform()
 root.matrix = new Two.Matrix2d().translate(100, 100).rotate(0.5)
@@ -19,4 +18,5 @@ sprite = new Two.Sprite(image: image)
 root.add sprite
 
 
+document.body.appendChild(canvas.domElement)
 render()

@@ -13,7 +13,7 @@ SceneRenderer = TwoObject.extend
 
   backend: Property readonly: true
 
-  render: ->
+  render: (matrix) ->
     @_backend.execute
       name: "clear"
       color: new Color(r:10, g: 30, b: 180)
@@ -21,14 +21,10 @@ SceneRenderer = TwoObject.extend
     image = new Image()
     image.src = "https://upload.wikimedia.org/wikipedia/en/6/65/Hello_logo_sm.gif"
 
-    transform = gl.mat2d.create()
-    gl.mat2d.translate transform, transform, [100, 100]
-    gl.mat2d.rotate transform, transform, 0.5
-
     @_backend.execute
       name: "drawImage"
       image: image
-      transform: transform
+      transform: matrix.values
 
 
 `export default SceneRenderer`
