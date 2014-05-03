@@ -5,3 +5,4 @@
 `import "./can_group_spec"`
 `import "./canvas_spec"`
 `import "./color_spec"`
+`import "./transform_spec"`

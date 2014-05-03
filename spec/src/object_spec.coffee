@@ -140,7 +140,22 @@ describe "TwoObject", ->
       expect(d.getMixinValue()).toEqual "mixin"
       expect(d.getDerivedValue()).toEqual "derived"
 
+    it "can apply multiple mixins to the subclass", ->
+      Mixin1 = Mixin.create mixin1: 1
+      Mixin2 = Mixin.create mixin2: 1
+
+      Derived = TwoObject.extend Mixin1, Mixin2,
+        derived: 3
+
+      d = Derived.create()
+      expect(d.mixin1).toEqual 1
+      expect(d.mixin2).toEqual 1
+      expect(d.derived).toEqual 3
+      expect(Mixin1.detect(d)).toBe true
+      expect(Mixin2.detect(d)).toBe true
+
     it "can extend and create", ->
       FooMixin = Mixin.create foo: -> "bar"
       obj = TwoObject.createWithMixins FooMixin
       expect(obj.foo()).toEqual "bar"
+

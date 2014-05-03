@@ -5,8 +5,8 @@ copyOwnProperties = (source, destination) ->
   destination[k] = v for own k,v of source when !(v instanceof PropertyMarker)
   destination
 
-initializeObject = (properties, object, mixin) ->
-  mixin.apply object if mixin
+initializeObject = (properties, object, mixins=[]) ->
+  mixin.apply object for mixin in mixins
   PropertyMarker.setupProperties properties, object
   object.initialize?()
   copyOwnProperties(properties, object)
@@ -37,17 +37,32 @@ _super = (Parent, funcName, context, args) ->
   throw new TypeError("Superclass method '#{funcName}' does not exist.") unless func
   func.apply context, args
 
-extendClass = (properties, Base, mixin) ->
-  Child = (properties={}) ->
-    return initializeObject properties, @, mixin
+extendClass = (properties, Base, mixins) ->
+  Class = (properties={}) ->
+    return initializeObject properties, @, mixins
 
-  copyOwnProperties(Base, Child)
+  copyOwnProperties(Base, Class)
 
-  Child.prototype = Object.create(Base.prototype)
-  setupClass(Child, properties)
+  Class.prototype = Object.create(Base.prototype)
+  setupClass(Class, properties)
 
-  Child.__super__ = Base.prototype
-  Child
+  Class.__super__ = Base.prototype
+  Class
+
+extractArguments = ->
+  mixins = []
+  properties = {}
+
+  for arg,i in arguments
+    if arg instanceof Mixin
+      mixins.push arg
+    else if arg instanceof Object
+      properties = arg
+      break
+    else
+      throw new TypeError("Arguments to 'extend' must be Mixins or Objects")
+
+  [mixins, properties]
 
 class TwoObject
   constructor: (properties={}) ->
@@ -56,13 +71,10 @@ class TwoObject
   @create: (properties={}) ->
     initializeObject properties, new Object
 
-  @extend: (mixin_or_properties={}, properties={}) ->
-    if mixin_or_properties instanceof Mixin
-      mixin = mixin_or_properties
-    else
-      properties = mixin_or_properties
+  @extend: ->
+    [mixins, properties] = extractArguments.apply @, arguments
 
-    extendClass properties, TwoObject, mixin
+    extendClass properties, TwoObject, mixins
 
   @createWithMixins: ->
     TwoObject.extend.apply(TwoObject, arguments).create()

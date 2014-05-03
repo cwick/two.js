@@ -2,6 +2,7 @@
 `import Property from "./property"`
 `import CanvasRenderer from "./canvas_renderer"`
 `import Color from "./color"`
+`module gl from "lib/gl-matrix"`
 
 SceneRenderer = TwoObject.extend
   initialize: ->
@@ -20,10 +21,22 @@ SceneRenderer = TwoObject.extend
     image = new Image()
     image.src = "https://upload.wikimedia.org/wikipedia/en/6/65/Hello_logo_sm.gif"
 
+    transform = gl.mat2d.create()
+    # gl.mat2d.translate transform, transform, [100, 100]
+    # gl.mat2d.rotate transform, transform, 0.5
+    rotate = gl.mat2d.create()
+    gl.mat2d.rotate rotate, rotate, 0.5
+
+    translate = gl.mat2d.create()
+    gl.mat2d.translate translate, translate, [100, 100]
+
+    gl.mat2d.multiply transform, translate, rotate
+
+
     @_backend.execute
       name: "drawImage"
       image: image
-      transform: [2, 0, 0, 2, 0, 0]
+      transform: transform
 
 
 `export default SceneRenderer`
