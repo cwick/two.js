@@ -10,6 +10,9 @@ Canvas = TwoObject.extend
 
   domElement: Property readonly: true
 
+  getContext: (type) ->
+    @_domElement.getContext type
+
   width: Property
     set: (value) ->
       @_width = value
@@ -21,5 +24,11 @@ Canvas = TwoObject.extend
       @_height = value
       @_domElement.height = value * DeviceMetrics.devicePixelRatio
       @_domElement.style.height = "#{value}px"
+
+  frameWidth: Property
+    get: -> @_domElement.width
+
+  frameHeight: Property
+    get: -> @_domElement.height
 
 `export default Canvas`

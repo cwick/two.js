@@ -1,3 +1,4 @@
 `import Object from "object"`
 `import Canvas from "canvas"`
-`export { Object, Canvas }`
+`import SceneRenderer from "scene_renderer"`
+`export { Object, Canvas, SceneRenderer }`
