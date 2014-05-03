@@ -21,8 +21,8 @@ getPropertyOptions = (name, property, context) ->
 class PropertyMarker
   constructor: (@options) ->
 
-  @setupProperties: (object, context) ->
-    for own k,v of object
+  @setupProperties: (properties, object, context) ->
+    for own k,v of properties
       if v instanceof PropertyMarker
         options = getPropertyOptions(k, v, context)
         Object.defineProperty object, k, options

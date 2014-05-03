@@ -39,13 +39,15 @@ describe "Property", ->
       expect(-> obj.foo = "bad").toThrow()
 
   describe "when extending from Object", ->
-    xit "allows properties to be set in the constructor", ->
+    it "allows properties to be set in the constructor", ->
       Derived = TwoObject.extend
-        foo: Property()
+        foo: Property
+          get: -> @_fooValue
+          set: (value) -> @_fooValue = value
 
       obj = new Derived(foo: 123)
       expect(obj.foo).toEqual 123
-      expect(obj._foo).toEqual 123
+      expect(obj._fooValue).toEqual 123
 
     it "and using #create, it can have a getter", ->
       Derived = TwoObject.extend

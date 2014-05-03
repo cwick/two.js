@@ -2,16 +2,13 @@
 `import { PropertyMarker } from "./property"`
 
 copyOwnProperties = (source, destination) ->
-  for own k,v of source
-    Object.defineProperty destination, k,
-      value: v, configurable: true, enumerable: true, writable: true
-
+  destination[k] = v for own k,v of source when !(v instanceof PropertyMarker)
   destination
 
 initializeObject = (properties, object, mixin) ->
   mixin.apply object if mixin
+  PropertyMarker.setupProperties properties, object
   copyOwnProperties(properties, object)
-  PropertyMarker.setupProperties object
   object
 
 setupClass = (Constructor, properties) ->
@@ -20,9 +17,9 @@ setupClass = (Constructor, properties) ->
   Constructor.extend = (properties) -> extendClass(properties, Constructor)
   Constructor.toString = -> "Class"
 
+  PropertyMarker.setupProperties properties, Constructor.prototype
   copyOwnProperties(properties, Constructor.prototype)
   wrapFunctionsForSuper(Constructor)
-  PropertyMarker.setupProperties Constructor.prototype
 
 wrapFunctionsForSuper = (Constructor) ->
   for own k,v of Constructor.prototype when k != "constructor"
