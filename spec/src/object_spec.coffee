@@ -36,6 +36,20 @@ describe "TwoObject", ->
       expect(obj.a).toEqual 1
       expect(obj.b()).toEqual 2
 
+    xit "can have an initializer", ->
+      hasInitialized = false
+
+      TestClass = TwoObject.extend
+        initialize: -> hasInitialized = true
+
+      TestClass.create()
+      expect(hasInitialized).toBe true
+
+      hasInitialized = false
+
+      new TestClass()
+      expect(hasInitialized).toBe true
+
     it "shares object property values between instances", ->
       proto = notShared: 1, shared: [1,2,3]
       Class1 = TwoObject.extend proto

@@ -19,10 +19,18 @@ describe "Property", ->
   describe "default property getter", ->
     it "reads an instance variable", ->
       obj = TwoObject.create
-        foo: Property readonly: true
+        foo: Property()
 
       obj._foo = "hello"
       expect(obj.foo).toEqual "hello"
+
+  describe "default property setter", ->
+    it "sets an instance variable", ->
+      obj = TwoObject.create
+        foo: Property()
+
+      obj.foo = "hello"
+      expect(obj._foo).toEqual "hello"
 
     it "throws an error when attempting to write a readonly property", ->
       obj = TwoObject.create
@@ -31,6 +39,14 @@ describe "Property", ->
       expect(-> obj.foo = "bad").toThrow()
 
   describe "when extending from Object", ->
+    xit "allows properties to be set in the constructor", ->
+      Derived = TwoObject.extend
+        foo: Property()
+
+      obj = new Derived(foo: 123)
+      expect(obj.foo).toEqual 123
+      expect(obj._foo).toEqual 123
+
     it "and using #create, it can have a getter", ->
       Derived = TwoObject.extend
         foo: Property
@@ -44,6 +60,26 @@ describe "Property", ->
           get: -> "hello"
 
       expect(new Derived().foo).toEqual "hello"
+
+    it "and using #create, it can have a setter", ->
+      Derived = TwoObject.extend
+        foo: Property
+          set: (value) -> @_value = value
+
+      obj = Derived.create()
+      obj.foo = "hello"
+
+      expect(obj._value).toEqual "hello"
+
+    it "and using #new, it can have a setter", ->
+      Derived = TwoObject.extend
+        foo: Property
+          set: (value) -> @_value = value
+
+      obj = new Derived()
+      obj.foo = "hello"
+
+      expect(obj._value).toEqual "hello"
 
     it "can overwrite a property via the constructor", ->
       Derived = TwoObject.extend

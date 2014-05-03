@@ -1,2 +1,3 @@
 `import Object from "object"`
-`export { Object }`
+`import Canvas from "canvas"`
+`export { Object, Canvas }`
