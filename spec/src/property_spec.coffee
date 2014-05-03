@@ -32,6 +32,12 @@ describe "Property", ->
       obj.foo = "hello"
       expect(obj._foo).toEqual "hello"
 
+    it "is not created when only getter is specified", ->
+      obj = TwoObject.create
+        foo: Property get: -> "hello"
+
+      expect(-> obj.foo = "bad").toThrow()
+
     it "throws an error when attempting to write a readonly property", ->
       obj = TwoObject.create
         foo: Property readonly: true

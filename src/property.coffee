@@ -13,7 +13,8 @@ getPropertyOptions = (name, property, context) ->
     options.set = (value) ->
       @_super = (value) -> @constructor.__super__[name] = value
       property.options.set.call(getContext.call(@), value)
-  else unless property.options.readonly
+
+  else if !property.options.readonly && !property.options.get?
     options.set = (value) -> (getContext.call(@))["_#{name}"] = value
 
   options

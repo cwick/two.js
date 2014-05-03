@@ -36,7 +36,7 @@ describe "TwoObject", ->
       expect(obj.a).toEqual 1
       expect(obj.b()).toEqual 2
 
-    it "can have an initializer", ->
+    xit "can have an initializer", ->
       hasInitialized = false
 
       TestClass = TwoObject.extend
