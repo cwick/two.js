@@ -6,3 +6,4 @@
 `import "./canvas_spec"`
 `import "./color_spec"`
 `import "./transform_spec"`
+`import "./matrix2d_spec"`
