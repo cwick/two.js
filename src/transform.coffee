@@ -6,10 +6,11 @@ TransformNode = GroupNode.extend
   initialize: ->
     @rotation = 0
     @position = [0,0]
+    @scale = [1,1]
 
   matrix: Property
     get: ->
       m = new Matrix2d()
-      m.translate(@position[0], @position[1]).rotate(@rotation)
+      m.translate(@position[0], @position[1]).rotate(@rotation).scale(@scale[0], @scale[1])
 
 `export default TransformNode`

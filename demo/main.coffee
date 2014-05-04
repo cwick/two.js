@@ -13,9 +13,7 @@ root = new Two.TransformNode()
 
 objectTransform = new Two.TransformNode()
 objectTransform.position = [400, 400]
-objectTransform.scale = [2, .8]
-# objectTransform.matrix = new Two.Matrix2d().translate(400, 400).scale(2,.8)
-# root.matrix = new Two.Matrix2d().translate(300,100).rotate(.9).rotate(2).translate(-300, -100)
+objectTransform.scale = [1.2, .8]
 
 helloImage = new Image()
 helloImage.src = "https://upload.wikimedia.org/wikipedia/en/6/65/Hello_logo_sm.gif"
