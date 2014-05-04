@@ -3,6 +3,7 @@
 render = ->
   requestAnimationFrame(render)
   objectTransform.rotation += 0.01
+  objectTransform.position[0] = 500 + Math.sin(Date.now() / 500) * 100
   renderer.render(root)
 
 canvas = new Two.Canvas(width: 640, height: 480)
@@ -12,7 +13,7 @@ renderer.backend.imageSmoothingEnabled = false
 root = new Two.TransformNode()
 
 objectTransform = new Two.TransformNode()
-objectTransform.position = [400, 400]
+objectTransform.position[1] = 400
 objectTransform.scale = [1.2, .8]
 
 helloImage = new Image()
