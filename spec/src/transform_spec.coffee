@@ -28,3 +28,10 @@ describe "TransformNode", ->
       t = new TransformNode()
       t.position[0] += 10
       expect(t.matrix.values).toEqual new Matrix2d().translate(10, 0).values
+
+  describe "composite transform", ->
+    it "should rotate, then translate", ->
+      t = new TransformNode()
+      t.position = [1,2]
+      t.rotation = 4
+      expect(t.matrix.values).toEqual new Matrix2d().translate(1,2).rotate(4).values
