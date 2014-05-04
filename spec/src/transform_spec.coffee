@@ -13,6 +13,18 @@ describe "TransformNode", ->
       t.rotation = amount
       expect(t.matrix.values).toEqual new Matrix2d().rotate(amount).values
 
-
   describe "position", ->
-    xit "defaults to 0", ->
+    it "defaults to [0,0]", ->
+      t = new TransformNode()
+      expect(t.position).toEqual [0,0]
+
+    it "modifies the transformation matrix when re-assigning", ->
+      t = new TransformNode()
+      position = [4,5]
+      t.position = position
+      expect(t.matrix.values).toEqual new Matrix2d().translate(position[0], position[1]).values
+
+    it "modifies the transformation matrix when updating an individual vector component", ->
+      t = new TransformNode()
+      t.position[0] += 10
+      expect(t.matrix.values).toEqual new Matrix2d().translate(10, 0).values

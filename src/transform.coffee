@@ -1,6 +1,15 @@
 `import GroupNode from "./group"`
-`import TransformHelpers from "./transform_helpers"`
+`import Property from "./property"`
+`import Matrix2d from "./matrix2d"`
 
-TransformNode = GroupNode.extend TransformHelpers
+TransformNode = GroupNode.extend
+  initialize: ->
+    @rotation = 0
+    @position = [0,0]
+
+  matrix: Property
+    get: ->
+      m = new Matrix2d()
+      m.rotate(@rotation).translate(@position[0], @position[1])
 
 `export default TransformNode`
