@@ -71,3 +71,10 @@ describe "BreadthFirstTreeIterator", ->
 
     results = iterate(root)
     expect(results).toEqual [root, node1, node2, node3]
+
+  it "can handle nodes with no children", ->
+    LeafNode = Object
+    node = new LeafNode()
+    results = iterate(node)
+    expect(results).toEqual [node]
+

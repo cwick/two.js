@@ -1,19 +1,19 @@
-`import TwoObject from "./object"`
-`import Property from "./property"`
 `module gl from "lib/gl-matrix"`
 
-Matrix2d = TwoObject.extend
-  initialize: ->
-    @_values = gl.mat2d.create()
-
-  values: Property readonly: true
+class Matrix2d
+  constructor: (@values = gl.mat2d.create()) ->
 
   translate: (x, y) ->
-    gl.mat2d.translate @_values, @_values, [x,y]
+    gl.mat2d.translate @values, @values, [x,y]
     @
 
   rotate: (radians) ->
-    gl.mat2d.rotate @_values, @_values, radians
+    gl.mat2d.rotate @values, @values, radians
     @
+
+  multiply: (other) ->
+    result = gl.mat2d.create()
+    gl.mat2d.multiply result, @values, other.values
+    new Matrix2d(result)
 
 `export default Matrix2d`

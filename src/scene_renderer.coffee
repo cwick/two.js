@@ -2,6 +2,8 @@
 `import Property from "./property"`
 `import CanvasRenderer from "./canvas_renderer"`
 `import Color from "./color"`
+`import { BreadthFirstTreeIterator } from "./tree_iterators"`
+`import Sprite from "./sprite"`
 `module gl from "lib/gl-matrix"`
 
 SceneRenderer = TwoObject.extend
@@ -18,13 +20,14 @@ SceneRenderer = TwoObject.extend
       name: "clear"
       color: new Color(r:10, g: 30, b: 180)
 
-    image = new Image()
-    image.src = "https://upload.wikimedia.org/wikipedia/en/6/65/Hello_logo_sm.gif"
+    iterator = new BreadthFirstTreeIterator(scene)
 
-    @_backend.execute
-      name: "drawImage"
-      image: image
-      transform: matrix.values
-
+    while iterator.hasNext
+      node = iterator.next()
+      if node instanceof Sprite
+        @_backend.execute
+          name: "drawImage"
+          image: node.image
+          transform: node.parent.worldMatrix.values
 
 `export default SceneRenderer`

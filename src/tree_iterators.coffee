@@ -10,7 +10,7 @@ class BreadthFirstTreeIterator
 
   next: ->
     node = @_queue.pop() || null
-    @_queue.unshift(child) for child in node.children if node?
+    @_queue.unshift(child) for child in node.children if node?.children?
     node
 
 Property.setupProperties BreadthFirstTreeIterator.prototype
