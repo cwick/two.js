@@ -20,6 +20,10 @@ describe "Matrix2d", ->
     m2 = new Matrix2d()
     expect(m1.multiply(m2).values).toEqual new Float32Array([1,0,0,1,0,0])
 
+  it "can scale", ->
+    m = new Matrix2d()
+    expect(m.scale(2,3).values).toEqual new Float32Array([2,0,0,3,0,0])
+
   it "can be initialized from values", ->
     m = new Matrix2d([1,2,3,4,5,6])
     expect(m.values).toEqual [1,2,3,4,5,6]

@@ -2,7 +2,7 @@
 
 render = ->
   requestAnimationFrame(render)
-  root.matrix.rotate(0.01)
+  rotateTransform.matrix.rotate(0.01)
   renderer.render(root)
 
 canvas = new Two.Canvas(width: 640, height: 480)
@@ -10,7 +10,14 @@ renderer = new Two.SceneRenderer(canvas: canvas)
 renderer.backend.imageSmoothingEnabled = false
 
 root = new Two.Transform()
-root.matrix = new Two.Matrix2d().translate(400, 400)
+preTranslate = new Two.Transform()
+postTranslate = new Two.Transform()
+preTranslate.matrix = new Two.Matrix2d().translate(300, 100)
+postTranslate.matrix = new Two.Matrix2d().translate(-300, -100)
+rotateTransform = new Two.Transform()
+
+objectTransform = new Two.Transform()
+objectTransform.matrix = new Two.Matrix2d().translate(400, 400).scale(2,.8)
 # root.matrix = new Two.Matrix2d().translate(300,100).rotate(.9).rotate(2).translate(-300, -100)
 
 helloImage = new Image()
@@ -18,15 +25,20 @@ helloImage.src = "https://upload.wikimedia.org/wikipedia/en/6/65/Hello_logo_sm.g
 worldImage = new Image()
 worldImage.src = "http://img.talkandroid.com/uploads/2012/08/World-300x305.jpg"
 
-hello = new Two.Sprite(image: helloImage)
-world = new Two.Sprite(image: worldImage)
+helloSprite = new Two.Sprite(image: helloImage)
+worldSprite = new Two.Sprite(image: worldImage)
 
-worldTransform = new Two.Transform()
-worldTransform.matrix = new Two.Matrix2d().translate(305, 0)
+worldSpriteTransform = new Two.Transform()
+worldSpriteTransform.matrix = new Two.Matrix2d().translate(305, 0)
 
-root.add hello
-root.add worldTransform
-worldTransform.add world
+root.add preTranslate
+preTranslate.add objectTransform
+objectTransform.add rotateTransform
+rotateTransform.add postTranslate
+
+postTranslate.add helloSprite
+postTranslate.add worldSpriteTransform
+worldSpriteTransform.add worldSprite
 
 document.body.appendChild(canvas.domElement)
 render()

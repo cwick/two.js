@@ -11,6 +11,10 @@ class Matrix2d
     gl.mat2d.rotate @values, @values, radians
     @
 
+  scale: (x, y) ->
+    gl.mat2d.scale @values, @values, [x, y]
+    @
+
   multiply: (other) ->
     result = gl.mat2d.create()
     gl.mat2d.multiply result, @values, other.values
