@@ -1,7 +1,7 @@
 `import { PropertyMarker } from "property"`
 
 INIT_FUNCTION = "initialize"
-META_KEY = "__two_meta"
+META_KEY = "__two_meta__"
 NEXT_ID = 1
 
 class Mixin

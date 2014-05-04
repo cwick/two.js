@@ -159,3 +159,17 @@ describe "TwoObject", ->
       obj = TwoObject.createWithMixins FooMixin
       expect(obj.foo()).toEqual "bar"
 
+    it "handles mixins from multiple subclasses", ->
+      A_Mixin = Mixin.create
+        a: -> "a"
+
+      B_Mixin = Mixin.create
+        b: -> "b"
+
+      A = TwoObject.extend A_Mixin
+      B = A.extend B_Mixin
+
+      base = new B()
+
+      expect(base.a()).toEqual "a"
+      expect(base.b()).toEqual "b"

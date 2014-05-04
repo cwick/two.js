@@ -12,10 +12,30 @@ initializeObject = (properties, object, mixins=[]) ->
   copyOwnProperties(properties, object)
   object
 
+create = (Constructor) ->
+  return (properties={}) ->
+    initializeObject properties, new Constructor
+
+extend = (ParentClass) ->
+  return ->
+    [mixins, properties] = extractArguments.apply @, arguments
+
+    Class = (properties={}) ->
+      return initializeObject properties, @, mixins.concat(ParentClass.__mixins__)
+
+    copyOwnProperties(ParentClass, Class)
+
+    Class.prototype = Object.create(ParentClass.prototype)
+    setupClass(Class, properties)
+
+    Class.__super__ = ParentClass.prototype
+    Class.__mixins__ = mixins
+    Class
+
 setupClass = (Constructor, properties) ->
   Constructor.prototype.constructor = Constructor
-  Constructor.create = (properties) -> initializeObject(properties, new Constructor)
-  Constructor.extend = (properties) -> extendClass(properties, Constructor)
+  Constructor.create = create(Constructor)
+  Constructor.extend = extend(Constructor)
   Constructor.toString = -> "Class"
 
   PropertyMarker.setupProperties properties, Constructor.prototype
@@ -23,31 +43,19 @@ setupClass = (Constructor, properties) ->
   wrapFunctionsForSuper(Constructor)
 
 wrapFunctionsForSuper = (Constructor) ->
-  for own k,v of Constructor.prototype when k != "constructor"
-    do (k,v) ->
-      if typeof v == "function"
-        Constructor.prototype[k] = ->
-          @_super = -> _super(Constructor, k, @, arguments)
-          result = v.apply @, arguments
+  for own key, value of Constructor.prototype when key != "constructor"
+    do (key, value) ->
+      if typeof value == "function"
+        Constructor.prototype[key] = ->
+          @_super = -> superFunction(Constructor, key, @, arguments)
+          result = value.apply @, arguments
           delete @_super
           result
 
-_super = (Parent, funcName, context, args) ->
+superFunction = (Parent, funcName, context, args) ->
   func = Parent.__super__[funcName]
   throw new TypeError("Superclass method '#{funcName}' does not exist.") unless func
   func.apply context, args
-
-extendClass = (properties, Base, mixins) ->
-  Class = (properties={}) ->
-    return initializeObject properties, @, mixins
-
-  copyOwnProperties(Base, Class)
-
-  Class.prototype = Object.create(Base.prototype)
-  setupClass(Class, properties)
-
-  Class.__super__ = Base.prototype
-  Class
 
 extractArguments = ->
   mixins = []
@@ -68,13 +76,11 @@ class TwoObject
   constructor: (properties={}) ->
     return TwoObject.create properties
 
-  @create: (properties={}) ->
-    initializeObject properties, new Object
+  @__mixins__: []
 
-  @extend: ->
-    [mixins, properties] = extractArguments.apply @, arguments
+  @create: create(Object)
 
-    extendClass properties, TwoObject, mixins
+  @extend: extend(TwoObject)
 
   @createWithMixins: ->
     TwoObject.extend.apply(TwoObject, arguments).create()

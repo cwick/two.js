@@ -3,6 +3,10 @@
 class Matrix2d
   constructor: (@values = gl.mat2d.create()) ->
 
+  reset: ->
+    gl.mat2d.identity @values
+    @
+
   translate: (x, y) ->
     gl.mat2d.translate @values, @values, [x,y]
     @

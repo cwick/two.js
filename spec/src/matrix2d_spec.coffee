@@ -27,3 +27,8 @@ describe "Matrix2d", ->
   it "can be initialized from values", ->
     m = new Matrix2d([1,2,3,4,5,6])
     expect(m.values).toEqual [1,2,3,4,5,6]
+
+  it "can be reset to identity", ->
+    m = new Matrix2d([1,2,3,4,5,6])
+    m.reset()
+    expect(m.values).toEqual [1,0,0,1,0,0]
