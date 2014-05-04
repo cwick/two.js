@@ -22,7 +22,7 @@ getPropertyOptions = (name, property, context) ->
 class PropertyMarker
   constructor: (@options) ->
 
-  @setupProperties: (properties, object, context) ->
+  @setupProperties: (properties, object, context=null) ->
     for own k,v of properties
       if v instanceof PropertyMarker
         options = getPropertyOptions(k, v, context)
@@ -31,6 +31,7 @@ class PropertyMarker
     object
 
 Property = (options={}) -> new PropertyMarker(options)
+Property.setupProperties = (prototype) -> PropertyMarker.setupProperties prototype, prototype
 
 `export default Property`
 `export { PropertyMarker }`

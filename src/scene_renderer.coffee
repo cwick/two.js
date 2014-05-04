@@ -13,7 +13,7 @@ SceneRenderer = TwoObject.extend
 
   backend: Property readonly: true
 
-  render: (matrix) ->
+  render: (scene) ->
     @_backend.execute
       name: "clear"
       color: new Color(r:10, g: 30, b: 180)
