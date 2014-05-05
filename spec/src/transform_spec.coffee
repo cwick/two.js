@@ -35,7 +35,6 @@ describe "TransformNode", ->
 
       expect(t.matrix.values).toEqual new Matrix2d().translate(20, 20).values
 
-
   describe "scale", ->
     it "defaults to [1,1]", ->
       t = new TransformNode()
@@ -65,3 +64,26 @@ describe "TransformNode", ->
       t.scale = [10,10]
       expect(t.matrix.values).toEqual new Matrix2d().translate(1,2).rotate(4).scale(10,10).values
 
+  describe "origin", ->
+    it "defaults to [0,0]", ->
+      t = new TransformNode()
+      expect(t.origin).toEqual [0,0]
+
+    it "does not modify the transformation matrix when no other transforms are applied", ->
+      t = new TransformNode()
+      t.origin = [4,5]
+      expect(t.matrix.values).toEqual new Matrix2d().values
+
+    it "does not modify the transformation matrix when only translation is applied", ->
+      t = new TransformNode()
+      t.origin = [4,5]
+      t.position = [10,10]
+      expect(t.matrix.values).toEqual new Matrix2d().translate(10,10).values
+
+    it "modifies the transformation matrix when rotation is applied", ->
+      t = new TransformNode()
+      t.origin = [4,5]
+      t.origin.x += 1
+      t.origin.y += 1
+      t.rotation = 10
+      expect(t.matrix.values).toEqual new Matrix2d().translate(5,6).rotate(10).translate(-5,-6).values
