@@ -173,3 +173,4 @@ describe "TwoObject", ->
 
       expect(base.a()).toEqual "a"
       expect(base.b()).toEqual "b"
+

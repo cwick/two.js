@@ -26,8 +26,15 @@ describe "TransformNode", ->
 
     it "modifies the transformation matrix when updating an individual vector component", ->
       t = new TransformNode()
+
       t.position[0] += 10
-      expect(t.matrix.values).toEqual new Matrix2d().translate(10, 0).values
+      t.position.x += 10
+
+      t.position[1] += 10
+      t.position.y += 10
+
+      expect(t.matrix.values).toEqual new Matrix2d().translate(20, 20).values
+
 
   describe "scale", ->
     it "defaults to [1,1]", ->
@@ -43,7 +50,12 @@ describe "TransformNode", ->
     it "modifies the transformation matrix when updating an individual vector component", ->
       t = new TransformNode()
       t.scale[0] += 10
-      expect(t.matrix.values).toEqual new Matrix2d().scale(11, 1).values
+      t.scale.x += 10
+
+      t.scale[1] += 10
+      t.scale.y += 10
+
+      expect(t.matrix.values).toEqual new Matrix2d().scale(21, 21).values
 
   describe "composite transform", ->
     it "should scale, then rotate, then translate", ->
@@ -52,3 +64,4 @@ describe "TransformNode", ->
       t.rotation = 4
       t.scale = [10,10]
       expect(t.matrix.values).toEqual new Matrix2d().translate(1,2).rotate(4).scale(10,10).values
+
