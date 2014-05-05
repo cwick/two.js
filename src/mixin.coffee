@@ -24,7 +24,7 @@ class Mixin
       do (k,v) ->
         base[k] = v
         if typeof v == "function"
-          base[k] = -> v.apply _context, arguments
+          base[k] = base[k].bind _context
 
     PropertyMarker.setupProperties(@properties, base, _context)
 
