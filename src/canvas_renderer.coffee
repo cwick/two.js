@@ -1,5 +1,6 @@
 `import TwoObject from "object"`
 `import Property from "./property"`
+`import DeviceMetrics from "./device_metrics"`
 
 CanvasRenderer = TwoObject.extend
   canvas: Property
@@ -24,7 +25,11 @@ CanvasRenderer = TwoObject.extend
 
   drawImageCommand: (options) ->
     @_context.setTransform.apply @_context, options.transform
-    @_context.drawImage options.image, 0, 0
+    @_context.drawImage options.image,
+      0,
+      0,
+      options.image.width * DeviceMetrics.devicePixelRatio,
+      options.image.height * DeviceMetrics.devicePixelRatio
 
 `export default CanvasRenderer`
 

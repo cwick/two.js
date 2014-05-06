@@ -24,6 +24,8 @@ var src = processCoffeeFiles("src");
 var dependencies = pickFiles("lib", { srcDir: "/", destDir: "lib" });
 var demo = [
   pickFiles("demo", { srcDir: "/", destDir: "/", files: ["index.html"] }),
+  pickFiles("demo", { srcDir: "/", destDir: "/demo", files: ["require_config.js"] }),
+  pickFiles("demo", { srcDir: "/", destDir: "/demo", files: ["*.html"] }),
   processCoffeeFiles(pickFiles("demo", { srcDir: "/", destDir: "/demo", files: ["**/*.coffee"] }))
 ];
 
