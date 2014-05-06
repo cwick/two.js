@@ -24,12 +24,11 @@ CanvasRenderer = TwoObject.extend
     @_context.fillRect 0,0, @_canvas.frameWidth, @_canvas.frameHeight
 
   drawImageCommand: (options) ->
-    @_context.setTransform.apply @_context, options.transform
-    @_context.drawImage options.image,
-      0,
-      0,
-      options.image.width * DeviceMetrics.devicePixelRatio,
-      options.image.height * DeviceMetrics.devicePixelRatio
+    transform = options.transform.clone()
+    transform.scale DeviceMetrics.devicePixelRatio
+
+    @_context.setTransform.apply @_context, transform.values
+    @_context.drawImage options.image, 0, 0
 
 `export default CanvasRenderer`
 

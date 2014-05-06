@@ -38,6 +38,7 @@ describe "TransformNode", ->
   describe "scale", ->
     it "defaults to [1,1]", ->
       t = new TransformNode()
+      console.log k for own k,v of t
       expect(t.scale).toEqual [1,1]
 
     it "modifies the transformation matrix when re-assigning", ->
@@ -55,6 +56,11 @@ describe "TransformNode", ->
       t.scale.y += 10
 
       expect(t.matrix.values).toEqual new Matrix2d().scale(21, 21).values
+
+    it "can be scaled along both dimesions equally", ->
+      t = new TransformNode()
+      t.scale = 5
+      expect(t.matrix.values).toEqual new Matrix2d().scale(5,5).values
 
   describe "composite transform", ->
     it "should scale, then rotate, then translate", ->

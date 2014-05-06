@@ -24,6 +24,12 @@ describe "Matrix2d", ->
     m = new Matrix2d()
     expect(m.scale(2,3).values).toEqual new Float32Array([2,0,0,3,0,0])
 
+  it "can be scaled equally along both dimensions by omitting the second argument", ->
+    m1 = new Matrix2d()
+    m2 = new Matrix2d()
+
+    expect(m1.scale(6,6).values).toEqual m2.scale(6).values
+
   it "can be initialized from values", ->
     m = new Matrix2d([1,2,3,4,5,6])
     expect(m.values).toEqual [1,2,3,4,5,6]
@@ -32,3 +38,17 @@ describe "Matrix2d", ->
     m = new Matrix2d([1,2,3,4,5,6])
     m.reset()
     expect(m.values).toEqual [1,0,0,1,0,0]
+
+  it "can be cloned", ->
+    values = [1,2,3,4,5,6]
+    m = new Matrix2d(values)
+    clone = m.clone()
+
+    expect(clone.values).toEqual m.values
+    values[0] = null
+    expect(clone.values[0]).not.toBeNull()
+
+  it "the identity matrix can be cloned", ->
+    m = new Matrix2d()
+    expect(m.clone().values).toEqual m.values
+

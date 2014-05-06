@@ -28,6 +28,6 @@ SceneRenderer = TwoObject.extend
         @_backend.execute
           name: "drawImage"
           image: node.image
-          transform: node.parent.worldMatrix.values
+          transform: node.parent.worldMatrix
 
 `export default SceneRenderer`

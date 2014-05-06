@@ -5,7 +5,10 @@ Float32Array.prototype.jasmineToString = ->
   "[#{result.join ", "}]"
 
 Float32ArrayEqualityTester = (first, second) ->
-  if first instanceof Float32Array && second instanceof Float32Array
+  if first instanceof Float32Array && second instanceof Float32Array ||
+     first instanceof Array && second instanceof Float32Array ||
+     first instanceof Float32Array && second instanceof Array
+
     return false unless first.length == second.length
     for i in [0..first.length-1]
       return false unless getJasmineRequireObj().toBeCloseTo()().compare(first[i], second[i]).pass
