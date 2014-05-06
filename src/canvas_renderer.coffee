@@ -25,7 +25,7 @@ CanvasRenderer = TwoObject.extend
 
   drawImageCommand: (options) ->
     transform = options.transform.clone()
-    transform.scale DeviceMetrics.devicePixelRatio
+    transform.scale @_canvas.devicePixelRatio
 
     @_context.setTransform.apply @_context, transform.values
     @_context.drawImage options.image, 0, 0

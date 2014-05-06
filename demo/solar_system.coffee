@@ -13,6 +13,7 @@ canvas = new Two.Canvas(width: 800, height: 600)
 renderer = new Two.SceneRenderer(canvas: canvas)
 root = new Two.TransformNode()
 
+# TODO: need to fix transform pipeline so this actually centers the scene in the canvas
 root.position = [400, 300]
 
 sunTransform = new Two.TransformNode()
