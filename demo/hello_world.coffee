@@ -6,7 +6,7 @@ render = ->
   objectTransform.position.x = 320 + Math.sin(Date.now() / 500) * 100
   renderer.render(root)
 
-canvas = new Two.Canvas(width: 640, height: 480, devicePixelRatio:1)
+canvas = new Two.Canvas(width: 640, height: 480)
 renderer = new Two.SceneRenderer(canvas: canvas)
 renderer.backend.imageSmoothingEnabled = false
 
