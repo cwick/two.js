@@ -3,19 +3,19 @@
 render = ->
   requestAnimationFrame(render)
   objectTransform.rotation += 0.008
-  objectTransform.position.x = 350 + Math.sin(Date.now() / 500) * 100
+  objectTransform.position.x = 320 + Math.sin(Date.now() / 500) * 100
   renderer.render(root)
 
-canvas = new Two.Canvas(width: 640, height: 480)
+canvas = new Two.Canvas(width: 640, height: 480, devicePixelRatio:1)
 renderer = new Two.SceneRenderer(canvas: canvas)
 renderer.backend.imageSmoothingEnabled = false
 
 root = new Two.TransformNode()
 
 objectTransform = new Two.TransformNode()
-objectTransform.position.y = 330
-objectTransform.origin = [300,150]
-objectTransform.scale = [1.2, .8]
+objectTransform.position = [320, 240]
+objectTransform.origin = [302,150]
+objectTransform.scale = .5
 
 helloImage = new Image()
 helloImage.src = "https://upload.wikimedia.org/wikipedia/en/6/65/Hello_logo_sm.gif"

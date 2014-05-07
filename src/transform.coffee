@@ -12,9 +12,7 @@ TransformNode = GroupNode.extend
   matrix: Property
     get: ->
       m = new Matrix2d()
-      m.translate(@origin[0], @origin[1]).
-
-        translate(@position[0], @position[1]).
+      m.translate(@position[0], @position[1]).
         rotate(@rotation).
         scale(@scale[0], @scale[1]).
 
