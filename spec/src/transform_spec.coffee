@@ -75,21 +75,16 @@ describe "TransformNode", ->
       t = new TransformNode()
       expect(t.origin).toEqual [0,0]
 
-    it "does not modify the transformation matrix when no other transforms are applied", ->
+    it "shifts the position of the node", ->
       t = new TransformNode()
       t.origin = [4,5]
-      expect(t.matrix.values).toEqual new Matrix2d().values
+      t.position = [10, 10]
+      t.rotation = 10
+      expect(t.matrix.values).toEqual new Matrix2d().translate(10,10).rotate(10).translate(-4, -5).values
 
-    it "does not modify the transformation matrix when only translation is applied", ->
-      t = new TransformNode()
-      t.origin = [4,5]
-      t.position = [10,10]
-      expect(t.matrix.values).toEqual new Matrix2d().translate(10,10).values
-
-    it "modifies the transformation matrix when rotation is applied", ->
+    it "each component can be set", ->
       t = new TransformNode()
       t.origin = [4,5]
       t.origin.x += 1
       t.origin.y += 1
-      t.rotation = 10
-      expect(t.matrix.values).toEqual new Matrix2d().translate(5,6).rotate(10).translate(-5,-6).values
+      expect(t.matrix.values).toEqual new Matrix2d().translate(-5,-6).values
