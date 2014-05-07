@@ -32,8 +32,7 @@ class Matrix2d
     @
 
   multiply: (other) ->
-    result = gl.mat2d.create()
-    gl.mat2d.multiply result, @values, other.values
-    new Matrix2d(result)
+    gl.mat2d.multiply @values, @values, other.values
+    @
 
 `export default Matrix2d`

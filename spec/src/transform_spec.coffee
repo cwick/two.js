@@ -38,7 +38,6 @@ describe "TransformNode", ->
   describe "scale", ->
     it "defaults to [1,1]", ->
       t = new TransformNode()
-      console.log k for own k,v of t
       expect(t.scale).toEqual [1,1]
 
     it "modifies the transformation matrix when re-assigning", ->

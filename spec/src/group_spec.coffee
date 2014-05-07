@@ -1,15 +1,6 @@
 `import GroupNode from "group"`
 `import Matrix2d from "matrix2d"`
 
-class DummyMatrix
-  constructor: (@name) ->
-    @multiplicationOrder = [ @name ]
-
-  multiply: (other) ->
-    result = new DummyMatrix("#{@name}*#{other.name}")
-    result.multiplicationOrder = @multiplicationOrder.concat other.multiplicationOrder
-    result
-
 describe "GroupNode", ->
   it "has the identity matrix by default", ->
     t = new GroupNode()
@@ -28,10 +19,10 @@ describe "GroupNode", ->
     child = new GroupNode()
     parent.add child
 
-    parent._matrix = new DummyMatrix("parent")
-    child._matrix = new DummyMatrix("child")
+    parent._matrix = new Matrix2d([1,2,3,4,5,6])
+    child._matrix = new Matrix2d([4,5,6,7,8,9])
 
-    expect(child.worldMatrix.multiplicationOrder).toEqual ["parent", "child"]
+    expect(child.worldMatrix).toEqual parent.matrix.multiply(child.matrix)
 
   it "computes a composite world transform for a complex tree", ->
     node1 = new GroupNode()
@@ -49,13 +40,21 @@ describe "GroupNode", ->
     node1.add node3
     node2.add node4
 
-    node1._matrix = new DummyMatrix("node1")
-    node2._matrix = new DummyMatrix("node2")
-    node3._matrix = new DummyMatrix("node3")
-    node4._matrix = new DummyMatrix("node4")
+    node1._matrix = new Matrix2d([1,2,3,4,5,6])
+    node2._matrix = new Matrix2d([5,6,7,8,9,0])
+    node3._matrix = new Matrix2d([2,4,6,8,0,1])
+    node4._matrix = new Matrix2d([9,8,7,6,5,4])
 
-    expect(node4.worldMatrix.multiplicationOrder).toEqual ["node1", "node2", "node4"]
-    expect(node2.worldMatrix.multiplicationOrder).toEqual ["node1", "node2"]
-    expect(node3.worldMatrix.multiplicationOrder).toEqual ["node1", "node3"]
-    expect(node1.worldMatrix.multiplicationOrder).toEqual ["node1"]
+    expect(node4.worldMatrix).toEqual new Matrix2d().
+      multiply(node1.matrix).
+      multiply(node2.matrix).
+      multiply(node4.matrix)
+    expect(node2.worldMatrix).toEqual new Matrix2d().
+      multiply(node1.matrix).
+      multiply(node2.matrix)
+    expect(node3.worldMatrix).toEqual new Matrix2d().
+      multiply(node1.matrix).
+      multiply(node3.matrix)
+    expect(node1.worldMatrix).toEqual new Matrix2d().
+      multiply(node1.matrix)
 
