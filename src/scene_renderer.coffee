@@ -27,8 +27,15 @@ SceneRenderer = TwoObject.extend
       node = iterator.next()
       if node instanceof Sprite
         transform = node.parent.worldMatrix.clone()
+
+        # TODO: put device mapping somewhere else
         transform.values[4] *= @_canvas.devicePixelRatio
         transform.values[5] *= @_canvas.devicePixelRatio
+
+        if node.width && node.image.width
+          transform.scale node.width / node.image.width, 1
+        if node.height && node.image.height
+          transform.scale 1, node.height / node.image.height
 
         @_backend.execute
           name: "drawImage"

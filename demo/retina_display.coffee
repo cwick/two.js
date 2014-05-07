@@ -3,7 +3,7 @@
 render = ->
   requestAnimationFrame(render)
 
-  lowresRenderer.render(testImage)
+  lowresRenderer.renderdemo/retina_display.coffee
   highresRenderer.render(testImage)
 
 makeImage = (src) ->

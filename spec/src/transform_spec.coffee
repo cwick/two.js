@@ -69,21 +69,3 @@ describe "TransformNode", ->
       t.scale = [10,10]
       expect(t.matrix.values).toEqual new Matrix2d().translate(1,2).rotate(4).scale(10,10).values
 
-  describe "origin", ->
-    it "defaults to [0,0]", ->
-      t = new TransformNode()
-      expect(t.origin).toEqual [0,0]
-
-    it "shifts the position of the node", ->
-      t = new TransformNode()
-      t.origin = [4,5]
-      t.position = [10, 10]
-      t.rotation = 10
-      expect(t.matrix.values).toEqual new Matrix2d().translate(10,10).rotate(10).translate(-4, -5).values
-
-    it "each component can be set", ->
-      t = new TransformNode()
-      t.origin = [4,5]
-      t.origin.x += 1
-      t.origin.y += 1
-      expect(t.matrix.values).toEqual new Matrix2d().translate(-5,-6).values

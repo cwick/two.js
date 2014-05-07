@@ -7,16 +7,13 @@ TransformNode = GroupNode.extend
     @position = [0,0]
     @rotation = 0
     @scale = [1,1]
-    @origin = [0,0]
 
   matrix: Property
     get: ->
       m = new Matrix2d()
       m.translate(@position[0], @position[1]).
         rotate(@rotation).
-        scale(@scale[0], @scale[1]).
-
-        translate(-@origin[0], -@origin[1])
+        scale(@scale[0], @scale[1])
 
   # Map position[0] to position.x and position[1] to position.y
   position: Property
@@ -44,18 +41,5 @@ TransformNode = GroupNode.extend
         set: (value) -> @[1] = value
 
     get: -> @_scale
-
-  # Map origin[0] to origin.x and origin[1] to origin.y
-  origin: Property
-    set: (value) ->
-      @_origin = [value[0], value[1]]
-      Object.defineProperty @_origin, "x",
-        get: -> @[0]
-        set: (value) -> @[0] = value
-      Object.defineProperty @_origin, "y",
-        get: -> @[1]
-        set: (value) -> @[1] = value
-
-    get: -> @_origin
 
 `export default TransformNode`
