@@ -41,5 +41,6 @@ SceneRenderer = TwoObject.extend
           name: "drawImage"
           image: node.image
           transform: transform
+          origin: node.pixelOrigin
 
 `export default SceneRenderer`

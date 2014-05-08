@@ -16,12 +16,15 @@ sun = new Two.Sprite
   image: "http://images.nationalgeographic.com/wpf/media-live/photos/000/584/cache/twin-prom-sun_58429_600x450.jpg"
   width: 110
   height: 100
+  origin: "center"
+
 
 earthTransform = new Two.TransformNode()
 earth = new Two.Sprite
   image: "http://img4.wikia.nocookie.net/__cb20130212200722/memoryalpha/en/images/3/36/Earth.jpg"
   width: 50
   height: 50
+  origin: "center"
 
 root.add sunTransform
 sunTransform.add sun

@@ -28,7 +28,7 @@ CanvasRenderer = TwoObject.extend
     transform.scale @_canvas.devicePixelRatio
 
     @_context.setTransform.apply @_context, transform.values
-    @_context.drawImage options.image, 0, 0
+    @_context.drawImage options.image, -options.origin[0], -options.origin[1]
 
 `export default CanvasRenderer`
 
