@@ -8,7 +8,6 @@ render = ->
 
 canvas = new Two.Canvas(width: 640, height: 480)
 renderer = new Two.SceneRenderer(canvas: canvas)
-renderer.backend.imageSmoothingEnabled = false
 
 root = new Two.TransformNode()
 wobble = new Two.TransformNode()

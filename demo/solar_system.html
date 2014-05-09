@@ -3,11 +3,17 @@
     <title>Solar System</title>
   </head>
   <body>
+    <h3>WARNING: Not suitable for rocket trajectory planning</h3>
     <script src="/lib/require.js"></script>
     <script src="require_config.js"></script>
     <script>
       require(["demo/solar_system"]);
     </script>
+
+    Simulation Speed:
+    <br/>
+    <input id="simulation-speed" type="range" value="100" min="1" max="1000" oninput="setSimulationSpeed()"></input>
+    <br/>
   </body>
 </html>
 

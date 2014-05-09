@@ -1,36 +1,46 @@
 `module Two from "two"`
 
+simulationSpeed = .1
+
+window.setSimulationSpeed = ->
+  simulationSpeed = document.getElementById("simulation-speed").value / 1000
+
 render = ->
   requestAnimationFrame(render)
   renderer.render(root)
 
-  earthOrbit.rotation -= EARTH_ORBIT_SPEED
-  earthTransform.rotation += EARTH_ORBIT_SPEED * (1 - EARTH_PERIOD / EARTH_DAY_LENGTH)
+  mercuryOrbitSpeed = simulationSpeed / MERCURY_PERIOD
+  earthOrbitSpeed = simulationSpeed / EARTH_PERIOD
+  venusOrbitSpeed = simulationSpeed / VENUS_PERIOD
+  marsOrbitSpeed = simulationSpeed / MARS_PERIOD
 
-  mercuryOrbit.rotation -= MERCURY_ORBIT_SPEED
-  mercuryTransform.rotation += MERCURY_ORBIT_SPEED * (1 - MERCURY_PERIOD / MERCURY_DAY_LENGTH)
+  earthOrbit.rotation -= earthOrbitSpeed
+  earthTransform.rotation += earthOrbitSpeed * (1 - EARTH_PERIOD / EARTH_DAY_LENGTH)
 
-  venusOrbit.rotation -= VENUS_ORBIT_SPEED
+  mercuryOrbit.rotation -= mercuryOrbitSpeed
+  mercuryTransform.rotation += mercuryOrbitSpeed * (1 - MERCURY_PERIOD / MERCURY_DAY_LENGTH)
+
+  venusOrbit.rotation -= venusOrbitSpeed
   # Venus rotates backwards!
-  venusTransform.rotation += VENUS_ORBIT_SPEED * (1 + VENUS_PERIOD / VENUS_DAY_LENGTH)
+  venusTransform.rotation += venusOrbitSpeed * (1 + VENUS_PERIOD / VENUS_DAY_LENGTH)
 
-canvas = new Two.Canvas(width: 800, height: 600)
+  marsOrbit.rotation -= marsOrbitSpeed
+  marsTransform.rotation += marsOrbitSpeed * (1 - MARS_PERIOD / MARS_DAY_LENGTH)
+
+canvas = new Two.Canvas(width: 800, height: 800)
 renderer = new Two.SceneRenderer(canvas: canvas)
 root = new Two.TransformNode()
 
-root.position = [400, 300]
+root.position = [400, 400]
 
-SIMULATION_SPEED = .08
 EARTH_PERIOD = 365
 EARTH_DAY_LENGTH = 1
 MERCURY_PERIOD = 88
 MERCURY_DAY_LENGTH = 58
 VENUS_PERIOD = 225
 VENUS_DAY_LENGTH = 243
-
-MERCURY_ORBIT_SPEED = SIMULATION_SPEED / MERCURY_PERIOD
-EARTH_ORBIT_SPEED = SIMULATION_SPEED / EARTH_PERIOD
-VENUS_ORBIT_SPEED = SIMULATION_SPEED / VENUS_PERIOD
+MARS_PERIOD = 687
+MARS_DAY_LENGTH = 1
 
 sun = new Two.Sprite
   image: "http://music.ckut.ca/wp-content/uploads/2011/09/sun-solar-flare.jpg"
@@ -62,40 +72,51 @@ moon = new Two.Sprite
   height: 20
   origin: "center"
 
+mars = new Two.Sprite
+  image: "http://schoolofartgalleries.dsc.rmit.edu.au/PSSR/exhibitions/2008/the_mars_project/mars0_lth.jpg"
+  width: 30
+  height: 30
+  origin: "center"
+
 earthTransform = new Two.TransformNode()
 sunTransform = new Two.TransformNode()
 moonTransform = new Two.TransformNode()
 mercuryTransform = new Two.TransformNode()
 venusTransform = new Two.TransformNode()
+marsTransform = new Two.TransformNode()
 
 mercuryOrbit = new Two.TransformNode()
 earthOrbit = new Two.TransformNode()
 moonOrbit = new Two.TransformNode()
 venusOrbit = new Two.TransformNode()
+marsOrbit = new Two.TransformNode()
 
 earthOrbit.add earthTransform
 moonOrbit.add moonTransform
 mercuryOrbit.add mercuryTransform
 venusOrbit.add venusTransform
+marsOrbit.add marsTransform
 
 # Set the orbital radius
 earthTransform.position.x = 250
 moonTransform.position.x = 50
 mercuryTransform.position.x = 100
 venusTransform.position.x = 160
+marsTransform.position.x = 350
 
 earthTransform.add earth
 earthTransform.add moonOrbit
 moonTransform.add moon
 mercuryTransform.add mercury
 venusTransform.add venus
-
+marsTransform.add mars
 
 root.add sunTransform
 sunTransform.add sun
 sunTransform.add earthOrbit
 sunTransform.add mercuryOrbit
 sunTransform.add venusOrbit
+sunTransform.add marsOrbit
 
 document.body.appendChild(canvas.domElement)
 render()
