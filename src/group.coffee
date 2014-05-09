@@ -14,7 +14,7 @@ GroupNode = TwoObject.extend CanHaveParent, CanGroup,
   # TODO: inefficient and naive implementation
   worldMatrix: Property
     get: ->
-      result = new Matrix2d()
+      @_worldMatrix.reset()
       matrices = []
       parent = @parent
 
@@ -25,9 +25,9 @@ GroupNode = TwoObject.extend CanHaveParent, CanGroup,
         parent = parent.parent
 
       for m in matrices by -1
-        result.multiply(m)
+        @_worldMatrix.multiply(m)
 
-      result
+      @_worldMatrix
 
 `export default GroupNode`
 

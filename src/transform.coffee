@@ -4,14 +4,15 @@
 
 TransformNode = GroupNode.extend
   initialize: ->
+    @_super()
     @position = [0,0]
     @rotation = 0
     @scale = [1,1]
 
   matrix: Property
     get: ->
-      m = new Matrix2d()
-      m.translate(@position[0], @position[1]).
+      @_matrix.reset()
+      @_matrix.translate(@position[0], @position[1]).
         rotate(@rotation).
         scale(@scale[0], @scale[1])
 
