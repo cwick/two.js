@@ -147,6 +147,15 @@ describe "Mixin", ->
       base._foo = "world"
       expect(base.foo).toEqual "hello"
 
+    it "the initializer is called after properties are defined", ->
+      base = new Object()
+      mixin = Mixin.create
+       initialize: -> @_base.readonly = 123
+       readonly: Property readonly: true
+
+      expect(-> mixin.apply base).toThrow()
+
+
 
 
 

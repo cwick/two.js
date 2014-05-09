@@ -16,9 +16,6 @@ class Mixin
 
     _context = { _base: base }
 
-    if typeof @properties[INIT_FUNCTION] == "function"
-      @properties[INIT_FUNCTION].apply _context
-
     # Call functions using the private context
     for own k,v of @properties when k != INIT_FUNCTION
       do (k,v) ->
@@ -29,6 +26,9 @@ class Mixin
     PropertyMarker.setupProperties(@properties, base, _context)
 
     (base[META_KEY] ?= {})[@id] = true
+
+    if typeof @properties[INIT_FUNCTION] == "function"
+      @properties[INIT_FUNCTION].apply _context
 
     return
 `export default Mixin`
