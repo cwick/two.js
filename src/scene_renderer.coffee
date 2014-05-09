@@ -20,7 +20,6 @@ SceneRenderer = TwoObject.extend
       name: "clear"
       color: new Color(r:10, g: 30, b: 180)
 
-    transform = new Matrix2d()
     iterator = new BreadthFirstTreeIterator(scene)
 
     while iterator.hasNext

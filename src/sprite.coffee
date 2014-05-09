@@ -40,6 +40,13 @@ Sprite = TwoObject.extend CanHaveParent,
       else
         @_image = @_specifiedImage
 
+  clone: ->
+    new Sprite
+      image: @_specifiedImage
+      origin: @origin.slice(0)
+      width: @width
+      height: @height
+
   image: Property
     set: (value) ->
       if typeof value is "string"

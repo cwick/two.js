@@ -34,5 +34,11 @@ describe "Sprite", ->
         origin: "invalid")
       .toThrow new Error("Invalid value \"invalid\" for origin")
 
-
-
+  it "can be cloned", ->
+    image = new DummyImage(width: 100, height: 100)
+    sprite = new Sprite(image: image, origin: [3,3], width: 10, height: 20)
+    clone = sprite.clone()
+    expect(clone.image).toBe image
+    expect(clone.origin).toEqual [3,3]
+    expect(clone.width).toEqual 10
+    expect(clone.height).toEqual 20
