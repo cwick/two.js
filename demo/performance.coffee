@@ -16,14 +16,15 @@ updateFrameTime = ->
   if counter == 29
     document.getElementById("frame-time").innerHTML = timestamp - previousTimestamp
 
-getRandomPosition = ->
-  [
-    Math.random() * (canvas.width - ballSprite.width) + ballSprite.width/2,
-    Math.random() * (canvas.height - ballSprite.height) + ballSprite.height/2
-  ]
-
 render = ->
   requestAnimationFrame(render)
+
+  for ball in balls
+    x = ball.transform.position.x += ball.velocity[0]
+    y = ball.transform.position.y += ball.velocity[1]
+    if x > canvas.width || y > canvas.width || x < 0 || y < 0
+      ball.velocity[0] *= -1
+      ball.velocity[1] *= -1
 
   updateFPSCounter()
   renderer.render(root)
@@ -34,18 +35,34 @@ renderer = new Two.SceneRenderer(canvas: canvas)
 
 root = new Two.TransformNode()
 
-ballSprite = new Two.Sprite
-  image: "http://www.clker.com/cliparts/r/y/Z/3/u/a/ball-hi.png"
-  width: 40
-  height: 40
-  origin: "center"
+class Ball
+  constructor: ->
+    @transform = new Two.TransformNode()
+    @velocity = [ Math.random() - .5, Math.random() - .5]
+    @velocity[0] *= 20
+    @velocity[1] *= 20
+    @transform.position = @getRandomPosition()
+    @transform.add @ballSprite.clone()
 
-for x in [1..2000]
-  ball = new Two.TransformNode()
-  ball.position = getRandomPosition()
-  ball.add ballSprite.clone()
+  ballSprite: new Two.Sprite
+    image: "http://cdn.bulbagarden.net/upload/2/22/Dream_Moon_Ball_Sprite.png"
+    width: 40
+    height: 40
+    origin: "center"
 
-  root.add ball
+  getRandomPosition: ->
+    [
+      Math.random() * (canvas.width - @ballSprite.width) + @ballSprite.width/2,
+      Math.random() * (canvas.height - @ballSprite.height) + @ballSprite.height/2
+    ]
+
+
+balls = []
+for x in [1..600]
+  ball = new Ball()
+  balls.push ball
+
+  root.add ball.transform
 
 document.getElementById("object-count").innerHTML = root.children.length
 document.body.appendChild(canvas.domElement)
