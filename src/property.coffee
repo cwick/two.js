@@ -1,21 +1,21 @@
 getPropertyOptions = (name, property, context) ->
   options = {}
-  getContext = -> (context || @)
+  privateName = "_#{name}"
 
   if property.options.get
     options.get = ->
       @_super = -> @constructor.__super__[name]
-      property.options.get.call(getContext.call(@))
+      property.options.get.call(context || @)
   else
-    options.get = -> (getContext.call(@))["_#{name}"]
+    options.get = -> (context || @)[privateName]
 
   if property.options.set
     options.set = (value) ->
       @_super = (value) -> @constructor.__super__[name] = value
-      property.options.set.call(getContext.call(@), value)
+      property.options.set.call(context || @, value)
 
   else if !property.options.readonly && !property.options.get?
-    options.set = (value) -> (getContext.call(@))["_#{name}"] = value
+    options.set = (value) -> (context || @)[privateName] = value
 
   options
 
