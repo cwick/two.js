@@ -19,9 +19,10 @@ create = (Constructor) ->
 extend = (ParentClass) ->
   return ->
     [mixins, properties] = extractArguments.apply @, arguments
+    mixins = mixins.concat(ParentClass.__mixins__)
 
     Class = (properties={}) ->
-      return initializeObject properties, @, mixins.concat(ParentClass.__mixins__)
+      return initializeObject properties, @, mixins
 
     copyOwnProperties(ParentClass, Class)
 
