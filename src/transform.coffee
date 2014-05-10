@@ -11,10 +11,14 @@ TransformNode = GroupNode.extend
 
   matrix: Property
     get: ->
+      position = @_position
+      rotation = @rotation
+      scale = @_scale
+
       @_matrix.reset()
-      @_matrix.translate(@position[0], @position[1]).
-        rotate(@rotation).
-        scale(@scale[0], @scale[1])
+      @_matrix.translate(position[0], position[1]).
+        rotate(rotation).
+        scale(scale[0], scale[1])
 
   # Map position[0] to position.x and position[1] to position.y
   position: Property
