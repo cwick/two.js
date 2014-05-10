@@ -46,7 +46,7 @@ setupClass = (Constructor, properties) ->
 wrapFunctionsForSuper = (Constructor) ->
   for own key, value of Constructor.prototype when key != "constructor"
     do (key, value) ->
-      if typeof value == "function"
+      if typeof value == "function" && key == "initialize"
         Constructor.prototype[key] = ->
           @_super = -> superFunction(Constructor, key, @, arguments)
           result = value.apply @, arguments

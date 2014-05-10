@@ -16,7 +16,9 @@ SceneRenderer = TwoObject.extend
   backend: Property readonly: true
 
   render: (scene) ->
-    @_backend.execute
+    commands = []
+    devicePixelRatio = @_canvas.devicePixelRatio
+    commands.push
       name: "clear"
       color: new Color(r:10, g: 30, b: 180)
 
@@ -26,8 +28,8 @@ SceneRenderer = TwoObject.extend
         transform = node.parent.worldMatrix.clone()
 
         # TODO: put device mapping somewhere else
-        transform.values[4] *= @_canvas.devicePixelRatio
-        transform.values[5] *= @_canvas.devicePixelRatio
+        transform.values[4] *= devicePixelRatio
+        transform.values[5] *= devicePixelRatio
 
         scaleX = scaleY = 1
 
@@ -38,10 +40,13 @@ SceneRenderer = TwoObject.extend
 
         transform.scale scaleX, scaleY
 
-        @_backend.execute
+        commands.push
           name: "drawImage"
           image: image
           transform: transform
           origin: node._pixelOrigin
+
+    @_backend.execute command for command in commands
+    return
 
 `export default SceneRenderer`

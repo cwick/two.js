@@ -16,14 +16,14 @@ CanvasRenderer = TwoObject.extend
         @_context.webkitImageSmoothingEnabled = value
 
   execute: (command) ->
-    @["#{command.name}Command"](command)
+    @[command.name](command)
 
-  clearCommand: (options) ->
+  clear: (options) ->
     @_context.setTransform(1, 0, 0, 1, 0, 0)
     @_context.fillStyle = options.color.toCSS()
     @_context.fillRect 0,0, @_canvas.frameWidth, @_canvas.frameHeight
 
-  drawImageCommand: (options) ->
+  drawImage: (options) ->
     transform = options.transform.clone()
     transform.scale @_canvas.devicePixelRatio
 
