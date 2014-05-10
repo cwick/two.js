@@ -1,5 +1,4 @@
 `import Property from "./property"`
-`module Queue from "lib/queue"`
 
 class DepthFirstTreeIterator
   constructor: (@root) ->
