@@ -1,5 +1,6 @@
 `import TwoObject from "object"`
 `import Mixin from "mixin"`
+`import Property from "property"`
 
 describe "TwoObject", ->
   it "can be instantiated with 'new'", ->
@@ -172,4 +173,26 @@ describe "TwoObject", ->
 
       expect(base.a()).toEqual "a"
       expect(base.b()).toEqual "b"
+
+    it "the mixin initializer sets properties on the base object", ->
+      TestMixin = Mixin.create
+        initialize: ->
+          @foo = "hello"
+
+      base = TwoObject.createWithMixins(TestMixin)
+
+      expect(base.foo).toEqual "hello"
+
+    it "the mixin initializer is called after properties are defined", ->
+      TestMixin = Mixin.create
+        initialize: -> @readonly = 123
+        readonly: Property readonly: true
+
+      # Should throw "can't set readonly property"
+      expect(-> TwoObject.createWithMixins(TestMixin)).toThrow()
+
+
+
+
+
 

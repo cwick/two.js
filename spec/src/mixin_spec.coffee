@@ -46,17 +46,6 @@ describe "Mixin", ->
     mixin.apply base
     expect(base.initialize).toBeUndefined()
 
-  it "the mixin initializer sets properties on the base object", ->
-    base = new Object()
-
-    mixin = Mixin.create
-      initialize: ->
-        @foo = "hello"
-
-    mixin.apply base
-
-    expect(base.foo).toEqual "hello"
-
   describe "defining properties", ->
     it "can mix in a property", ->
       base = new Object()
@@ -87,16 +76,4 @@ describe "Mixin", ->
       mixin.apply base
       base._foo = "hello"
       expect(base.foo).toEqual "hello"
-
-    it "the initializer is called after properties are defined", ->
-      base = new Object()
-      mixin = Mixin.create
-       initialize: -> @readonly = 123
-       readonly: Property readonly: true
-
-      expect(-> mixin.apply base).toThrow()
-
-
-
-
 

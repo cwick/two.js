@@ -21,8 +21,5 @@ class Mixin
 
     (base[META_KEY] ?= {})[@id] = true
 
-    if typeof @properties[INIT_FUNCTION] == "function"
-      @properties[INIT_FUNCTION].apply base
-
     return
 `export default Mixin`

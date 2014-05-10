@@ -5,8 +5,8 @@ copyOwnProperties = (source, destination) ->
   destination[k] = v for own k,v of source when !(v instanceof PropertyMarker)
   destination
 
-initializeObject = (properties, object, mixins=[]) ->
-  mixin.apply object for mixin in mixins
+initializeObject = (properties, object, mixins) ->
+  mixin.properties.initialize.apply object for mixin in mixins when mixin.properties.initialize?
   PropertyMarker.setupProperties properties, object
   object.initialize?()
   copyOwnProperties(properties, object)
@@ -14,45 +14,35 @@ initializeObject = (properties, object, mixins=[]) ->
 
 create = (Constructor) ->
   return (properties={}) ->
-    initializeObject properties, new Constructor
+    initializeObject properties, new Constructor, []
 
 extend = (ParentClass) ->
   return ->
     [mixins, properties] = extractArguments.apply @, arguments
-    mixins = mixins.concat(ParentClass.__mixins__)
+    allMixins = mixins.concat(ParentClass.__mixins__)
 
     Class = (properties={}) ->
-      return initializeObject properties, @, mixins
+      return initializeObject properties, @, allMixins
 
     copyOwnProperties(ParentClass, Class)
 
     Class.prototype = Object.create(ParentClass.prototype)
-    setupClass(Class, properties)
+    setupClass(Class, properties, mixins)
 
     Class.__super__ = ParentClass.prototype
-    Class.__mixins__ = mixins
+    Class.__mixins__ = allMixins
     Class
 
-setupClass = (Constructor, properties) ->
+setupClass = (Constructor, properties, mixins) ->
   Constructor.prototype.constructor = Constructor
   Constructor.create = create(Constructor)
   Constructor.extend = extend(Constructor)
   Constructor.toString = -> "Class"
 
+  mixin.apply Constructor.prototype for mixin in mixins
   PropertyMarker.setupProperties properties, Constructor.prototype
   copyOwnProperties(properties, Constructor.prototype)
   Constructor.prototype._super = superFunction
-  wrapFunctionsForSuper(Constructor)
-
-wrapFunctionsForSuper = (Constructor) ->
-  for own key, value of Constructor.prototype when key != "constructor"
-    do (key, value) ->
-      if typeof value == "function" && key == "initialize"
-        Constructor.prototype[key] = ->
-          @_super = -> superFunctionOld(Constructor, key, @, arguments)
-          result = value.apply @, arguments
-          delete @_super
-          result
 
 superFunction = (Parent, property) ->
   parentProperty = Parent.prototype[property]
@@ -60,11 +50,6 @@ superFunction = (Parent, property) ->
   if typeof parentProperty == "function"
     parentProperty = parentProperty.bind @
   parentProperty
-
-superFunctionOld = (Parent, funcName, context, args) ->
-  func = Parent.__super__[funcName]
-  throw new TypeError("Superclass method '#{funcName}' does not exist.") unless func
-  func.apply context, args
 
 extractArguments = ->
   mixins = []
