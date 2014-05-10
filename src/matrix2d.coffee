@@ -20,19 +20,23 @@ class Matrix2d
     new Matrix2d(@values)
 
   translate: (x, y) ->
-    gl.mat2d.translate @values, @values, [x,y]
+    values = @values
+    gl.mat2d.translate values, values, [x,y]
     @
 
   rotate: (radians) ->
-    gl.mat2d.rotate @values, @values, radians
+    values = @values
+    gl.mat2d.rotate values, values, radians
     @
 
   scale: (x, y=x) ->
-    gl.mat2d.scale @values, @values, [x, y]
+    values = @values
+    gl.mat2d.scale values, values, [x, y]
     @
 
   multiply: (other) ->
-    gl.mat2d.multiply @values, @values, other.values
+    values = @values
+    gl.mat2d.multiply values, values, other.values
     @
 
 `export default Matrix2d`
