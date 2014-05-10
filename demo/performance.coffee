@@ -58,7 +58,7 @@ class Ball
 
 
 balls = []
-for x in [1..600]
+for x in [1..6000]
   ball = new Ball()
   balls.push ball
 

@@ -8,5 +8,5 @@
 `import "./transform_spec"`
 `import "./group_spec"`
 `import "./matrix2d_spec"`
-`import "./breadth_first_spec"`
+`import "./tree_iterator_spec"`
 `import "./sprite_spec"`

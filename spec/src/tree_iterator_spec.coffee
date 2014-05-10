@@ -1,37 +1,28 @@
 `import TwoObject from "object"`
 `import CanGroup from "can_group"`
-`import { BreadthFirstTreeIterator } from "tree_iterators"`
+`import { DepthFirstTreeIterator } from "tree_iterators"`
 
 iterate = (root) ->
-  iterator = new BreadthFirstTreeIterator(root)
+  iterator = new DepthFirstTreeIterator(root)
   results = []
 
-  while iterator.hasNext
-    results.push iterator.next()
+  iterator.execute (node) ->
+    results.push node
 
   results
 
 Node = null
 
-describe "BreadthFirstTreeIterator", ->
+describe "DepthFirstTreeIterator", ->
   beforeEach ->
     Node = TwoObject.extend CanGroup,
       jasmineToString: -> @name || "unnamed node"
-
-  it "iterates over a zero-node tree", ->
-    results = iterate()
-    expect(results).toEqual []
 
   it "iterates over a one-node tree", ->
     node = new Node()
     results = iterate(node)
 
     expect(results).toEqual [node]
-
-  it "returns null if next is called when iterating finished", ->
-    iterator = new BreadthFirstTreeIterator()
-    expect(iterator.hasNext).toBe false
-    expect(iterator.next()).toBeNull()
 
   it "iterates over a two-node tree", ->
     node1 = new Node(name: "node1")
@@ -70,7 +61,7 @@ describe "BreadthFirstTreeIterator", ->
     node1.add node3
 
     results = iterate(root)
-    expect(results).toEqual [root, node1, node2, node3]
+    expect(results).toEqual [root, node1, node3, node2]
 
   it "can handle nodes with no children", ->
     LeafNode = Object

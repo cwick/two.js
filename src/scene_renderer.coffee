@@ -3,7 +3,7 @@
 `import CanvasRenderer from "./canvas_renderer"`
 `import Color from "./color"`
 `import Matrix2d from "./matrix2d"`
-`import { BreadthFirstTreeIterator } from "./tree_iterators"`
+`import { DepthFirstTreeIterator } from "./tree_iterators"`
 `import Sprite from "./sprite"`
 
 SceneRenderer = TwoObject.extend
@@ -20,10 +20,7 @@ SceneRenderer = TwoObject.extend
       name: "clear"
       color: new Color(r:10, g: 30, b: 180)
 
-    iterator = new BreadthFirstTreeIterator(scene)
-
-    while iterator.hasNext
-      node = iterator.next()
+    new DepthFirstTreeIterator(scene).execute (node) =>
       if node instanceof Sprite
         transform = node.parent.worldMatrix.clone()
 

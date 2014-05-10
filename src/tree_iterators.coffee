@@ -1,20 +1,16 @@
 `import Property from "./property"`
 `module Queue from "lib/queue"`
 
-class BreadthFirstTreeIterator
-  constructor: (root) ->
-    @_queue = new Queue()
-    @_queue.enqueue root if root?
+class DepthFirstTreeIterator
+  constructor: (@root) ->
 
-  hasNext: Property
-    get: -> !@_queue.isEmpty()
+  execute: (callback) ->
+    @_visit @root, callback
 
-  next: ->
-    node = @_queue.dequeue() || null
-    @_queue.enqueue(child) for child in node.children if node?.children?
+  _visit: (root, callback) ->
+    callback(root)
+    children = root.children
+    @_visit node, callback for node in children if children?
+    return
 
-    node
-
-Property.setupProperties BreadthFirstTreeIterator.prototype
-
-`export { BreadthFirstTreeIterator }`
+`export { DepthFirstTreeIterator }`
