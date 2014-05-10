@@ -8,7 +8,7 @@ class DepthFirstTreeIterator
 
   _visit: (root, callback) ->
     callback(root)
-    children = root.children
+    children = root._children
     @_visit node, callback for node in children if children?
     return
 
