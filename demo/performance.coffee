@@ -22,7 +22,7 @@ render = ->
   for ball in balls
     x = ball.transform.position.x += ball.velocity[0]
     y = ball.transform.position.y += ball.velocity[1]
-    if x > canvas.width || y > canvas.width || x < 0 || y < 0
+    if x > canvas.width || y > canvas.height || x < 0 || y < 0
       ball.velocity[0] *= -1
       ball.velocity[1] *= -1
 
@@ -58,7 +58,7 @@ class Ball
 
 
 balls = []
-for x in [1..6000]
+for x in [1..1500]
   ball = new Ball()
   balls.push ball
 
