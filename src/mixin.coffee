@@ -14,21 +14,15 @@ class Mixin
   apply: (base) ->
     return if @detect(base)
 
-    _context = { _base: base }
-
-    # Call functions using the private context
     for own k,v of @properties when k != INIT_FUNCTION
-      do (k,v) ->
-        base[k] = v
-        if typeof v == "function"
-          base[k] = base[k].bind _context
+      base[k] = v
 
-    PropertyMarker.setupProperties(@properties, base, _context)
+    PropertyMarker.setupProperties(@properties, base)
 
     (base[META_KEY] ?= {})[@id] = true
 
     if typeof @properties[INIT_FUNCTION] == "function"
-      @properties[INIT_FUNCTION].apply _context
+      @properties[INIT_FUNCTION].apply base
 
     return
 `export default Mixin`

@@ -13,7 +13,7 @@ CanGroup = Mixin.create
       @_children.push child
       if CanHaveParent.detect(child)
         child.parent?.remove child
-        child._setParent(@_base)
+        child._setParent(@)
 
   remove: (child) ->
     idx = @_children.indexOf child

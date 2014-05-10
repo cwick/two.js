@@ -118,7 +118,7 @@ describe "Property", ->
 
       Derived = Base.extend
         foo: Property
-          get: -> @_super() + " there"
+          get: -> @_super(Base, "foo") + " there"
 
       expect(new Derived().foo).toEqual "hello there"
 
@@ -129,11 +129,11 @@ describe "Property", ->
 
       Derived = Base.extend
         foo: Property
-          get: -> @_super() + " there"
+          get: -> @_super(Base, "foo") + " there"
 
       MoreDerived = Derived.extend
         foo: Property
-          get: -> @_super() + " world"
+          get: -> @_super(Derived, "foo") + " world"
 
       expect(new MoreDerived().foo).toEqual "hello there world"
 

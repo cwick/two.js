@@ -1,31 +1,26 @@
-getPropertyOptions = (name, property, context) ->
+getPropertyOptions = (name, property) ->
   options = {}
   privateName = "_#{name}"
 
   if property.options.get
-    options.get = ->
-      @_super = -> @constructor.__super__[name]
-      property.options.get.call(context || @)
+    options.get = property.options.get
   else
-    options.get = -> (context || @)[privateName]
+    options.get = -> @[privateName]
 
   if property.options.set
-    options.set = (value) ->
-      @_super = (value) -> @constructor.__super__[name] = value
-      property.options.set.call(context || @, value)
-
+    options.set = property.options.set
   else if !property.options.readonly && !property.options.get?
-    options.set = (value) -> (context || @)[privateName] = value
+    options.set = (value) -> @[privateName] = value
 
   options
 
 class PropertyMarker
   constructor: (@options) ->
 
-  @setupProperties: (properties, object, context=null) ->
+  @setupProperties: (properties, object) ->
     for own k,v of properties
       if v instanceof PropertyMarker
-        options = getPropertyOptions(k, v, context)
+        options = getPropertyOptions(k, v)
         Object.defineProperty object, k, options
 
     object
