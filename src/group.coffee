@@ -10,24 +10,27 @@ GroupNode = TwoObject.extend CanHaveParent, CanGroup,
     @_worldMatrix = new Matrix2d()
 
   matrix: Property readonly: true
+  worldMatrix: Property readonly: true
 
-  # TODO: inefficient and naive implementation
-  worldMatrix: Property
-    get: ->
-      @_worldMatrix.reset()
-      matrices = []
-      parent = @parent
+  # Implement in subclass
+  updateMatrix: ->
 
-      matrices.push @matrix
+  updateWorldMatrix: ->
+    @_worldMatrix.reset()
+    matrices = []
+    parent = @_parent
 
-      while parent
-        matrices.push parent.matrix
-        parent = parent.parent
+    @updateMatrix()
+    matrices.push @_matrix
 
-      for m in matrices by -1
-        @_worldMatrix.multiply(m)
+    while parent
+      matrices.push parent._matrix
+      parent = parent._parent
 
-      @_worldMatrix
+    for m in matrices by -1
+      @_worldMatrix.multiply(m)
+
+    @_worldMatrix
 
 `export default GroupNode`
 

@@ -1,8 +1,11 @@
 `import TwoObject from "object"`
 `import Property from "./property"`
 `import DeviceMetrics from "./device_metrics"`
+`import Matrix2d from "./matrix2d"`
 
 CanvasRenderer = TwoObject.extend
+  transform: new Matrix2d()
+
   canvas: Property
     set: (value) ->
       @_canvas = value
@@ -24,10 +27,10 @@ CanvasRenderer = TwoObject.extend
     @_context.fillRect 0,0, @_canvas.frameWidth, @_canvas.frameHeight
 
   drawImage: (options) ->
-    transform = options.transform.clone()
-    transform.scale @_canvas.devicePixelRatio
+    @transform.values.set options.transform.values
+    @transform.scale @_canvas.devicePixelRatio
 
-    @_context.setTransform.apply @_context, transform.values
+    @_context.setTransform.apply @_context, @transform.values
     @_context.drawImage options.image, -options.origin[0], -options.origin[1]
 
 `export default CanvasRenderer`

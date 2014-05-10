@@ -22,7 +22,7 @@ describe "GroupNode", ->
     parent._matrix = new Matrix2d([1,2,3,4,5,6])
     child._matrix = new Matrix2d([4,5,6,7,8,9])
 
-    expect(child.worldMatrix).toEqual parent.matrix.multiply(child.matrix)
+    expect(child.updateWorldMatrix()).toEqual parent.matrix.multiply(child.matrix)
 
   it "computes a composite world transform for a complex tree", ->
     node1 = new GroupNode()
@@ -44,6 +44,11 @@ describe "GroupNode", ->
     node2._matrix = new Matrix2d([5,6,7,8,9,0])
     node3._matrix = new Matrix2d([2,4,6,8,0,1])
     node4._matrix = new Matrix2d([9,8,7,6,5,4])
+
+    node1.updateWorldMatrix()
+    node2.updateWorldMatrix()
+    node3.updateWorldMatrix()
+    node4.updateWorldMatrix()
 
     expect(node4.worldMatrix).toEqual new Matrix2d().
       multiply(node1.matrix).

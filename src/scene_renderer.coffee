@@ -24,9 +24,10 @@ SceneRenderer = TwoObject.extend
       color: new Color(r:10, g: 30, b: 180)
 
     new DepthFirstTreeIterator(scene).execute (node) =>
+      node.updateMatrix?()
       if node instanceof Sprite
         image = node._image
-        transform = node._parent.worldMatrix.clone()
+        transform = node._parent.updateWorldMatrix().clone()
 
         # TODO: put device mapping somewhere else
         transform.values[4] *= devicePixelRatio

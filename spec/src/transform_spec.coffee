@@ -11,6 +11,7 @@ describe "TransformNode", ->
       t = new TransformNode()
       amount = Math.PI
       t.rotation = amount
+      t.updateMatrix()
       expect(t.matrix.values).toEqual new Matrix2d().rotate(amount).values
 
   describe "position", ->
@@ -22,6 +23,7 @@ describe "TransformNode", ->
       t = new TransformNode()
       position = [4,5]
       t.position = position
+      t.updateMatrix()
       expect(t.matrix.values).toEqual new Matrix2d().translate(position[0], position[1]).values
 
     it "modifies the transformation matrix when updating an individual vector component", ->
@@ -33,6 +35,7 @@ describe "TransformNode", ->
       t.position[1] += 10
       t.position.y += 10
 
+      t.updateMatrix()
       expect(t.matrix.values).toEqual new Matrix2d().translate(20, 20).values
 
   describe "scale", ->
@@ -44,6 +47,7 @@ describe "TransformNode", ->
       t = new TransformNode()
       scale = [4,5]
       t.scale = scale
+      t.updateMatrix()
       expect(t.matrix.values).toEqual new Matrix2d().scale(scale[0], scale[1]).values
 
     it "modifies the transformation matrix when updating an individual vector component", ->
@@ -54,11 +58,13 @@ describe "TransformNode", ->
       t.scale[1] += 10
       t.scale.y += 10
 
+      t.updateMatrix()
       expect(t.matrix.values).toEqual new Matrix2d().scale(21, 21).values
 
     it "can be scaled along both dimesions equally", ->
       t = new TransformNode()
       t.scale = 5
+      t.updateMatrix()
       expect(t.matrix.values).toEqual new Matrix2d().scale(5,5).values
 
   describe "composite transform", ->
@@ -67,5 +73,6 @@ describe "TransformNode", ->
       t.position = [1,2]
       t.rotation = 4
       t.scale = [10,10]
+      t.updateMatrix()
       expect(t.matrix.values).toEqual new Matrix2d().translate(1,2).rotate(4).scale(10,10).values
 
