@@ -22,21 +22,26 @@ SceneRenderer = TwoObject.extend
 
     new DepthFirstTreeIterator(scene).execute (node) =>
       if node instanceof Sprite
+        image = node._image
         transform = node.parent.worldMatrix.clone()
 
         # TODO: put device mapping somewhere else
         transform.values[4] *= @_canvas.devicePixelRatio
         transform.values[5] *= @_canvas.devicePixelRatio
 
-        if node.width && node.image.width
-          transform.scale node.width / node.image.width, 1
-        if node.height && node.image.height
-          transform.scale 1, node.height / node.image.height
+        scaleX = scaleY = 1
+
+        if node.width && image.width
+          scaleX = node.width / image.width
+        if node.height && image.height
+          scaleY = node.height / image.height
+
+        transform.scale scaleX, scaleY
 
         @_backend.execute
           name: "drawImage"
-          image: node.image
+          image: image
           transform: transform
-          origin: node.pixelOrigin
+          origin: node._pixelOrigin
 
 `export default SceneRenderer`
