@@ -98,36 +98,35 @@ describe "TwoObject", ->
       expect(derived.a).toEqual 3
       expect(derived.b).toEqual 4
 
+    it "calling super preserves 'this'", ->
+      Base = TwoObject.extend
+        value: 3
+        getValue: -> @value
+
+      Derived = TwoObject.extend
+        value: 4
+        getValue: -> @_super(Base, "getValue")()
+
+      expect(new Derived().getValue()).toEqual 4
+
     it "super methods can be accessed by subclasses multiple levels deep", ->
       Base = TwoObject.extend
         a: (x) -> x + " Base"
 
       Derived = Base.extend
-        a: (x) -> @_super(x) + " Derived"
+        a: (x) -> @_super(Base, "a")(x) + " Derived"
 
       MoreDerived = Derived.extend
-        a: (x) -> @_super(x) + " MoreDerived"
+        a: (x) -> @_super(Derived, "a")(x) + " MoreDerived"
 
-      derived = new MoreDerived()
-      expect(derived.a("Hello")).toEqual "Hello Base Derived MoreDerived"
-
-    it "removes the _super property when not inside a method call", ->
-      Base = TwoObject.extend
-        a: (x) -> x + " Base"
-
-      Derived = Base.extend
-        a: (x) -> @_super(x) + " Derived"
-
-      d = new Derived()
-      d.a()
-
-      expect(d._super).toBeUndefined()
+      moreDerived = new MoreDerived()
+      expect(moreDerived.a("Hello")).toEqual "Hello Base Derived MoreDerived"
 
     it "throws TypeError when calling a super method that doesn't exist", ->
       Base = TwoObject.extend
-        a: -> @_super()
+        a: -> @_super(TwoObject, "a")
 
-      expect(-> new Base().a()).toThrow(new TypeError("Superclass method 'a' does not exist."))
+      expect(-> new Base().a()).toThrow(new TypeError("Superclass property 'a' does not exist."))
 
   describe "creating a subclass with mixins", ->
     it "can apply a mixin to the subclass", ->

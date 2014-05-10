@@ -41,6 +41,7 @@ setupClass = (Constructor, properties) ->
 
   PropertyMarker.setupProperties properties, Constructor.prototype
   copyOwnProperties(properties, Constructor.prototype)
+  Constructor.prototype._super = superFunction
   wrapFunctionsForSuper(Constructor)
 
 wrapFunctionsForSuper = (Constructor) ->
@@ -48,12 +49,19 @@ wrapFunctionsForSuper = (Constructor) ->
     do (key, value) ->
       if typeof value == "function" && key == "initialize"
         Constructor.prototype[key] = ->
-          @_super = -> superFunction(Constructor, key, @, arguments)
+          @_super = -> superFunctionOld(Constructor, key, @, arguments)
           result = value.apply @, arguments
           delete @_super
           result
 
-superFunction = (Parent, funcName, context, args) ->
+superFunction = (Parent, property) ->
+  parentProperty = Parent.prototype[property]
+  throw new TypeError("Superclass property '#{property}' does not exist.") unless parentProperty?
+  if typeof parentProperty == "function"
+    parentProperty = parentProperty.bind @
+  parentProperty
+
+superFunctionOld = (Parent, funcName, context, args) ->
   func = Parent.__super__[funcName]
   throw new TypeError("Superclass method '#{funcName}' does not exist.") unless func
   func.apply context, args
