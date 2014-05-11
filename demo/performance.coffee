@@ -1,20 +1,9 @@
 `module Two from "two"`
 
-previousTimestamp = Date.now()
-counter = 0
-
-updateFPSCounter = ->
-  counter += 1
-  timestamp = Date.now()
-  if counter == 30
-    document.getElementById("fps").innerHTML = Math.round(1000 / (timestamp - previousTimestamp))
-    counter = 0
-  previousTimestamp = timestamp
-
-updateFrameTime = ->
-  timestamp = Date.now()
-  if counter == 29
-    document.getElementById("frame-time").innerHTML = timestamp - previousTimestamp
+PROFILE_FREQUENCY = 2
+timer = new Two.Timer()
+profiler = Two.Profiler.create("frametime", PROFILE_FREQUENCY)
+sampler = new Two.PeriodicSampler(PROFILE_FREQUENCY)
 
 render = ->
   requestAnimationFrame(render)
@@ -26,9 +15,9 @@ render = ->
       ball.velocity[0] *= -1
       ball.velocity[1] *= -1
 
-  updateFPSCounter()
-  renderer.render(root)
-  updateFrameTime()
+  frameTime = profiler.collect(-> renderer.render(root)).toFixed(3)
+  document.getElementById("frame-time").innerHTML = frameTime
+  document.getElementById("fps").innerHTML = sampler.sample(1000 / timer.mark()).toFixed(2)
 
 canvas = new Two.Canvas(width: 640, height: 480)
 renderer = new Two.SceneRenderer(canvas: canvas)
