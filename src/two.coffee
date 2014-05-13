@@ -6,5 +6,10 @@
 `import Matrix2d from "./matrix2d"`
 `import DeviceMetrics from "./device_metrics"`
 `import { Profiler, Timer, PeriodicSampler } from "./benchmark"`
+`import GameObject from "./game_object"`
 
-`export { Object, Canvas, SceneRenderer, TransformNode, Sprite, Matrix2d, DeviceMetrics, Profiler, Timer, PeriodicSampler }`
+Components = {}
+
+`export { Object, Canvas, SceneRenderer, TransformNode, Sprite, Matrix2d,
+DeviceMetrics, Profiler, Timer, PeriodicSampler, GameObject, Components
+}`

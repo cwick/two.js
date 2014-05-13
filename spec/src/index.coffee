@@ -10,3 +10,6 @@
 `import "./matrix2d_spec"`
 `import "./tree_iterator_spec"`
 `import "./sprite_spec"`
+`import "./game_object_spec"`
+`import "./physics_spec"`
+`import "./vector2d_spec"`
