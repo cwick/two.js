@@ -9,7 +9,7 @@ class Mixin
   constructor: (@properties, @id) ->
 
   detect: (base) ->
-    base?[META_KEY]?[@id]?
+    base[META_KEY]?[@id]?
 
   apply: (base) ->
     return if @detect(base)

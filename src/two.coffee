@@ -7,9 +7,12 @@
 `import DeviceMetrics from "./device_metrics"`
 `import { Profiler, Timer, PeriodicSampler } from "./benchmark"`
 `import GameObject from "./game_object"`
+`import GameWorld from "./game_world"`
+`import PhysicsComponent from "./components/physics"`
 
-Components = {}
+Components =
+  Physics: PhysicsComponent
 
 `export { Object, Canvas, SceneRenderer, TransformNode, Sprite, Matrix2d,
-DeviceMetrics, Profiler, Timer, PeriodicSampler, GameObject, Components
+DeviceMetrics, Profiler, Timer, PeriodicSampler, GameObject, Components, GameWorld
 }`

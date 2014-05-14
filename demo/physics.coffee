@@ -1,22 +1,20 @@
 `module Two from "two"`
 
 PROFILE_FREQUENCY = 2
+BALL_COUNT = 2000
 timer = new Two.Timer()
-profiler = Two.Profiler.create("frametime", PROFILE_FREQUENCY)
+renderProfiler = Two.Profiler.create("render", PROFILE_FREQUENCY)
+physicsProfiler = Two.Profiler.create("physics", PROFILE_FREQUENCY)
 sampler = new Two.PeriodicSampler(PROFILE_FREQUENCY)
 
 render = ->
   requestAnimationFrame(render)
 
-  for ball in balls
-    x = ball.transform.position.x += ball.velocity[0]
-    y = ball.transform.position.y += ball.velocity[1]
-    if x > canvas.width || y > canvas.height || x < 0 || y < 0
-      ball.velocity[0] *= -1
-      ball.velocity[1] *= -1
+  renderTime = renderProfiler.collect(-> renderer.render(root)).toFixed(3)
+  physicsTime = physicsProfiler.collect(-> world.step(1/60)).toFixed(3)
 
-  frameTime = profiler.collect(-> renderer.render(root)).toFixed(3)
-  document.getElementById("frame-time").innerHTML = frameTime
+  document.getElementById("render-time").innerHTML = renderTime
+  document.getElementById("physics-time").innerHTML = physicsTime
   document.getElementById("fps").innerHTML = sampler.sample(1000 / timer.mark()).toFixed(2)
 
 canvas = new Two.Canvas(width: 640, height: 480)
@@ -24,10 +22,10 @@ renderer = new Two.SceneRenderer(canvas: canvas)
 
 root = new Two.TransformNode()
 
-Ball = Two.GameObject.extend Two.Components.Physics
+Ball = Two.GameObject.extend Two.Components.Physics,
   initialize: ->
-    @physics.velocity.x = (Math.random() - .5) * 20
-    @physics.velocity.y = (Math.random() - .5) * 20
+    @physics.velocity.x = (Math.random() - .5) * 100
+    @physics.velocity.y = (Math.random() - .5) * 100
     @transform.position = @getRandomPosition()
     @transform.add @ballSprite.clone()
 
@@ -45,12 +43,14 @@ Ball = Two.GameObject.extend Two.Components.Physics
     ]
 
 
-balls = []
-for x in [1..2000]
+world = new Two.GameWorld()
+world.physics.gravity = 0
+
+for x in [1..BALL_COUNT]
   ball = new Ball()
-  balls.push ball
 
   root.add ball.transform
+  world.add ball
 
 document.body.appendChild(canvas.domElement)
 render()
