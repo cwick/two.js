@@ -1,6 +1,8 @@
 `import Physics from "components/physics"`
 `import Transform from "components/transform"`
 `import TwoObject from "object"`
+`import Vector2d from "vector2d"`
+`import PhysicsWorld from "physics_world"`
 
 describe "Components.Physics", ->
   beforeEach ->
@@ -12,20 +14,16 @@ describe "Components.Physics", ->
   it "has 0 velocity by default", ->
     expect(@obj.physics.velocity).toEqual [0,0]
 
-  it "can set velocity with an array", ->
-    @obj.physics.velocity = [1,2]
-    expect(@obj.physics.velocity).toEqual [1,2]
+  it "velocity is a Vector2d", ->
+    expect(@obj.physics.velocity instanceof Vector2d).toBe true
 
-  it "can set velocity with array indices", ->
-    @obj.physics.velocity[0] = 3
-    @obj.physics.velocity[1] = 4
-    expect(@obj.physics.velocity[0]).toEqual 3
-    expect(@obj.physics.velocity[1]).toEqual 4
+  it "calculates position in a zero-g environment", ->
+    @obj.physics.velocity = [60, 0]
 
-  it "can set velocity with x and y", ->
-    @obj.physics.velocity.x = 6
-    @obj.physics.velocity.y = 7
-    expect(@obj.physics.velocity.x).toEqual 6
-    expect(@obj.physics.velocity.y).toEqual 7
-    expect(@obj.physics.velocity).toEqual [6,7]
+    world = new PhysicsWorld(gravity: 0)
+    world.add @obj
+    world.step 1/60
+
+    expect(@obj.transform.position.x).toBeCloseTo 1
+
 
