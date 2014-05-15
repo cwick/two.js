@@ -8,7 +8,7 @@ class DummyImage extends Image
 
 describe "Sprite", ->
   it "converts a URL into an Image object", ->
-    sprite = new Sprite(image: "http://some_url/", usePlaceholder: false)
+    sprite = new Sprite(image: "http://some_url/")
     expect(sprite.image instanceof Image).toBe true
     expect(sprite.image.src).toEqual "http://some_url/"
 
@@ -36,9 +36,23 @@ describe "Sprite", ->
 
   it "can be cloned", ->
     image = new DummyImage(width: 100, height: 100)
-    sprite = new Sprite(image: image, origin: [3,3], width: 10, height: 20)
+    sprite = new Sprite
+      image: image
+      origin: [3,3]
+      width: 10
+      height: 20
+      crop:
+        x: 2
+        y: 3
+        width: 4
+        height: 5
     clone = sprite.clone()
     expect(clone.image).toBe image
     expect(clone.origin).toEqual [3,3]
     expect(clone.width).toEqual 10
     expect(clone.height).toEqual 20
+    expect(clone.crop).toEqual
+      x: 2
+      y: 3
+      width: 4
+      height: 5

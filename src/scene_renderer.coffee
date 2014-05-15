@@ -47,6 +47,11 @@ SceneRenderer = TwoObject.extend
           image: image
           transform: transform
           origin: node._pixelOrigin
+          crop: node.crop || {
+            x: 0
+            y: 0
+            width: image.width
+            height: image.height }
 
     backend.execute command for command in commands
     return

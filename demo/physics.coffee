@@ -26,16 +26,21 @@ Ball = Two.GameObject.extend Two.Components.Physics,
   initialize: ->
     @physics.velocity.x = (Math.random() - .5) * 100
     @physics.velocity.y = (Math.random() - .5) * 100
-    @physics.shape = new Two.Circle(radius: 20)
+    @physics.shape = new Two.Circle(radius: @ballSprite.width/2)
     @transform.position = @getRandomPosition()
     @transform.add @ballSprite.clone()
 
   ballSprite:
     new Two.Sprite
       image: "http://cdn.bulbagarden.net/upload/2/22/Dream_Moon_Ball_Sprite.png"
-      width: 40
-      height: 40
+      width: 20
+      height: 20
       origin: "center"
+      crop: new Two.Rectangle
+        x: 10
+        y: 10
+        width: 60
+        height: 60
 
   getRandomPosition: ->
     [

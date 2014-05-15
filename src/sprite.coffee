@@ -1,13 +1,11 @@
 `import TwoObject from "./object"`
 `import CanHaveParent from "./can_have_parent"`
 `import Property from "./property"`
-`import DEFAULT_IMAGE from "./default_sprite_image"`
 
 Sprite = TwoObject.extend CanHaveParent,
   initialize: ->
     @origin = [0,0]
-    @image = @_specifiedImage = DEFAULT_IMAGE
-    @usePlaceholder = true
+    @crop = null
 
   origin: Property
     set: (value) ->
@@ -22,30 +20,13 @@ Sprite = TwoObject.extend CanHaveParent,
 
   pixelOrigin: Property readonly: true
 
-  usePlaceholder: Property
-    set: (value) ->
-      @_usePlaceholder = value
-
-      if value && !@_specifiedImage.complete
-        # Temporarily swap out the current image for the default one
-        # while we wait for the original image to load.
-        @_image = DEFAULT_IMAGE
-        previousonload = @_specifiedImage.onload
-        @_specifiedImage.onload = =>
-          @image = @_specifiedImage
-          # Not a typo. We need to call the origin setter
-          # again so pixelOrigin is properly calculated
-          @origin = @origin
-          previousonload?()
-      else
-        @_image = @_specifiedImage
-
   clone: ->
     new Sprite
-      image: @_specifiedImage
+      image: @_image
       origin: @origin.slice(0)
       width: @width
       height: @height
+      crop: @crop?.clone()
 
   image: Property
     set: (value) ->
@@ -55,9 +36,13 @@ Sprite = TwoObject.extend CanHaveParent,
       else
         @_image = value
 
-      @_specifiedImage = @_image
-      @usePlaceholder = @usePlaceholder
-
-
+      unless @_image.complete
+        previousonload = @_image.onload
+        @_image.onload = =>
+          # Not a typo. We need to call the origin setter
+          # again so pixelOrigin is properly calculated
+          @origin = @origin
+          @_image.onload = previousonload
+          @_image.onload?()
 
 `export default Sprite`

@@ -27,11 +27,24 @@ CanvasRenderer = TwoObject.extend
     @_context.fillRect 0,0, @_canvas.frameWidth, @_canvas.frameHeight
 
   drawImage: (options) ->
+    image = options.image
+    crop = options.crop
+    origin = options.origin
+
     @transform.values.set options.transform.values
     @transform.scale @_canvas.devicePixelRatio
 
     @_context.setTransform.apply @_context, @transform.values
-    @_context.drawImage options.image, -options.origin[0], -options.origin[1]
+    @_context.drawImage(
+      image,
+      crop.x, #source X
+      crop.y, #source Y
+      crop.width,  #source width
+      crop.height, #source height
+      -origin[0], #destination X
+      -origin[1], #destination Y
+      image.width, #destination width
+      image.height) #destination height
 
 `export default CanvasRenderer`
 
