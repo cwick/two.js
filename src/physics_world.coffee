@@ -18,6 +18,8 @@ PhysicsWorld = TwoObject.extend
       velocity: object.physics.velocity
 
     body.damping = 0
+    body.addShape new p2.Circle(object.physics.shape.radius)
+
     @_bodyMap[body.id] = object
     @_world.addBody body
 

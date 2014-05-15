@@ -1,7 +1,7 @@
 `module Two from "two"`
 
 PROFILE_FREQUENCY = 2
-BALL_COUNT = 2000
+BALL_COUNT = 15*15
 timer = new Two.Timer()
 renderProfiler = Two.Profiler.create("render", PROFILE_FREQUENCY)
 physicsProfiler = Two.Profiler.create("physics", PROFILE_FREQUENCY)
@@ -26,6 +26,7 @@ Ball = Two.GameObject.extend Two.Components.Physics,
   initialize: ->
     @physics.velocity.x = (Math.random() - .5) * 100
     @physics.velocity.y = (Math.random() - .5) * 100
+    @physics.shape = new Two.Circle(radius: 20)
     @transform.position = @getRandomPosition()
     @transform.add @ballSprite.clone()
 

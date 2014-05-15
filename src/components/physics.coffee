@@ -5,5 +5,6 @@ Physics = Mixin.create
   initialize: ->
     @physics =
       velocity: new Vector2d()
+      shape: null
 
 `export default Physics`
