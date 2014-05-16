@@ -1,6 +1,6 @@
 `import TwoObject from "./object"`
 `import PhysicsWorld from "./physics_world"`
-`import PhysicsComponent from "./components/physics"`
+`import RigidBody from "./components/rigid_body"`
 
 GameWorld = TwoObject.extend
   initialize: ->
@@ -12,6 +12,6 @@ GameWorld = TwoObject.extend
 
   add: (obj) ->
     @objects.push obj
-    @physics.add obj if PhysicsComponent.detect(obj)
+    @physics.add obj if RigidBody.detect(obj)
 
 `export default GameWorld`

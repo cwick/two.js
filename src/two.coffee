@@ -8,15 +8,13 @@
 `import { Profiler, Timer, PeriodicSampler } from "./benchmark"`
 `import GameObject from "./game_object"`
 `import GameWorld from "./game_world"`
-`import PhysicsComponent from "./components/physics"`
-`import Circle from "./circle"`
+`import RigidBody from "./components/rigid_body"`
 `import Rectangle from "./rectangle"`
-`import Plane from "./plane"`
 
 Components =
-  Physics: PhysicsComponent
+  RigidBody: RigidBody
 
 `export { Object, Canvas, SceneRenderer, TransformNode, Sprite, Matrix2d,
 DeviceMetrics, Profiler, Timer, PeriodicSampler, GameObject, Components, GameWorld,
-Circle, Rectangle, Plane
+Rectangle
 }`

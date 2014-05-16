@@ -1,7 +1,8 @@
 `module Two from "two"`
+`module p2 from "lib/p2"`
 
 PROFILE_FREQUENCY = 2
-BALL_COUNT = 15*15
+BALL_COUNT = 15*10
 timer = new Two.Timer()
 renderProfiler = Two.Profiler.create("render", PROFILE_FREQUENCY)
 physicsProfiler = Two.Profiler.create("physics", PROFILE_FREQUENCY)
@@ -22,12 +23,16 @@ renderer = new Two.SceneRenderer(canvas: canvas)
 
 scene = new Two.TransformNode()
 
-Ball = Two.GameObject.extend Two.Components.Physics,
+Ball = Two.GameObject.extend Two.Components.RigidBody,
   initialize: ->
-    @physics.velocity.x = (Math.random() - .5) * 100
-    @physics.velocity.y = (Math.random() - .5) * 100
-    @physics.shape = new Two.Circle(radius: @ballSprite.width/2)
-    @transform.position = @getRandomPosition()
+    @rigidBody.motionState = p2.Body.DYNAMIC
+    @rigidBody.mass = 1
+    @rigidBody.velocity[0] = (Math.random() - .5) * 300
+    @rigidBody.velocity[1] = Math.random() * - 400 + 100
+    @rigidBody.angularVelocity = (Math.random() - .5) * 2*Math.PI
+    @rigidBody.addShape new p2.Circle(@ballSprite.width/2)
+    @rigidBody.position = @getRandomPosition()
+    @rigidBody.updateMassProperties()
     @transform.add @ballSprite.clone()
 
   ballSprite:
@@ -50,7 +55,9 @@ Ball = Two.GameObject.extend Two.Components.Physics,
 
 
 world = new Two.GameWorld()
-world.physics.gravity = 0
+world.physics.p2.gravity = [0, 920]
+world.physics.p2.defaultContactMaterial.restitution = .55
+world.physics.p2.defaultContactMaterial.stiffness = Number.MAX_VALUE
 
 for x in [1..BALL_COUNT]
   ball = new Ball()
@@ -58,20 +65,21 @@ for x in [1..BALL_COUNT]
   scene.add ball.transform
   world.add ball
 
-Boundary = Two.GameObject.extend Two.Components.Physics,
+Boundary = Two.GameObject.extend Two.Components.RigidBody,
   initialize: (options) ->
+    plane = new p2.Plane()
+
     switch options.type
       when "bottom"
-        @transform.position.y = canvas.height
-        @transform.rotation = Math.PI
+        @rigidBody.position[1] = canvas.height
+        @rigidBody.angle = Math.PI
       when "left"
-        @transform.rotation = -Math.PI/2
+        @rigidBody.angle = -Math.PI/2
       when "right"
-        @transform.rotation = Math.PI/2
-        @transform.position.x = canvas.width
+        @rigidBody.angle = Math.PI/2
+        @rigidBody.position[0] = canvas.width
 
-    @physics.shape = new Two.Plane()
-    @physics.type = "static"
+    @rigidBody.addShape(plane)
 
 world.add new Boundary(type: "bottom")
 world.add new Boundary(type: "top")
