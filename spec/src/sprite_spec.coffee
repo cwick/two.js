@@ -46,13 +46,14 @@ describe "Sprite", ->
         y: 3
         width: 4
         height: 5
+        clone: -> @
+
     clone = sprite.clone()
     expect(clone.image).toBe image
     expect(clone.origin).toEqual [3,3]
     expect(clone.width).toEqual 10
     expect(clone.height).toEqual 20
-    expect(clone.crop).toEqual
-      x: 2
-      y: 3
-      width: 4
-      height: 5
+    expect(clone.crop.x).toEqual 2
+    expect(clone.crop.y).toEqual 3
+    expect(clone.crop.width).toEqual 4
+    expect(clone.crop.height).toEqual 5

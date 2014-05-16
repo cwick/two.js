@@ -10,7 +10,7 @@ sampler = new Two.PeriodicSampler(PROFILE_FREQUENCY)
 render = ->
   requestAnimationFrame(render)
 
-  renderTime = renderProfiler.collect(-> renderer.render(root)).toFixed(3)
+  renderTime = renderProfiler.collect(-> renderer.render(scene)).toFixed(3)
   physicsTime = physicsProfiler.collect(-> world.step(1/60)).toFixed(3)
 
   document.getElementById("render-time").innerHTML = renderTime
@@ -20,7 +20,7 @@ render = ->
 canvas = new Two.Canvas(width: 640, height: 480)
 renderer = new Two.SceneRenderer(canvas: canvas)
 
-root = new Two.TransformNode()
+scene = new Two.TransformNode()
 
 Ball = Two.GameObject.extend Two.Components.Physics,
   initialize: ->
@@ -55,8 +55,28 @@ world.physics.gravity = 0
 for x in [1..BALL_COUNT]
   ball = new Ball()
 
-  root.add ball.transform
+  scene.add ball.transform
   world.add ball
+
+Boundary = Two.GameObject.extend Two.Components.Physics,
+  initialize: (options) ->
+    switch options.type
+      when "bottom"
+        @transform.position.y = canvas.height
+        @transform.rotation = Math.PI
+      when "left"
+        @transform.rotation = -Math.PI/2
+      when "right"
+        @transform.rotation = Math.PI/2
+        @transform.position.x = canvas.width
+
+    @physics.shape = new Two.Plane()
+    @physics.type = "static"
+
+world.add new Boundary(type: "bottom")
+world.add new Boundary(type: "top")
+world.add new Boundary(type: "left")
+world.add new Boundary(type: "right")
 
 document.body.appendChild(canvas.domElement)
 render()

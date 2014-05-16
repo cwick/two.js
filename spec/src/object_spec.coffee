@@ -51,6 +51,13 @@ describe "TwoObject", ->
       new TestClass()
       expect(hasInitialized).toBe true
 
+    it "can pass arguments to the initializer", ->
+      TestClass = TwoObject.extend
+        initialize: (options) ->
+          @options = options
+
+      expect(new TestClass(a: 1, b: 2).options).toEqual a: 1, b: 2
+
     it "shares object property values between instances", ->
       proto = notShared: 1, shared: [1,2,3]
       Class1 = TwoObject.extend proto

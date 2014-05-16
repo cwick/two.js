@@ -14,6 +14,9 @@ describe "Components.Physics", ->
   it "has 0 velocity by default", ->
     expect(@obj.physics.velocity).toEqual [0,0]
 
+  it "has 1 mass by default", ->
+    expect(@obj.physics.mass).toEqual 1
+
   it "velocity is a Vector2d", ->
     expect(@obj.physics.velocity instanceof Vector2d).toBe true
 

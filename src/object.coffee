@@ -8,7 +8,7 @@ copyOwnProperties = (source, destination) ->
 initializeObject = (properties, object, mixins) ->
   mixin.properties.initialize.apply object for mixin in mixins when mixin.properties.initialize?
   PropertyMarker.setupProperties properties, object
-  object.initialize?()
+  object.initialize?(properties)
   copyOwnProperties(properties, object)
   object
 

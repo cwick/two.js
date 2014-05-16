@@ -11,11 +11,12 @@
 `import PhysicsComponent from "./components/physics"`
 `import Circle from "./circle"`
 `import Rectangle from "./rectangle"`
+`import Plane from "./plane"`
 
 Components =
   Physics: PhysicsComponent
 
 `export { Object, Canvas, SceneRenderer, TransformNode, Sprite, Matrix2d,
 DeviceMetrics, Profiler, Timer, PeriodicSampler, GameObject, Components, GameWorld,
-Circle, Rectangle
+Circle, Rectangle, Plane
 }`
