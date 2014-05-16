@@ -37,15 +37,15 @@ Ball = Two.GameObject.extend Two.Components.RigidBody,
 
   ballSprite:
     new Two.Sprite
-      image: "http://cdn.bulbagarden.net/upload/2/22/Dream_Moon_Ball_Sprite.png"
+      image: "https://upload.wikimedia.org/wikipedia/en/thumb/e/ec/Soccer_ball.svg/480px-Soccer_ball.svg.png"
       width: 20
       height: 20
       origin: "center"
       crop: new Two.Rectangle
-        x: 10
-        y: 10
-        width: 60
-        height: 60
+        x: 5
+        y: 5
+        width: 470
+        height: 470
 
   getRandomPosition: ->
     [
