@@ -4,8 +4,6 @@
 `import Matrix2d from "./matrix2d"`
 
 CanvasRenderer = TwoObject.extend
-  transform: new Matrix2d()
-
   canvas: Property
     set: (value) ->
       @_canvas = value
@@ -26,16 +24,26 @@ CanvasRenderer = TwoObject.extend
     @_context.fillStyle = options.color.toCSS()
     @_context.fillRect 0,0, @_canvas.frameWidth, @_canvas.frameHeight
 
+  setTransform: (transform) ->
+    values = transform.values
+    devicePixelRatio = @_canvas._devicePixelRatio
+
+    # Upscale according to devicePixelRatio and flip the Y axis
+    @_context.setTransform(
+      devicePixelRatio * values[0],
+      -devicePixelRatio * values[1],
+      -devicePixelRatio * values[2],
+      devicePixelRatio * values[3],
+      devicePixelRatio * values[4],
+      devicePixelRatio * (@_canvas._height - values[5]))
+
   drawImage: (options) ->
     image = options.image
     crop = options.crop
     origin = options.origin
 
-    @transform.reset()
-    @transform.scale @_canvas._devicePixelRatio
-    @transform.multiply options.transform
+    @setTransform options.transform
 
-    @_context.setTransform.apply @_context, @transform.values
     @_context.drawImage(
       image,
       crop.x, #source X

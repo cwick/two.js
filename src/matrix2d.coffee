@@ -24,9 +24,16 @@ class Matrix2d
     gl.mat2d.translate values, values, [x,y]
     @
 
+  ###*
+  # Rotate this matrix clockwise by the given angle.
+  #
+  # @method rotate
+  # @param {Number} radians the angle, measured in radians
+  # @return this matrix
+  ###
   rotate: (radians) ->
     values = @values
-    gl.mat2d.rotate values, values, radians
+    gl.mat2d.rotate values, values, -radians
     @
 
   scale: (x, y=x) ->

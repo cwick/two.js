@@ -17,7 +17,7 @@ testImage.add new Two.Sprite
   image: "https://upload.wikimedia.org/wikipedia/en/7/7e/Person-tree.jpg"
   anchorPoint: [0, 1]
 testImage.scale = 0.5
-testImage.position = [20, 20]
+testImage.position = [20, lowresCanvas.height - 20]
 
 document.body.appendChild(lowresCanvas.domElement)
 document.body.appendChild(highresCanvas.domElement)

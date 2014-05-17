@@ -25,8 +25,8 @@ worldTransform.add new Two.Sprite
   image: "http://img.talkandroid.com/uploads/2012/08/World-300x305.jpg"
   anchorPoint: [0, 1]
 
-helloTransform.position = [-305, -150]
-worldTransform.position = [0, -150]
+helloTransform.position = [-305, 150]
+worldTransform.position = [0, 150]
 
 root.add wobble
 
