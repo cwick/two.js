@@ -4,12 +4,12 @@ render = ->
   requestAnimationFrame(render)
   helloWorldTransform.rotation += 0.008
   wobble.position.x = Math.sin(Date.now() / 500) * 100
-  renderer.render(root)
+  renderer.render(scene)
 
 canvas = new Two.Canvas(width: 640, height: 480)
 renderer = new Two.SceneRenderer(canvas: canvas)
 
-root = new Two.TransformNode()
+scene = new Two.TransformNode()
 wobble = new Two.TransformNode()
 helloWorldTransform = new Two.TransformNode()
 worldTransform = new Two.TransformNode()
@@ -28,7 +28,7 @@ worldTransform.add new Two.Sprite
 helloTransform.position = [-305, 150]
 worldTransform.position = [0, 150]
 
-root.add wobble
+scene.add wobble
 
 wobble.add helloWorldTransform
 helloWorldTransform.add helloTransform

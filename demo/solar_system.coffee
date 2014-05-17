@@ -7,7 +7,7 @@ window.setSimulationSpeed = ->
 
 render = ->
   requestAnimationFrame(render)
-  renderer.render(root)
+  renderer.render(scene)
 
   mercuryOrbitSpeed = simulationSpeed / MERCURY_PERIOD
   earthOrbitSpeed = simulationSpeed / EARTH_PERIOD
@@ -29,9 +29,9 @@ render = ->
 
 canvas = new Two.Canvas(width: 800, height: 800)
 renderer = new Two.SceneRenderer(canvas: canvas)
-root = new Two.TransformNode()
+scene = new Two.TransformNode()
 
-root.position = [400, 400]
+scene.position = [400, 400]
 
 EARTH_PERIOD = 365
 EARTH_DAY_LENGTH = 1
@@ -44,8 +44,8 @@ MARS_DAY_LENGTH = 1
 
 sun = new Two.Sprite
   image: "http://music.ckut.ca/wp-content/uploads/2011/09/sun-solar-flare.jpg"
-  width: 100
-  height: 100
+  width: 200
+  height: 200
 
 mercury = new Two.Sprite
   image: "http://tallbloke.files.wordpress.com/2012/02/mercury-300x300.jpg"
@@ -105,7 +105,7 @@ mercuryTransform.add mercury
 venusTransform.add venus
 marsTransform.add mars
 
-root.add sunTransform
+scene.add sunTransform
 sunTransform.add sun
 sunTransform.add earthOrbit
 sunTransform.add mercuryOrbit
