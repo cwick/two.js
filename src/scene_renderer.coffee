@@ -17,7 +17,6 @@ SceneRenderer = TwoObject.extend
 
   render: (scene) ->
     commands = []
-    devicePixelRatio = @_canvas.devicePixelRatio
     backend = @_backend
     commands.push
       name: "clear"
@@ -28,12 +27,6 @@ SceneRenderer = TwoObject.extend
       if node instanceof Sprite
         image = node._image
         transform = node._parent.updateWorldMatrix().clone()
-
-        # TODO: put device mapping somewhere else
-        # transform.values[5] = 480 - transform.values[5]
-        # transform.values[5] -= image.height
-        transform.values[4] *= devicePixelRatio
-        transform.values[5] *= devicePixelRatio
 
         scaleX = scaleY = 1
 

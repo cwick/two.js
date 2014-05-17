@@ -31,8 +31,9 @@ CanvasRenderer = TwoObject.extend
     crop = options.crop
     origin = options.origin
 
-    @transform.values.set options.transform.values
-    @transform.scale @_canvas.devicePixelRatio
+    @transform.reset()
+    @transform.scale @_canvas._devicePixelRatio
+    @transform.multiply options.transform
 
     @_context.setTransform.apply @_context, @transform.values
     @_context.drawImage(
