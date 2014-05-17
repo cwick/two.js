@@ -2,9 +2,9 @@
 `import Property from "./property"`
 `import CanvasRenderer from "./canvas_renderer"`
 `import Color from "./color"`
-`import Matrix2d from "./matrix2d"`
 `import { DepthFirstTreeIterator } from "./tree_iterators"`
-`import Sprite from "./sprite"`
+`import RenderNode from "./render_node"`
+`import GroupNode from "./group"`
 
 SceneRenderer = TwoObject.extend
   initialize: ->
@@ -23,30 +23,10 @@ SceneRenderer = TwoObject.extend
       color: new Color(r:10, g: 30, b: 180)
 
     new DepthFirstTreeIterator(scene).execute (node) =>
-      node.updateMatrix?()
-      if node instanceof Sprite
-        image = node._image
-        transform = node._parent.updateWorldMatrix().clone()
-
-        scaleX = scaleY = 1
-
-        if node.width && image.width
-          scaleX = node.width / image.width
-        if node.height && image.height
-          scaleY = node.height / image.height
-
-        transform.scale scaleX, scaleY
-
-        commands.push
-          name: "drawImage"
-          image: image
-          transform: transform
-          origin: node.pixelOrigin
-          crop: node.crop || {
-            x: 0
-            y: 0
-            width: image.width
-            height: image.height }
+      if node instanceof GroupNode
+        node.updateMatrix()
+      else if node instanceof RenderNode
+        node.pushRenderCommands commands, node._parent.updateWorldMatrix()
 
     backend.execute command for command in commands
     return

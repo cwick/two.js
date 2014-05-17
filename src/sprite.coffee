@@ -1,8 +1,7 @@
 `import TwoObject from "./object"`
-`import CanHaveParent from "./can_have_parent"`
 `import Property from "./property"`
 
-Sprite = TwoObject.extend CanHaveParent,
+Sprite = TwoObject.extend
   initialize: ->
     @anchorPoint = [0.5, 0.5]
     @crop = null
@@ -43,5 +42,28 @@ Sprite = TwoObject.extend CanHaveParent,
           @origin = @origin
           @_image.onload = previousonload
           @_image.onload?()
+
+  pushRenderCommands: (commands, transform) ->
+    image = @_image
+    scaleX = scaleY = 1
+    transform = transform.clone()
+
+    if @width && image.width
+      scaleX = @width / image.width
+    if @height && image.height
+      scaleY = @height / image.height
+
+    transform.scale scaleX, scaleY
+
+    commands.push
+      name: "drawImage"
+      image: image
+      transform: transform
+      origin: @pixelOrigin
+      crop: @crop || {
+        x: 0
+        y: 0
+        width: image.width
+        height: image.height }
 
 `export default Sprite`

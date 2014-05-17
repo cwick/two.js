@@ -2,22 +2,24 @@
 `import CanHaveParent from "can_have_parent"`
 `import TwoObject from "object"`
 
-Node = null
+GroupNode = null
+LeafNode = null
 
 describe "CanGroup", ->
   beforeEach ->
-    Node = TwoObject.extend CanGroup
+    GroupNode = TwoObject.extend CanGroup, CanHaveParent
+    LeafNode = TwoObject.extend CanHaveParent
 
   it "starts with no children", ->
-    node = new Node()
+    node = new GroupNode()
     expect(node.children.length).toEqual 0
 
   describe "when adding children", ->
     parent = child = null
 
     beforeEach ->
-      parent = new Node()
-      child = new Node()
+      parent = new GroupNode()
+      child = new GroupNode()
 
     it "updates its 'children' collection", ->
       parent.add child
@@ -31,7 +33,6 @@ describe "CanGroup", ->
       expect(parent.children[0]).toBe child
 
     it "sets the 'parent' property of its children", ->
-      CanHaveParent.apply child
       parent.add child
       expect(child.parent).toBe parent
 
@@ -39,10 +40,8 @@ describe "CanGroup", ->
     parent = child = null
 
     beforeEach ->
-      parent = new Node()
-      child = new Node()
-
-      CanHaveParent.apply child
+      parent = new GroupNode()
+      child = new LeafNode()
 
       parent.add child
       parent.remove child
@@ -53,15 +52,13 @@ describe "CanGroup", ->
     it "clears the 'parent' property of its former children", ->
       expect(child.parent).toBeNull()
 
-  describe "when adding a child to multiple parents", ->
+  describe "when adding a group to multiple parents", ->
     parent1 = parent2 = child = null
 
     beforeEach ->
-      child = new Node()
-      parent1 = new Node()
-      parent2 = new Node()
-
-      CanHaveParent.apply child
+      child = new GroupNode()
+      parent1 = new GroupNode()
+      parent2 = new GroupNode()
 
       parent1.add child
       parent2.add child
@@ -70,3 +67,14 @@ describe "CanGroup", ->
       expect(child.parent).toBe parent2
       expect(parent1.children).toEqual []
       expect(parent2.children).toEqual [child]
+
+  describe "when adding a leaf to multiple parents", ->
+    parent1 = parent2 = child = null
+
+    beforeEach ->
+      child = new LeafNode()
+      parent1 = new GroupNode()
+      parent2 = new GroupNode()
+
+      parent1.add child
+      parent2.add child

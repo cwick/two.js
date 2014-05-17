@@ -18,10 +18,12 @@ helloTransform = new Two.TransformNode()
 helloWorldTransform.position = [320, 240]
 helloWorldTransform.scale = .5
 
-helloTransform.add new Two.Sprite
+helloTransform.add new Two.RenderNode()
+helloTransform.children[0].add new Two.Sprite
   image: "https://upload.wikimedia.org/wikipedia/en/6/65/Hello_logo_sm.gif"
   anchorPoint: [0, 1]
-worldTransform.add new Two.Sprite
+worldTransform.add new Two.RenderNode()
+worldTransform.children[0].add new Two.Sprite
   image: "http://img.talkandroid.com/uploads/2012/08/World-300x305.jpg"
   anchorPoint: [0, 1]
 
