@@ -1,7 +1,6 @@
 `import RigidBody from "components/rigid_body"`
 `import Transform from "components/transform"`
 `import TwoObject from "object"`
-`import Vector2d from "vector2d"`
 `import PhysicsWorld from "physics_world"`
 `module p2 from "lib/p2"`
 
