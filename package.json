@@ -1,8 +1,7 @@
 {
   "devDependencies": {
-    "broccoli": "^0.9.0",
+    "broccoli": "^0.12.0",
     "broccoli-coffee": "^0.1.0",
-    "broccoli-es6-concatenator": "^0.1.4",
     "broccoli-merge-trees": "^0.1.3",
     "broccoli-es6-module-filter": "^0.1.9",
     "broccoli-static-compiler": "^0.1.4"
