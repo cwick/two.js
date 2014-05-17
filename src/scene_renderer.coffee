@@ -30,6 +30,8 @@ SceneRenderer = TwoObject.extend
         transform = node._parent.updateWorldMatrix().clone()
 
         # TODO: put device mapping somewhere else
+        # transform.values[5] = 480 - transform.values[5]
+        # transform.values[5] -= image.height
         transform.values[4] *= devicePixelRatio
         transform.values[5] *= devicePixelRatio
 
@@ -46,7 +48,7 @@ SceneRenderer = TwoObject.extend
           name: "drawImage"
           image: image
           transform: transform
-          origin: node._pixelOrigin
+          origin: node.pixelOrigin
           crop: node.crop || {
             x: 0
             y: 0

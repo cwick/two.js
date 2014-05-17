@@ -13,7 +13,9 @@ lowresRenderer = new Two.SceneRenderer(canvas: lowresCanvas)
 highresRenderer = new Two.SceneRenderer(canvas: highresCanvas)
 
 testImage = new Two.TransformNode()
-testImage.add new Two.Sprite(image: "https://upload.wikimedia.org/wikipedia/en/7/7e/Person-tree.jpg")
+testImage.add new Two.Sprite
+  image: "https://upload.wikimedia.org/wikipedia/en/7/7e/Person-tree.jpg"
+  anchorPoint: [0, 1]
 testImage.scale = 0.5
 testImage.position = [20, 20]
 

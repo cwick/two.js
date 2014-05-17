@@ -46,37 +46,31 @@ sun = new Two.Sprite
   image: "http://music.ckut.ca/wp-content/uploads/2011/09/sun-solar-flare.jpg"
   width: 100
   height: 100
-  origin: "center"
 
 mercury = new Two.Sprite
   image: "http://tallbloke.files.wordpress.com/2012/02/mercury-300x300.jpg"
   width: 20
   height: 20
-  origin: "center"
 
 venus = new Two.Sprite
   image: "https://d1jqu7g1y74ds1.cloudfront.net/wp-content/uploads/2009/08/venusmagellan.jpg"
   width: 60
   height: 60
-  origin: "center"
 
 earth = new Two.Sprite
   image: "http://img3.wikia.nocookie.net/__cb20100221225734/uncyclopedia/images/d/d0/Earth.PNG"
   width: 50
   height: 50
-  origin: "center"
 
 moon = new Two.Sprite
   image: "http://www.howitworksdaily.com/wp-content/uploads/2012/12/Moon.jpg"
   width: 20
   height: 20
-  origin: "center"
 
 mars = new Two.Sprite
   image: "http://schoolofartgalleries.dsc.rmit.edu.au/PSSR/exhibitions/2008/the_mars_project/mars0_lth.jpg"
   width: 30
   height: 30
-  origin: "center"
 
 earthTransform = new Two.TransformNode()
 sunTransform = new Two.TransformNode()

@@ -37,7 +37,6 @@ class Ball
     image: "http://cdn.bulbagarden.net/upload/2/22/Dream_Moon_Ball_Sprite.png"
     width: 40
     height: 40
-    origin: "center"
 
   getRandomPosition: ->
     [

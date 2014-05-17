@@ -40,7 +40,6 @@ Ball = Two.GameObject.extend Two.Components.RigidBody,
       image: "https://upload.wikimedia.org/wikipedia/en/thumb/e/ec/Soccer_ball.svg/480px-Soccer_ball.svg.png"
       width: 20
       height: 20
-      origin: "center"
       crop: new Two.Rectangle
         x: 5
         y: 5

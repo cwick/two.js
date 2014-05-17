@@ -4,29 +4,28 @@
 
 Sprite = TwoObject.extend CanHaveParent,
   initialize: ->
-    @origin = [0,0]
+    @anchorPoint = [0.5, 0.5]
     @crop = null
-
-  origin: Property
-    set: (value) ->
-      if value == "center"
-        @_pixelOrigin = [ @image.width / 2, @image.height / 2 ] if @image?.complete
-      else if value instanceof Array
-        @_pixelOrigin = value
-      else
-        throw new Error("Invalid value \"#{value}\" for origin")
-
-      @_origin = value
-
-  pixelOrigin: Property readonly: true
 
   clone: ->
     new Sprite
       image: @_image
-      origin: @origin.slice(0)
+      anchorPoint: @anchorPoint.slice(0)
       width: @width
       height: @height
       crop: @crop?.clone()
+
+  pixelOrigin: Property
+    get: ->
+      image = @image
+      return [0,0] unless image?.complete?
+
+      w = image.width
+      h = image.height
+
+      [ @anchorPoint[0] * w,
+        h - @anchorPoint[1] * h
+      ]
 
   image: Property
     set: (value) ->
