@@ -10,7 +10,6 @@ Game = Two.Game.extend
     @renderer.backend.imageSmoothingEnabled = false
 
     @renderer.backgroundColor = "#4488cc"
-    @camera.anchorPoint = [0,0]
     @camera.position.y = -32
 
     # Create some ground for the player to walk on
@@ -35,6 +34,9 @@ game.registerEntity "Player", Two.GameObject.extend Two.Components.ArcadePhysics
       anchorPoint: [0.5, 0]
 
     @transform.add new Two.RenderNode(components: [playerSprite])
+
+    # Make player collide with world boundaries so he doesn't leave the stage
+    @physics.collideWorldBounds = true
 
   spawn: ->
     @physics.position.x = @game.canvas.width/2

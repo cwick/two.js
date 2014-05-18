@@ -7,6 +7,7 @@
 `import GameWorld from "./game_world"`
 `import Keyboard from "./keyboard"`
 `import GameObject from "./game_object"`
+`import Rectangle from "./rectangle"`
 
 Game = TwoObject.extend
   initialize: ->
@@ -16,7 +17,7 @@ Game = TwoObject.extend
     @scene = new TransformNode()
     @world = new GameWorld()
     @input = { keyboard: new Keyboard() }
-    @_entities = {}
+    @_entityClasses = {}
 
   canvas: Property
     set: (value) ->
@@ -25,6 +26,7 @@ Game = TwoObject.extend
 
   start: ->
     @configure()
+    @_initializeWorld()
     @_initializeCanvas()
     @_initializeCamera()
     @_initializeInput()
@@ -43,7 +45,7 @@ Game = TwoObject.extend
     entity
 
   registerEntity: (name, Entity) ->
-    @_entities[name] = Entity
+    @_entityClasses[name] = Entity
 
   _render: ->
     requestAnimationFrame(@_render.bind @)
@@ -61,11 +63,19 @@ Game = TwoObject.extend
     @input.keyboard.start()
 
   _initializeEntity: (type) ->
-    Entity = @_entities[type]
+    Entity = @_entityClasses[type]
     entity = Object.create Entity.prototype
     entity.game = @
 
     Entity.apply entity
     entity
+
+  _initializeWorld: ->
+    unless @world.bounds?
+      @world.bounds = new Rectangle
+        x: 0
+        y: 0
+        width: @canvas.width
+        height: @canvas.height
 
 `export default Game`

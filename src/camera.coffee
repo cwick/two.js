@@ -4,7 +4,7 @@ Camera = TransformNode.extend
   initialize: ->
     @width = null
     @height = null
-    @anchorPoint = [0.5, 0.5]
+    @anchorPoint = [0, 0]
 
   updateMatrix: ->
     @_super(TransformNode, "updateMatrix")()

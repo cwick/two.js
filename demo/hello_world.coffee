@@ -9,6 +9,7 @@ Game = Two.Game.extend
     wobble.position.x = Math.sin(Date.now() / 500) * 100
 
 game = new Game()
+game.camera.anchorPoint = [0.5, 0.5]
 
 wobble = new Two.TransformNode()
 helloWorldTransform = new Two.TransformNode()

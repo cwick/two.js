@@ -30,7 +30,7 @@ render = ->
 canvas = new Two.Canvas(width: 800, height: 800)
 renderer = new Two.SceneRenderer(canvas: canvas)
 scene = new Two.TransformNode()
-camera = new Two.Camera(width: canvas.width, height: canvas.height)
+camera = new Two.Camera(width: canvas.width, height: canvas.height, anchorPoint: [0.5, 0.5])
 
 EARTH_PERIOD = 365
 EARTH_DAY_LENGTH = 1

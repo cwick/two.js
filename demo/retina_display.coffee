@@ -11,7 +11,7 @@ highresCanvas = new Two.Canvas(width: 440, height: 300, devicePixelRatio: 2)
 
 lowresRenderer = new Two.SceneRenderer(canvas: lowresCanvas, backgroundColor: "grey")
 highresRenderer = new Two.SceneRenderer(canvas: highresCanvas, backgroundColor: "grey")
-camera = new Two.Camera(anchorPoint: [0,0], width: lowresCanvas.width, height: lowresCanvas.height)
+camera = new Two.Camera(width: lowresCanvas.width, height: lowresCanvas.height)
 
 testImage = new Two.TransformNode()
 testImage.add new Two.RenderNode()

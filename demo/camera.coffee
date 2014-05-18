@@ -12,7 +12,7 @@ canvas = new Two.Canvas(width: 640, height: 480)
 renderer = new Two.SceneRenderer(canvas: canvas)
 renderer.backend.imageSmoothingEnabled = false
 
-camera = new Two.Camera(position: [0, 100], width: canvas.width, height: canvas.height)
+camera = new Two.Camera(anchorPoint: [0.5, 0.5], position: [0, 100], width: canvas.width, height: canvas.height)
 scene = new Two.TransformNode()
 ground = new Two.TransformNode()
 snail = new Two.TransformNode()
