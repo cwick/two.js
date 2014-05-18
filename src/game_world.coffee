@@ -1,19 +1,26 @@
 `import TwoObject from "./object"`
-`import PhysicsWorld from "./physics_world"`
+`import P2PhysicsWorld from "./p2_physics_world"`
 `import P2Physics from "./components/p2_physics"`
+`import ArcadePhysicsWorld from "./arcade_physics_world"`
+`import ArcadePhysics from "./components/arcade_physics"`
 
 GameWorld = TwoObject.extend
   initialize: ->
     @objects = []
-    @physics = new PhysicsWorld()
+    @physics =
+      p2: new P2PhysicsWorld()
+      arcade: new ArcadePhysicsWorld()
 
   step: (increment) ->
     obj.update?() for obj in @objects
-    @physics.step increment
-
+    world.step increment for k, world of @physics
 
   add: (obj) ->
     @objects.push obj
-    @physics.add obj if P2Physics.detect(obj)
+
+    if P2Physics.detect(obj)
+      @physics.p2.add obj
+    else if ArcadePhysics.detect(obj)
+      @physics.arcade.add obj
 
 `export default GameWorld`

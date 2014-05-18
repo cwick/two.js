@@ -1,6 +1,5 @@
 # Inspired by http://gamemechanicexplorer.com/
 `module Two from "two"`
-`module p2 from "lib/p2"`
 
 MAX_SPEED = 500 # pixels / second
 
@@ -29,11 +28,8 @@ Game = Two.Game.extend
 game = new Game()
 
 # Create the player entity
-game.registerEntity "Player", Two.GameObject.extend Two.Components.P2Physics,
+game.registerEntity "Player", Two.GameObject.extend Two.Components.ArcadePhysics,
   initialize: ->
-    @physics.motionState = p2.Body.KINEMATIC
-    @physics.addShape new p2.Rectangle(32, 32)
-
     playerSprite = new Two.Sprite
       image: "/demo/assets/player.png"
       anchorPoint: [0.5, 0]
@@ -41,15 +37,15 @@ game.registerEntity "Player", Two.GameObject.extend Two.Components.P2Physics,
     @transform.add new Two.RenderNode(components: [playerSprite])
 
   spawn: ->
-    @transform.position.x = @game.canvas.width/2
+    @physics.position.x = @game.canvas.width/2
 
   update: ->
     if @game.input.keyboard.isKeyDown Two.Keys.LEFT
-      @physics.velocity = [-MAX_SPEED, 0]
+      @physics.velocity.x = -MAX_SPEED
     else if @game.input.keyboard.isKeyDown Two.Keys.RIGHT
-      @physics.velocity = [MAX_SPEED, 0]
+      @physics.velocity.x = MAX_SPEED
     else
-      @physics.velocity = [0, 0]
+      @physics.velocity.x = 0
 
 
 game.start()

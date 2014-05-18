@@ -54,9 +54,9 @@ Ball = Two.GameObject.extend Two.Components.P2Physics,
 
 
 world = new Two.GameWorld()
-world.physics.p2.gravity = [0, -920]
-world.physics.p2.defaultContactMaterial.restitution = .55
-world.physics.p2.defaultContactMaterial.stiffness = Number.MAX_VALUE
+world.physics.p2.world.gravity = [0, -920]
+world.physics.p2.world.defaultContactMaterial.restitution = .55
+world.physics.p2.world.defaultContactMaterial.stiffness = Number.MAX_VALUE
 
 for x in [1..BALL_COUNT]
   ball = new Ball()

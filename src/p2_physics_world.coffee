@@ -2,26 +2,27 @@
 `import Property from "./property"`
 `module p2 from "../lib/p2"`
 
-PhysicsWorld = TwoObject.extend
+P2PhysicsWorld = TwoObject.extend
   initialize: ->
-    @p2 = new p2.World()
+    @world = new p2.World()
     @_bodyMap = {}
 
   add: (object) ->
     body = object.physics
     @_bodyMap[body.id] = object
-    @p2.addBody body
+    @world.addBody body
 
   step: (increment) ->
-    @p2.step increment
-    @_updateObjectTransforms()
+    if @world.bodies.length > 0
+      @world.step increment
+      @_updateObjectTransforms()
 
   _updateObjectTransforms: ->
-    for body in @p2.bodies
+    for body in @world.bodies
       object = @_bodyMap[body.id]
       transform = object.transform
       transform.position[0] = body.position[0]
       transform.position[1] = body.position[1]
       transform.rotation = body.angle
 
-`export default PhysicsWorld`
+`export default P2PhysicsWorld`
