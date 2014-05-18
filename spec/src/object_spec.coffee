@@ -58,6 +58,21 @@ describe "TwoObject", ->
 
       expect(new TestClass(a: 1, b: 2).options).toEqual a: 1, b: 2
 
+    it "the default initializer calls the parent initializer", ->
+      Base = TwoObject.extend
+        initialize: ->
+          @baseWasCalled = true
+
+      NoInitializer = Base.extend()
+
+      MoreDerived = NoInitializer.extend
+        initialize: ->
+          @moreDerivedWasCalled = true
+
+      moreDerived = new MoreDerived()
+      expect(moreDerived.moreDerivedWasCalled).toBe true
+      expect(moreDerived.baseWasCalled).toBe true
+
     it "shares object property values between instances", ->
       proto = notShared: 1, shared: [1,2,3]
       Class1 = TwoObject.extend proto

@@ -1,14 +1,18 @@
 `import Mixin from "./mixin"`
 `import { PropertyMarker } from "./property"`
 
+INITIALIZE_FUNCTION = "initialize"
+
 copyOwnProperties = (source, destination) ->
   destination[k] = v for own k,v of source when !(v instanceof PropertyMarker)
   destination
 
 initializeObject = (properties, object, mixins) ->
-  mixin.properties.initialize.apply object for mixin in mixins when mixin.properties.initialize?
+  for mixin in mixins when mixin.properties[INITIALIZE_FUNCTION]?
+    mixin.properties[INITIALIZE_FUNCTION].apply object
+
   PropertyMarker.setupProperties properties, object
-  object.initialize?(properties)
+  object[INITIALIZE_FUNCTION]?(properties)
   copyOwnProperties(properties, object)
   object
 
@@ -27,22 +31,30 @@ extend = (ParentClass) ->
     copyOwnProperties(ParentClass, Class)
 
     Class.prototype = Object.create(ParentClass.prototype)
-    setupClass(Class, properties, mixins)
+    setupClass(Class, ParentClass, properties, mixins)
 
     Class.__super__ = ParentClass.prototype
     Class.__mixins__ = allMixins
     Class
 
-setupClass = (Constructor, properties, mixins) ->
-  Constructor.prototype.constructor = Constructor
-  Constructor.create = create(Constructor)
-  Constructor.extend = extend(Constructor)
-  Constructor.toString = -> "Class"
+setupClass = (Class, ParentClass, properties, mixins) ->
+  Class.prototype.constructor = Class
+  Class.create = create(Class)
+  Class.extend = extend(Class)
+  Class.toString = -> "TwoObject"
 
-  mixin.apply Constructor.prototype for mixin in mixins
-  PropertyMarker.setupProperties properties, Constructor.prototype
-  copyOwnProperties(properties, Constructor.prototype)
-  Constructor.prototype._super = superFunction
+  mixin.apply Class.prototype for mixin in mixins
+  PropertyMarker.setupProperties properties, Class.prototype
+  copyOwnProperties(properties, Class.prototype)
+  Class.prototype._super = superFunction
+
+  if Class.prototype[INITIALIZE_FUNCTION]?
+    Class.prototype[INITIALIZE_FUNCTION] = wrapInitializer(Class.prototype[INITIALIZE_FUNCTION], ParentClass)
+
+wrapInitializer = (initializer, ParentClass) ->
+  ->
+    ParentClass.prototype[INITIALIZE_FUNCTION]?.apply @, arguments
+    initializer.apply @, arguments
 
 superFunction = (Parent, property) ->
   parentProperty = Parent.prototype[property]

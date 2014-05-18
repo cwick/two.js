@@ -5,7 +5,6 @@
 
 TransformNode = GroupNode.extend
   initialize: ->
-    @_super(GroupNode, "initialize")()
     @position = [0,0]
     @rotation = 0
     @scale = [1,1]
