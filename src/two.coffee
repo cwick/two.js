@@ -13,11 +13,12 @@
 `import Sprite from "./sprite"`
 `import TransformNode from "./transform"`
 `import { Profiler, Timer, PeriodicSampler } from "./benchmark"`
+`import Keys from "./keys"`
 
 Components =
   RigidBody: RigidBody
 
 `export { Object, Canvas, SceneRenderer, TransformNode, RenderNode, Sprite, Matrix2d,
 DeviceMetrics, Profiler, Timer, PeriodicSampler, GameObject, Components, GameWorld,
-Rectangle, Camera, Game
+Rectangle, Camera, Game, Keys
 }`

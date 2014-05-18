@@ -5,6 +5,7 @@
 `import Camera from "./camera"`
 `import TransformNode from "./transform"`
 `import GameWorld from "./game_world"`
+`import Keyboard from "./keyboard"`
 
 Game = TwoObject.extend
   initialize: ->
@@ -13,6 +14,7 @@ Game = TwoObject.extend
     @camera = new Camera()
     @scene = new TransformNode()
     @world = new GameWorld()
+    @input = { keyboard: new Keyboard() }
 
   canvas: Property
     set: (value) ->
@@ -23,6 +25,7 @@ Game = TwoObject.extend
     @setup()
     @_initializeCanvas()
     @_initializeCamera()
+    @_initializeInput()
     @_render()
 
   # Implement in derived classes
@@ -40,5 +43,8 @@ Game = TwoObject.extend
   _initializeCamera: ->
     @camera.width = @canvas.width unless @camera.width?
     @camera.height = @canvas.height unless @camera.height?
+
+  _initializeInput: ->
+    @input.keyboard.start()
 
 `export default Game`

@@ -1,6 +1,8 @@
 # Inspired by http://gamemechanicexplorer.com/
 `module Two from "two"`
 
+MAX_SPEED = 500 # pixels / second
+
 Game = Two.Game.extend
   setup: ->
     @canvas.width = 848
@@ -12,11 +14,11 @@ Game = Two.Game.extend
     @camera.position.y = -32
 
     # Create a player sprite
-    player = @scene.add new Two.TransformNode(position: [@canvas.width/2,0])
+    @player = @scene.add new Two.TransformNode(position: [@canvas.width/2,0])
     playerSprite = new Two.Sprite
       image: "/demo/assets/player.png"
       anchorPoint: [0.5, 0]
-    player.add(new Two.RenderNode(components: [playerSprite]))
+    @player.add(new Two.RenderNode(components: [playerSprite]))
 
     # Create some ground for the player to walk on
     ground = @scene.add new Two.TransformNode()
@@ -27,5 +29,11 @@ Game = Two.Game.extend
         groundBlock = new Two.TransformNode(position: [x, -32])
         groundBlock.add new Two.RenderNode(components: [groundSprite])
         ground.add groundBlock
+
+  update: ->
+    if @input.keyboard.isKeyDown Two.Keys.LEFT
+      @player.position.x -= MAX_SPEED/60
+    else if @input.keyboard.isKeyDown Two.Keys.RIGHT
+      @player.position.x += MAX_SPEED/60
 
 new Game().start()
