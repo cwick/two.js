@@ -1,6 +1,6 @@
 `import TwoObject from "./object"`
 `import PhysicsWorld from "./physics_world"`
-`import RigidBody from "./components/rigid_body"`
+`import P2Physics from "./components/p2_physics"`
 
 GameWorld = TwoObject.extend
   initialize: ->
@@ -14,6 +14,6 @@ GameWorld = TwoObject.extend
 
   add: (obj) ->
     @objects.push obj
-    @physics.add obj if RigidBody.detect(obj)
+    @physics.add obj if P2Physics.detect(obj)
 
 `export default GameWorld`

@@ -8,7 +8,7 @@ PhysicsWorld = TwoObject.extend
     @_bodyMap = {}
 
   add: (object) ->
-    body = object.rigidBody
+    body = object.physics
     @_bodyMap[body.id] = object
     @p2.addBody body
 

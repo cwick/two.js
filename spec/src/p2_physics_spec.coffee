@@ -1,19 +1,16 @@
-`import RigidBody from "components/rigid_body"`
+`import P2Physics from "components/p2_physics"`
 `import Transform from "components/transform"`
 `import TwoObject from "object"`
 `import PhysicsWorld from "physics_world"`
 `module p2 from "lib/p2"`
 
-describe "Components.RigidBody", ->
+describe "Components.P2Physics", ->
   beforeEach ->
-    @obj = TwoObject.createWithMixins RigidBody, Transform
-
-  xit "requires the Transform component", ->
-    expect(-> TwoObject.extend RigidBody).toThrow()
+    @obj = TwoObject.createWithMixins P2Physics, Transform
 
   it "calculates position in a zero-g environment", ->
-    @obj.rigidBody.motionState = p2.Body.DYNAMIC
-    @obj.rigidBody.velocity = [60, 0]
+    @obj.physics.motionState = p2.Body.DYNAMIC
+    @obj.physics.velocity = [60, 0]
 
     world = new PhysicsWorld()
     world.p2.gravity = [0, 0]

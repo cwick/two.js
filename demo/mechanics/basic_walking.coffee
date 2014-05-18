@@ -29,10 +29,10 @@ Game = Two.Game.extend
 game = new Game()
 
 # Create the player entity
-game.registerEntity "Player", Two.GameObject.extend Two.Components.RigidBody,
+game.registerEntity "Player", Two.GameObject.extend Two.Components.P2Physics,
   initialize: ->
-    @rigidBody.motionState = p2.Body.KINEMATIC
-    @rigidBody.addShape new p2.Rectangle(32, 32)
+    @physics.motionState = p2.Body.KINEMATIC
+    @physics.addShape new p2.Rectangle(32, 32)
 
     playerSprite = new Two.Sprite
       image: "/demo/assets/player.png"
@@ -45,11 +45,11 @@ game.registerEntity "Player", Two.GameObject.extend Two.Components.RigidBody,
 
   update: ->
     if @game.input.keyboard.isKeyDown Two.Keys.LEFT
-      @rigidBody.velocity = [-MAX_SPEED, 0]
+      @physics.velocity = [-MAX_SPEED, 0]
     else if @game.input.keyboard.isKeyDown Two.Keys.RIGHT
-      @rigidBody.velocity = [MAX_SPEED, 0]
+      @physics.velocity = [MAX_SPEED, 0]
     else
-      @rigidBody.velocity = [0, 0]
+      @physics.velocity = [0, 0]
 
 
 game.start()

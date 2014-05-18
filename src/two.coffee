@@ -8,7 +8,7 @@
 `import Object from "./object"`
 `import Rectangle from "./rectangle"`
 `import RenderNode from "./render_node"`
-`import RigidBody from "./components/rigid_body"`
+`import P2Physics from "./components/p2_physics"`
 `import SceneRenderer from "./scene_renderer"`
 `import Sprite from "./sprite"`
 `import TransformNode from "./transform"`
@@ -16,7 +16,7 @@
 `import Keys from "./keys"`
 
 Components =
-  RigidBody: RigidBody
+  P2Physics: P2Physics
 
 `export { Object, Canvas, SceneRenderer, TransformNode, RenderNode, Sprite, Matrix2d,
 DeviceMetrics, Profiler, Timer, PeriodicSampler, GameObject, Components, GameWorld,

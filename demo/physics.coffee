@@ -23,16 +23,16 @@ renderer = new Two.SceneRenderer(canvas: canvas)
 camera = new Two.Camera(anchorPoint: [0,0], width: canvas.width, height: canvas.height)
 scene = new Two.TransformNode()
 
-Ball = Two.GameObject.extend Two.Components.RigidBody,
+Ball = Two.GameObject.extend Two.Components.P2Physics,
   initialize: ->
-    @rigidBody.motionState = p2.Body.DYNAMIC
-    @rigidBody.mass = 1
-    @rigidBody.velocity[0] = (Math.random() - .5) * 300
-    @rigidBody.velocity[1] = Math.random() * - 400 + 100
-    @rigidBody.angularVelocity = (Math.random() - .5) * 2*Math.PI
-    @rigidBody.addShape new p2.Circle(@ballSprite.width/2)
-    @rigidBody.position = @getRandomPosition()
-    @rigidBody.updateMassProperties()
+    @physics.motionState = p2.Body.DYNAMIC
+    @physics.mass = 1
+    @physics.velocity[0] = (Math.random() - .5) * 300
+    @physics.velocity[1] = Math.random() * - 400 + 100
+    @physics.angularVelocity = (Math.random() - .5) * 2*Math.PI
+    @physics.addShape new p2.Circle(@ballSprite.width/2)
+    @physics.position = @getRandomPosition()
+    @physics.updateMassProperties()
     @transform.add new Two.RenderNode(components: [@ballSprite])
 
   ballSprite:
@@ -64,21 +64,21 @@ for x in [1..BALL_COUNT]
   scene.add ball.transform
   world.add ball
 
-Boundary = Two.GameObject.extend Two.Components.RigidBody,
+Boundary = Two.GameObject.extend Two.Components.P2Physics,
   initialize: (options) ->
     plane = new p2.Plane()
 
     switch options.type
       when "bottom"
-        @rigidBody.position[1] = canvas.height
-        @rigidBody.angle = Math.PI
+        @physics.position[1] = canvas.height
+        @physics.angle = Math.PI
       when "left"
-        @rigidBody.angle = -Math.PI/2
+        @physics.angle = -Math.PI/2
       when "right"
-        @rigidBody.angle = Math.PI/2
-        @rigidBody.position[0] = canvas.width
+        @physics.angle = Math.PI/2
+        @physics.position[0] = canvas.width
 
-    @rigidBody.addShape(plane)
+    @physics.addShape(plane)
 
 world.add new Boundary(type: "bottom")
 world.add new Boundary(type: "top")

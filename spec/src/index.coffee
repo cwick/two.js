@@ -11,5 +11,5 @@
 `import "./tree_iterator_spec"`
 `import "./sprite_spec"`
 `import "./game_object_spec"`
-`import "./rigid_body_spec"`
+`import "./p2_physics_spec"`
 `import "./vector2d_spec"`
