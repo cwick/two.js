@@ -4,6 +4,10 @@ render = ->
   requestAnimationFrame(render)
   renderer.render(scene)
 
+  scale = .5*Math.sin(Date.now()/3000) + 2
+  scene.position.x -= .5
+  scene.scale = scale
+
 canvas = new Two.Canvas(width: 640, height: 480)
 renderer = new Two.SceneRenderer(canvas: canvas)
 renderer.backend.imageSmoothingEnabled = false
@@ -39,7 +43,7 @@ crabSprite.crop = new Two.Rectangle
   width: 55
   height: 26
 
-groupSprite = new Two.Sprite
+groundSprite = new Two.Sprite
   image: "assets/blocks1.png"
   anchorPoint: [0, 0]
   width: tileSize
@@ -52,10 +56,10 @@ groupSprite = new Two.Sprite
 
 for x in [0..40]
   tile = new Two.TransformNode(position: [x*tileSize, 0])
-  tile.add groupSprite.clone()
+  tile.add groundSprite.clone()
   ground.add tile
 
-crab.position = [tileSize*22, tileSize]
+crab.position = [tileSize*18, tileSize]
 crab.add crabSprite
 
 snail.position = [tileSize*10, tileSize]

@@ -44,12 +44,13 @@ CanvasRenderer = TwoObject.extend
 
     @setTransform options.transform
 
+    # Need to shift source rect by 0.5 pixels to prevent pixel bleeding
     @_context.drawImage(
       image,
-      crop.x, #source X
-      crop.y, #source Y
-      crop.width,  #source width
-      crop.height, #source height
+      crop.x + .5, #source X
+      crop.y + .5, #source Y
+      crop.width - .5,  #source width
+      crop.height - .5, #source height
       -origin[0], #destination X
       -origin[1], #destination Y
       image.width, #destination width
