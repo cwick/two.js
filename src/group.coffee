@@ -20,7 +20,6 @@ GroupNode = TwoObject.extend CanHaveParent, CanGroup,
     matrices = []
     parent = @_parent
 
-    @updateMatrix()
     matrices.push @_matrix
 
     while parent

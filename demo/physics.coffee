@@ -11,7 +11,7 @@ sampler = new Two.PeriodicSampler(PROFILE_FREQUENCY)
 render = ->
   requestAnimationFrame(render)
 
-  renderTime = renderProfiler.collect(-> renderer.render(scene)).toFixed(3)
+  renderTime = renderProfiler.collect(-> renderer.render(scene, camera)).toFixed(3)
   physicsTime = physicsProfiler.collect(-> world.step(1/60)).toFixed(3)
 
   document.getElementById("render-time").innerHTML = renderTime
@@ -20,7 +20,7 @@ render = ->
 
 canvas = new Two.Canvas(width: 640, height: 480)
 renderer = new Two.SceneRenderer(canvas: canvas)
-
+camera = new Two.Camera(anchorPoint: [0,0], width: canvas.width, height: canvas.height)
 scene = new Two.TransformNode()
 
 Ball = Two.GameObject.extend Two.Components.RigidBody,
@@ -33,7 +33,7 @@ Ball = Two.GameObject.extend Two.Components.RigidBody,
     @rigidBody.addShape new p2.Circle(@ballSprite.width/2)
     @rigidBody.position = @getRandomPosition()
     @rigidBody.updateMassProperties()
-    @transform.add @ballSprite.clone()
+    @transform.add new Two.RenderNode(components: [@ballSprite])
 
   ballSprite:
     new Two.Sprite

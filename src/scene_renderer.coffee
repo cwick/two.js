@@ -15,20 +15,28 @@ SceneRenderer = TwoObject.extend
 
   backend: Property readonly: true
 
-  render: (scene) ->
+  render: (scene, camera) ->
     commands = []
     backend = @_backend
     commands.push
       name: "clear"
       color: new Color(r:10, g: 30, b: 180)
 
+    camera.updateMatrix()
+    cameraMatrix = camera.updateWorldMatrix().clone()
+      .scale(1/@_canvas.width, 1/@_canvas.height)
+      .invert()
+
     new DepthFirstTreeIterator(scene).execute (node) =>
       if node instanceof GroupNode
         node.updateMatrix()
       else if node instanceof RenderNode
-        node.pushRenderCommands commands, node._parent.updateWorldMatrix()
+        node.pushRenderCommands commands, node._parent.updateWorldMatrix().clone()
 
-    backend.execute command for command in commands
+    for command in commands
+      command.transform.preMultiply cameraMatrix if command.transform?
+      backend.execute command
+
     return
 
 `export default SceneRenderer`

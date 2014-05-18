@@ -15,14 +15,15 @@ render = ->
       ball.velocity[0] *= -1
       ball.velocity[1] *= -1
 
-  frameTime = profiler.collect(-> renderer.render(root)).toFixed(3)
+  frameTime = profiler.collect(-> renderer.render(scene, camera)).toFixed(3)
   document.getElementById("frame-time").innerHTML = frameTime
   document.getElementById("fps").innerHTML = sampler.sample(1000 / timer.mark()).toFixed(2)
 
 canvas = new Two.Canvas(width: 640, height: 480)
 renderer = new Two.SceneRenderer(canvas: canvas)
+camera = new Two.Camera(anchorPoint: [0,0], width: canvas.width, height: canvas.height)
 
-root = new Two.TransformNode()
+scene = new Two.TransformNode()
 
 class Ball
   constructor: ->
@@ -31,7 +32,7 @@ class Ball
     @velocity[0] *= 20
     @velocity[1] *= 20
     @transform.position = @getRandomPosition()
-    @transform.add @ballSprite.clone()
+    @transform.add new Two.RenderNode(components: [@ballSprite])
 
   ballSprite: new Two.Sprite
     image: "http://cdn.bulbagarden.net/upload/2/22/Dream_Moon_Ball_Sprite.png"
@@ -50,9 +51,9 @@ for x in [1..2000]
   ball = new Ball()
   balls.push ball
 
-  root.add ball.transform
+  scene.add ball.transform
 
-document.getElementById("object-count").innerHTML = root.children.length
+document.getElementById("object-count").innerHTML = scene.children.length
 document.body.appendChild(canvas.domElement)
 render()
 

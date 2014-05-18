@@ -2,19 +2,49 @@
 
 render = ->
   requestAnimationFrame(render)
-  renderer.render(scene)
+  renderer.render(scene, camera)
+
+  scale = 1/(.5*Math.sin(Date.now()/3000) + 2)
+  camera.position.x += .5
+  camera.scale = scale
 
 canvas = new Two.Canvas(width: 640, height: 480)
 renderer = new Two.SceneRenderer(canvas: canvas)
 renderer.backend.imageSmoothingEnabled = false
 
+camera = new Two.Camera(position: [0, 100], width: canvas.width, height: canvas.height)
 scene = new Two.TransformNode()
 ground = new Two.TransformNode()
+snail = new Two.TransformNode()
+crab = new Two.TransformNode()
 
 tileSize = 32
 tileMargin = 2
 
-sprite = new Two.Sprite
+characterSheet = new Image()
+characterSheet.src = "assets/char1.png"
+
+snailSprite = new Two.Sprite
+  image: characterSheet
+  anchorPoint: [0.5, 0]
+  width: 32
+  height: 32
+  crop: new Two.Rectangle
+    x: 398
+    y: 362
+    width: 34
+    height: 34
+
+crabSprite = snailSprite.clone()
+crabSprite.width = 55
+crabSprite.height = 26
+crabSprite.crop = new Two.Rectangle
+  x: 166
+  y: 107
+  width: 55
+  height: 26
+
+groundSprite = new Two.Sprite
   image: "assets/blocks1.png"
   anchorPoint: [0, 0]
   width: tileSize
@@ -27,10 +57,19 @@ sprite = new Two.Sprite
 
 for x in [0..40]
   tile = new Two.TransformNode(position: [x*tileSize, 0])
-  tile.add new Two.RenderNode(components: [sprite])
+  tile.add new Two.RenderNode(components: [groundSprite])
   ground.add tile
 
+crab.position = [tileSize*18, tileSize]
+crab.add new Two.RenderNode(components: [crabSprite])
+
+snail.position = [tileSize*10, tileSize]
+snail.scale = [-1,1]
+snail.add new Two.RenderNode(components: [snailSprite])
+
 scene.add ground
+scene.add snail
+scene.add crab
 
 document.body.appendChild(canvas.domElement)
 render()

@@ -46,7 +46,6 @@ Sprite = TwoObject.extend
   pushRenderCommands: (commands, transform) ->
     image = @_image
     scaleX = scaleY = 1
-    transform = transform.clone()
 
     if @width && image.width
       scaleX = @width / image.width

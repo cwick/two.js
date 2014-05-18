@@ -41,9 +41,19 @@ class Matrix2d
     gl.mat2d.scale values, values, [x, y]
     @
 
+  preMultiply: (other) ->
+    values = @values
+    gl.mat2d.multiply values, other.values, values
+    @
+
   multiply: (other) ->
     values = @values
     gl.mat2d.multiply values, values, other.values
+    @
+
+  invert: ->
+    values = @values
+    gl.mat2d.invert values, values
     @
 
 `export default Matrix2d`
