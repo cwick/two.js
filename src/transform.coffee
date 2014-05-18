@@ -18,7 +18,7 @@ TransformNode = GroupNode.extend
     @_matrix.reset()
     @_matrix.translate(position[0], position[1])
     @_matrix.rotate(rotation) if rotation != 0
-    @_matrix.scale(scale[0], scale[1]) if scale[0] != 1 || scale[1] != 1
+    @_matrix.scale(scale[0], scale[1])
     @_matrix
 
   position: Property

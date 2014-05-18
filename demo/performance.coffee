@@ -15,12 +15,13 @@ render = ->
       ball.velocity[0] *= -1
       ball.velocity[1] *= -1
 
-  frameTime = profiler.collect(-> renderer.render(root)).toFixed(3)
+  frameTime = profiler.collect(-> renderer.render(root, camera)).toFixed(3)
   document.getElementById("frame-time").innerHTML = frameTime
   document.getElementById("fps").innerHTML = sampler.sample(1000 / timer.mark()).toFixed(2)
 
 canvas = new Two.Canvas(width: 640, height: 480)
 renderer = new Two.SceneRenderer(canvas: canvas)
+camera = new Two.Camera(anchorPoint: [0,0], width: canvas.width, height: canvas.height)
 
 root = new Two.TransformNode()
 

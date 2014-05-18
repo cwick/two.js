@@ -46,4 +46,9 @@ class Matrix2d
     gl.mat2d.multiply values, values, other.values
     @
 
+  invert: ->
+    values = @values
+    gl.mat2d.invert values, values
+    @
+
 `export default Matrix2d`

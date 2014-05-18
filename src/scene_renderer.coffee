@@ -15,18 +15,23 @@ SceneRenderer = TwoObject.extend
 
   backend: Property readonly: true
 
-  render: (scene) ->
+  render: (scene, camera) ->
     commands = []
     backend = @_backend
     commands.push
       name: "clear"
       color: new Color(r:10, g: 30, b: 180)
 
+    transform = new Matrix2d()
+    cameraMatrix = camera.updateWorldMatrix().clone()
+      .scale(1/@_canvas.width, 1/@_canvas.height)
+      .invert()
+
     new DepthFirstTreeIterator(scene).execute (node) =>
       node.updateMatrix?()
       if node instanceof Sprite
         image = node._image
-        transform = node._parent.updateWorldMatrix().clone()
+        transform.reset().multiply(cameraMatrix).multiply(node._parent.updateWorldMatrix())
 
         scaleX = scaleY = 1
 
@@ -40,7 +45,7 @@ SceneRenderer = TwoObject.extend
         commands.push
           name: "drawImage"
           image: image
-          transform: transform
+          transform: transform.clone()
           origin: node.pixelOrigin
           crop: node.crop || {
             x: 0

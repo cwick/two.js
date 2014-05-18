@@ -7,7 +7,7 @@ window.setSimulationSpeed = ->
 
 render = ->
   requestAnimationFrame(render)
-  renderer.render(scene)
+  renderer.render(scene, camera)
 
   mercuryOrbitSpeed = simulationSpeed / MERCURY_PERIOD
   earthOrbitSpeed = simulationSpeed / EARTH_PERIOD
@@ -30,8 +30,7 @@ render = ->
 canvas = new Two.Canvas(width: 800, height: 800)
 renderer = new Two.SceneRenderer(canvas: canvas)
 scene = new Two.TransformNode()
-
-scene.position = [400, 400]
+camera = new Two.Camera(width: canvas.width, height: canvas.height)
 
 EARTH_PERIOD = 365
 EARTH_DAY_LENGTH = 1

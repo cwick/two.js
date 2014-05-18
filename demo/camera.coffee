@@ -2,16 +2,17 @@
 
 render = ->
   requestAnimationFrame(render)
-  renderer.render(scene)
+  renderer.render(scene, camera)
 
-  scale = .5*Math.sin(Date.now()/3000) + 2
-  scene.position.x -= .5
-  scene.scale = scale
+  scale = 1/(.5*Math.sin(Date.now()/3000) + 2)
+  camera.position.x += .5
+  camera.scale = scale
 
 canvas = new Two.Canvas(width: 640, height: 480)
 renderer = new Two.SceneRenderer(canvas: canvas)
 renderer.backend.imageSmoothingEnabled = false
 
+camera = new Two.Camera(position: [0, 100], width: canvas.width, height: canvas.height)
 scene = new Two.TransformNode()
 ground = new Two.TransformNode()
 snail = new Two.TransformNode()

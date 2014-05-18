@@ -2,6 +2,7 @@
 `import Canvas from "./canvas"`
 `import SceneRenderer from "./scene_renderer"`
 `import TransformNode from "./transform"`
+`import Camera from "./camera"`
 `import Sprite from "./sprite"`
 `import Matrix2d from "./matrix2d"`
 `import DeviceMetrics from "./device_metrics"`
@@ -16,5 +17,5 @@ Components =
 
 `export { Object, Canvas, SceneRenderer, TransformNode, Sprite, Matrix2d,
 DeviceMetrics, Profiler, Timer, PeriodicSampler, GameObject, Components, GameWorld,
-Rectangle
+Rectangle, Camera
 }`
