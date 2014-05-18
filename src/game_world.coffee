@@ -8,7 +8,9 @@ GameWorld = TwoObject.extend
     @physics = new PhysicsWorld()
 
   step: (increment) ->
+    obj.update?() for obj in @objects
     @physics.step increment
+
 
   add: (obj) ->
     @objects.push obj

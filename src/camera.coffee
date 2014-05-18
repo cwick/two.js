@@ -2,7 +2,6 @@
 
 Camera = TransformNode.extend
   initialize: ->
-    @_super(TransformNode, "initialize")()
     @width = null
     @height = null
     @anchorPoint = [0.5, 0.5]

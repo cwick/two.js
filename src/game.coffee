@@ -6,6 +6,7 @@
 `import TransformNode from "./transform"`
 `import GameWorld from "./game_world"`
 `import Keyboard from "./keyboard"`
+`import GameObject from "./game_object"`
 
 Game = TwoObject.extend
   initialize: ->
@@ -15,6 +16,7 @@ Game = TwoObject.extend
     @scene = new TransformNode()
     @world = new GameWorld()
     @input = { keyboard: new Keyboard() }
+    @_entities = {}
 
   canvas: Property
     set: (value) ->
@@ -22,15 +24,26 @@ Game = TwoObject.extend
       @renderer = new SceneRenderer(canvas: value)
 
   start: ->
-    @setup()
+    @configure()
     @_initializeCanvas()
     @_initializeCamera()
     @_initializeInput()
     @_render()
 
   # Implement in derived classes
-  setup: ->
+  configure: ->
   update: ->
+    @world.step 1/60 # TODO: use variable step?
+
+  spawn: (type) ->
+    entity = @_initializeEntity(type)
+    @scene.add entity.transform
+    @world.add entity
+    entity.spawn()
+    entity
+
+  registerEntity: (name, Entity) ->
+    @_entities[name] = Entity
 
   _render: ->
     requestAnimationFrame(@_render.bind @)
@@ -46,5 +59,13 @@ Game = TwoObject.extend
 
   _initializeInput: ->
     @input.keyboard.start()
+
+  _initializeEntity: (type) ->
+    Entity = @_entities[type]
+    entity = Object.create Entity.prototype
+    entity.game = @
+
+    Entity.apply entity
+    entity
 
 `export default Game`
