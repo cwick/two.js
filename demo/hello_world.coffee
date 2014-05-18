@@ -1,15 +1,15 @@
 `module Two from "two"`
 
-render = ->
-  requestAnimationFrame(render)
-  helloWorldTransform.rotation += 0.008
-  wobble.position.x = Math.sin(Date.now() / 500) * 100
-  renderer.render(scene, camera)
+Game = Two.Game.extend
+  setup: ->
+    @canvasSize = [640, 480]
 
-canvas = new Two.Canvas(width: 640, height: 480)
-renderer = new Two.SceneRenderer(canvas: canvas)
-camera = new Two.Camera(width: canvas.width, height: canvas.height)
-scene = new Two.TransformNode()
+  update: ->
+    helloWorldTransform.rotation += 0.008
+    wobble.position.x = Math.sin(Date.now() / 500) * 100
+
+game = new Game()
+
 wobble = new Two.TransformNode()
 helloWorldTransform = new Two.TransformNode()
 worldTransform = new Two.TransformNode()
@@ -29,11 +29,11 @@ worldTransform.children[0].add new Two.Sprite
 helloTransform.position = [-305, 150]
 worldTransform.position = [0, 150]
 
-scene.add wobble
+game.scene.add wobble
 
 wobble.add helloWorldTransform
 helloWorldTransform.add helloTransform
 helloWorldTransform.add worldTransform
 
-document.body.appendChild(canvas.domElement)
-render()
+game.start()
+
