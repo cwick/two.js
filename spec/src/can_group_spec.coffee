@@ -36,6 +36,9 @@ describe "CanGroup", ->
       parent.add child
       expect(child.parent).toBe parent
 
+    it "returns the child just added", ->
+      expect(parent.add child).toBe child
+
   describe "when removing children", ->
     parent = child = null
 

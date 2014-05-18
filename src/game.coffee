@@ -14,12 +14,6 @@ Game = TwoObject.extend
     @scene = new TransformNode()
     @world = new GameWorld()
 
-  canvasSize: Property
-    set: (value) ->
-      @_canvasSize = value
-      @canvas.width = value[0]
-      @canvas.height = value[1]
-
   canvas: Property
     set: (value) ->
       @_canvas = value

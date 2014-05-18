@@ -5,22 +5,27 @@
 `import { DepthFirstTreeIterator } from "./tree_iterators"`
 `import RenderNode from "./render_node"`
 `import GroupNode from "./group"`
+`import Color from "./color"`
 
 SceneRenderer = TwoObject.extend
   initialize: ->
     @_backend = new CanvasRenderer()
+    @backgroundColor = "black"
 
   canvas: Property
     set: (value) -> @_canvas = @_backend.canvas = value
 
   backend: Property readonly: true
+  backgroundColor: Property
+    set: (value) ->
+      @_backgroundColor = new Color(value)
 
   render: (scene, camera) ->
     commands = []
     backend = @_backend
     commands.push
       name: "clear"
-      color: new Color(r:10, g: 30, b: 180)
+      color: @_backgroundColor
 
     camera.updateMatrix()
     cameraMatrix = camera.updateWorldMatrix().clone()

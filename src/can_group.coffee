@@ -15,6 +15,8 @@ CanGroup = Mixin.create
         child.parent?.remove child
         child._setParent(@)
 
+    child
+
   remove: (child) ->
     idx = @_children.indexOf child
     if idx != -1
