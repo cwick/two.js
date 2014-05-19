@@ -2,11 +2,14 @@
 `module Two from "two"`
 
 Game = Two.Game.extend
+  GRAVITY: -2600 # pixels / second / second
+
   configure: ->
     @canvas.width = 848
     @canvas.height = 450
     @renderer.backend.imageSmoothingEnabled = false
     @renderer.backgroundColor = "#4488cc"
+    @world.physics.arcade.gravity.y = @GRAVITY
 
     # Create some ground for the player to walk on
     ground = @scene.add new Two.TransformNode()
@@ -44,6 +47,7 @@ game = new Game()
 # Create the player entity
 game.registerEntity "Player", Two.GameObject.extend Two.Components.ArcadePhysics,
   MAX_SPEED: 500 # pixels / second
+  JUMP_SPEED: 1000 # pixels / second
   ACCELERATION: 1500 # pixels / second / second
   DRAG: 600 # pixels / second
 
@@ -59,7 +63,7 @@ game.registerEntity "Player", Two.GameObject.extend Two.Components.ArcadePhysics
     @physics.boundingBox.y = -16
     @physics.boundingBox.width = 32
     @physics.boundingBox.height = 32
-    @physics.maxVelocity = [@MAX_SPEED, @MAX_SPEED]
+    @physics.maxVelocity = [@MAX_SPEED, @MAX_SPEED * 10]
     # Add drag to the player that slows them down when they are not accelerating
     @physics.drag.x = @DRAG
 
@@ -75,6 +79,8 @@ game.registerEntity "Player", Two.GameObject.extend Two.Components.ArcadePhysics
     else
       @physics.acceleration.x = 0
 
+    if @game.input.keyboard.isKeyDown Two.Keys.UP
+      @physics.velocity.y = @JUMP_SPEED
 
 game.start()
 

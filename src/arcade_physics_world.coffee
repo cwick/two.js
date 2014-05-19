@@ -1,11 +1,13 @@
 `import TwoObject from "./object"`
 `import Property from "./property"`
 `import Rectangle from "./rectangle"`
+`import Vector2d from "./vector2d"`
 
 ArcadePhysicsWorld = TwoObject.extend
   initialize: ->
     @objects = []
     @bounds = new Rectangle()
+    @gravity = new Vector2d()
 
   add: (object) ->
     @objects.push object
@@ -34,6 +36,10 @@ ArcadePhysicsWorld = TwoObject.extend
     # Apply acceleration
     velocity[0] += acceleration[0]*time
     velocity[1] += acceleration[1]*time
+
+    # Apply gravity
+    velocity[0] += @gravity[0]*time
+    velocity[1] += @gravity[1]*time
 
     # Enforce max velocity
     if velocity[0] > maxVelocity[0]
