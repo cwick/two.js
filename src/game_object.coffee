@@ -4,5 +4,6 @@
 GameObject = TwoObject.extend Transform,
   initialize: ->
   spawn: ->
+  update: ->
 
 `export default GameObject`
