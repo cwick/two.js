@@ -10,28 +10,32 @@ ArcadePhysicsWorld = TwoObject.extend
   add: (object) ->
     @objects.push object
 
-  step: (increment) ->
-    @_runSimulation(increment)
+  step: (time) ->
+    @_runSimulation(time)
     @_updateObjectTransforms()
 
-  _runSimulation: (increment) ->
+  _runSimulation: (time) ->
     for object in @objects
       body = object.physics
 
-      @_updateBody body, increment
+      @_updateBody body, time
       @_collideWorldBounds body
 
     return
 
-  _updateBody: (body, increment) ->
+  _updateBody: (body, time) ->
     position = body.position
     velocity = body.velocity
     maxVelocity = body.maxVelocity
     acceleration = body.acceleration
+    drag = body.drag
+    dragVector = body.dragVector
 
-    velocity[0] += acceleration[0]*increment
-    velocity[1] += acceleration[1]*increment
+    # Apply acceleration
+    velocity[0] += acceleration[0]*time
+    velocity[1] += acceleration[1]*time
 
+    # Enforce max velocity
     if velocity[0] > maxVelocity[0]
       velocity[0] = maxVelocity[0]
     else if velocity[0] < -maxVelocity[0]
@@ -42,8 +46,27 @@ ArcadePhysicsWorld = TwoObject.extend
     else if velocity[1] < -maxVelocity[1]
       velocity[1] = -maxVelocity[1]
 
-    position[0] += velocity[0]*increment
-    position[1] += velocity[1]*increment
+    # Apply X drag
+    if acceleration[0] == 0
+      if velocity[0] > 0
+        velocity[0] -= drag[0]*time
+        velocity[0] = 0 if velocity[0] < 0
+      else if velocity[0] < 0
+        velocity[0] += drag[0]*time
+        velocity[0] = 0 if velocity[0] > 0
+
+    # Apply Y drag
+    if acceleration[1] == 0
+      if velocity[1] > 0
+        velocity[1] -= drag[1]*time
+        velocity[1] = 0 if velocity[1] < 0
+      else if velocity[1] < 0
+        velocity[1] += drag[1]*time
+        velocity[1] = 0 if velocity[1] > 0
+
+    # Update position
+    position[0] += velocity[0]*time
+    position[1] += velocity[1]*time
 
   _collideWorldBounds: (body) ->
     return unless body.collideWorldBounds

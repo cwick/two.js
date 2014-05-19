@@ -10,6 +10,7 @@ ArcadePhysics = Mixin.create
       position: new Vector2d()
       boundingBox: new Rectangle()
       maxVelocity: new Vector2d([Number.MAX_VALUE, Number.MAX_VALUE])
+      drag: new Vector2d()
 
 `export default ArcadePhysics`
 
