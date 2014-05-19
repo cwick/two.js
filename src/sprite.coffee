@@ -1,5 +1,6 @@
 `import TwoObject from "./object"`
 `import Property from "./property"`
+`import Canvas from "./canvas"`
 
 Sprite = TwoObject.extend
   initialize: ->
@@ -17,10 +18,10 @@ Sprite = TwoObject.extend
   pixelOrigin: Property
     get: ->
       image = @image
-      return [0,0] unless image?.complete?
-
       w = image.width
       h = image.height
+
+      return [0,0] unless w? && h?
 
       [ @anchorPoint[0] * w,
         h - @anchorPoint[1] * h
@@ -33,15 +34,6 @@ Sprite = TwoObject.extend
         @_image.src = value
       else
         @_image = value
-
-      unless @_image.complete
-        previousonload = @_image.onload
-        @_image.onload = =>
-          # Not a typo. We need to call the origin setter
-          # again so pixelOrigin is properly calculated
-          @origin = @origin
-          @_image.onload = previousonload
-          @_image.onload?()
 
   pushRenderCommands: (commands, transform) ->
     image = @_image
@@ -56,7 +48,7 @@ Sprite = TwoObject.extend
 
     commands.push
       name: "drawImage"
-      image: image
+      image: if image instanceof Canvas then image._domElement else image
       transform: transform
       origin: @pixelOrigin
       crop: @crop || {

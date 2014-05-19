@@ -16,7 +16,7 @@ Game = Two.Game.extend
     for x in [0...@canvas.width] by 32
       do (x) ->
         groundBlock = new Two.TransformNode(position: [x, 0])
-        groundBlock.add new Two.RenderNode(components: [groundSprite])
+        groundBlock.add new Two.RenderNode(elements: [groundSprite])
         ground.add groundBlock
 
     player = @spawn "Player"
@@ -33,7 +33,7 @@ game.registerEntity "Player", Two.GameObject.extend Two.Components.ArcadePhysics
       image: "/demo/assets/player.png"
       anchorPoint: [0.5, 0]
 
-    @transform.add new Two.RenderNode(components: [playerSprite])
+    @transform.add new Two.RenderNode(elements: [playerSprite])
 
     # Make player collide with world boundaries so he doesn't leave the stage
     @physics.collideWorldBounds = true

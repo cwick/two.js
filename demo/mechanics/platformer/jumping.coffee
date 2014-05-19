@@ -1,14 +1,11 @@
 # Inspired by http://gamemechanicexplorer.com/
 `module Two from "two"`
 
-MAX_SPEED = 500 # pixels / second
-
 Game = Two.Game.extend
   configure: ->
     @canvas.width = 848
     @canvas.height = 450
     @renderer.backend.imageSmoothingEnabled = false
-
     @renderer.backgroundColor = "#4488cc"
 
     # Create some ground for the player to walk on
@@ -21,12 +18,35 @@ Game = Two.Game.extend
         groundBlock.add new Two.RenderNode(elements: [groundSprite])
         ground.add groundBlock
 
-    player = @spawn "Player"
+    @scene.add @drawHeightMarkers()
+    @spawn "Player"
+
+  drawHeightMarkers: ->
+    markers = new Two.TransformNode()
+    sprite = new Two.Sprite
+      image: new Two.Canvas(devicePixelRatio: 1, width: @canvas.width, height: @canvas.height)
+      anchorPoint: [0, 0]
+    markers.add new Two.RenderNode(elements: [sprite])
+
+    context = sprite.image.getContext "2d"
+
+    for y in [@canvas.height - 32..64] by -32
+      context.beginPath()
+      context.strokeStyle = 'rgba(255, 255, 255, 0.2)'
+      context.moveTo(0, y)
+      context.lineTo(sprite.image.width, y)
+      context.stroke()
+
+    markers
 
 game = new Game()
 
 # Create the player entity
 game.registerEntity "Player", Two.GameObject.extend Two.Components.ArcadePhysics,
+  MAX_SPEED: 500 # pixels / second
+  ACCELERATION: 1500 # pixels / second / second
+  DRAG: 600 # pixels / second
+
   initialize: ->
     playerSprite = new Two.Sprite
       image: "/demo/assets/player.png"
@@ -39,6 +59,9 @@ game.registerEntity "Player", Two.GameObject.extend Two.Components.ArcadePhysics
     @physics.boundingBox.y = -16
     @physics.boundingBox.width = 32
     @physics.boundingBox.height = 32
+    @physics.maxVelocity = [@MAX_SPEED, @MAX_SPEED]
+    # Add drag to the player that slows them down when they are not accelerating
+    @physics.drag.x = @DRAG
 
   spawn: ->
     @physics.position.x = @game.canvas.width/2
@@ -46,11 +69,14 @@ game.registerEntity "Player", Two.GameObject.extend Two.Components.ArcadePhysics
 
   update: ->
     if @game.input.keyboard.isKeyDown Two.Keys.LEFT
-      @physics.velocity.x = -MAX_SPEED
+      @physics.acceleration.x = -@ACCELERATION
     else if @game.input.keyboard.isKeyDown Two.Keys.RIGHT
-      @physics.velocity.x = MAX_SPEED
+      @physics.acceleration.x = @ACCELERATION
     else
-      @physics.velocity.x = 0
+      @physics.acceleration.x = 0
 
 
 game.start()
+
+
+

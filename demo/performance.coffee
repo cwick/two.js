@@ -32,7 +32,7 @@ class Ball
     @velocity[0] *= 20
     @velocity[1] *= 20
     @transform.position = @getRandomPosition()
-    @transform.add new Two.RenderNode(components: [@ballSprite])
+    @transform.add new Two.RenderNode(elements: [@ballSprite])
 
   ballSprite: new Two.Sprite
     image: "http://cdn.bulbagarden.net/upload/2/22/Dream_Moon_Ball_Sprite.png"

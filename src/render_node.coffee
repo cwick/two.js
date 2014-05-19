@@ -3,13 +3,13 @@
 
 RenderNode = TwoObject.extend CanHaveParent,
   initialize: ->
-    @components = []
+    @elements = []
 
   add: (component) ->
-    @components.push component
+    @elements.push component
 
   pushRenderCommands: (commands, transform) ->
-    component.pushRenderCommands commands, transform for component in @components
+    component.pushRenderCommands commands, transform for component in @elements
 
 `export default RenderNode`
 

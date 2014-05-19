@@ -57,15 +57,15 @@ groundSprite = new Two.Sprite
 
 for x in [0..40]
   tile = new Two.TransformNode(position: [x*tileSize, 0])
-  tile.add new Two.RenderNode(components: [groundSprite])
+  tile.add new Two.RenderNode(elements: [groundSprite])
   ground.add tile
 
 crab.position = [tileSize*18, tileSize]
-crab.add new Two.RenderNode(components: [crabSprite])
+crab.add new Two.RenderNode(elements: [crabSprite])
 
 snail.position = [tileSize*10, tileSize]
 snail.scale = [-1,1]
-snail.add new Two.RenderNode(components: [snailSprite])
+snail.add new Two.RenderNode(elements: [snailSprite])
 
 scene.add ground
 scene.add snail
