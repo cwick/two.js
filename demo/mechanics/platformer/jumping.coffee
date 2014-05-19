@@ -79,7 +79,7 @@ game.registerEntity "Player", Two.GameObject.extend Two.Components.ArcadePhysics
     else
       @physics.acceleration.x = 0
 
-    if @game.input.keyboard.isKeyDown Two.Keys.UP
+    if @game.input.keyboard.isKeyDown(Two.Keys.UP) && @physics.touching.down
       @physics.velocity.y = @JUMP_SPEED
 
 game.start()

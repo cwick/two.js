@@ -7,7 +7,7 @@ class Keyboard
     window.addEventListener('keyup', @_onKeyUp.bind @)
 
   isKeyDown: (key) ->
-    @_keyState[key]
+    @_keyState[key] || false
 
   _onKeyDown: (e) ->
     @_keyState[e.keyCode] = true

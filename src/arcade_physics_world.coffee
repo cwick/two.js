@@ -20,10 +20,15 @@ ArcadePhysicsWorld = TwoObject.extend
     for object in @objects
       body = object.physics
 
+      @_resetTouches body
       @_updateBody body, time
       @_collideWorldBounds body
 
     return
+
+  _resetTouches: (body) ->
+    t = body.touching
+    t.up = t.down = t.left = t.right = false
 
   _updateBody: (body, time) ->
     position = body.position
@@ -99,18 +104,22 @@ ArcadePhysicsWorld = TwoObject.extend
     if min_y <= bottom
       body.velocity[1] = body.acceleration[1] = 0
       body.position[1] = bottom + halfHeight + boundingBox.y
+      body.touching.down = true
 
     if max_y >= top
       body.velocity[1] = body.acceleration[1] = 0
       body.position[1] = top - halfHeight + boundingBox.y
+      body.touching.up = true
 
     if min_x <= left
       body.velocity[0] = body.acceleration[0] = 0
       body.position[0] = left + halfWidth - boundingBox.x
+      body.touching.left = true
 
     if max_x >= right
       body.velocity[0] = body.acceleration[0] = 0
       body.position[0] = right - halfWidth - boundingBox.x
+      body.touching.right = true
 
   _updateObjectTransforms: ->
     for object in @objects
