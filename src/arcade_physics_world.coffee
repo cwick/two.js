@@ -17,15 +17,28 @@ ArcadePhysicsWorld = TwoObject.extend
   _runSimulation: (increment) ->
     for object in @objects
       body = object.physics
-      position = body.position
-      velocity = body.velocity
 
-      position[0] += velocity[0]*increment
-      position[1] += velocity[1]*increment
-
+      @_updateBody body, increment
       @_collideWorldBounds body
 
     return
+
+  _updateBody: (body, increment) ->
+    position = body.position
+    velocity = body.velocity
+    maxVelocity = body.maxVelocity
+    acceleration = body.acceleration
+
+    velocity[0] += acceleration[0]*increment
+    velocity[1] += acceleration[1]*increment
+
+    velocity[0] = maxVelocity[0] if velocity[0] > maxVelocity[0]
+    velocity[0] = -maxVelocity[0] if velocity[0] < -maxVelocity[0]
+    velocity[1] = maxVelocity[1] if velocity[1] > maxVelocity[1]
+    velocity[1] = -maxVelocity[1] if velocity[1] < -maxVelocity[1]
+
+    position[0] += velocity[0]*increment
+    position[1] += velocity[1]*increment
 
   _collideWorldBounds: (body) ->
     return unless body.collideWorldBounds
@@ -50,19 +63,19 @@ ArcadePhysicsWorld = TwoObject.extend
     right = @bounds.x + @bounds.width
 
     if min_y <= bottom
-      body.velocity[1] = 0
+      body.velocity[1] = body.acceleration[1] = 0
       body.position[1] = bottom + halfHeight + boundingBox.y
 
     if max_y >= top
-      body.velocity[1] = 0
+      body.velocity[1] = body.acceleration[1] = 0
       body.position[1] = top - halfHeight + boundingBox.y
 
     if min_x <= left
-      body.velocity[0] = 0
+      body.velocity[0] = body.acceleration[0] = 0
       body.position[0] = left + halfWidth - boundingBox.x
 
     if max_x >= right
-      body.velocity[0] = 0
+      body.velocity[0] = body.acceleration[0] = 0
       body.position[0] = right - halfWidth - boundingBox.x
 
   _updateObjectTransforms: ->
