@@ -10,7 +10,6 @@ Game = Two.Game.extend
     @renderer.backend.imageSmoothingEnabled = false
 
     @renderer.backgroundColor = "#4488cc"
-    @camera.position.y = -32
 
     # Create some ground for the player to walk on
     ground = @scene.add new Two.TransformNode()
@@ -18,7 +17,7 @@ Game = Two.Game.extend
 
     for x in [0...@canvas.width] by 32
       do (x) ->
-        groundBlock = new Two.TransformNode(position: [x, -32])
+        groundBlock = new Two.TransformNode(position: [x, 0])
         groundBlock.add new Two.RenderNode(components: [groundSprite])
         ground.add groundBlock
 
@@ -37,9 +36,13 @@ game.registerEntity "Player", Two.GameObject.extend Two.Components.ArcadePhysics
 
     # Make player collide with world boundaries so he doesn't leave the stage
     @physics.collideWorldBounds = true
+    @physics.boundingBox.y = -16
+    @physics.boundingBox.width = 32
+    @physics.boundingBox.height = 32
 
   spawn: ->
     @physics.position.x = @game.canvas.width/2
+    @physics.position.y = 32
 
   update: ->
     if @game.input.keyboard.isKeyDown Two.Keys.LEFT
