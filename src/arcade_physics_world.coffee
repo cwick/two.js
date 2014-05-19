@@ -32,10 +32,15 @@ ArcadePhysicsWorld = TwoObject.extend
     velocity[0] += acceleration[0]*increment
     velocity[1] += acceleration[1]*increment
 
-    velocity[0] = maxVelocity[0] if velocity[0] > maxVelocity[0]
-    velocity[0] = -maxVelocity[0] if velocity[0] < -maxVelocity[0]
-    velocity[1] = maxVelocity[1] if velocity[1] > maxVelocity[1]
-    velocity[1] = -maxVelocity[1] if velocity[1] < -maxVelocity[1]
+    if velocity[0] > maxVelocity[0]
+      velocity[0] = maxVelocity[0]
+    else if velocity[0] < -maxVelocity[0]
+      velocity[0] = -maxVelocity[0]
+
+    if velocity[1] > maxVelocity[1]
+      velocity[1] = maxVelocity[1]
+    else if velocity[1] < -maxVelocity[1]
+      velocity[1] = -maxVelocity[1]
 
     position[0] += velocity[0]*increment
     position[1] += velocity[1]*increment
