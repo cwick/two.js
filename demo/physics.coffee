@@ -37,7 +37,7 @@ Ball = Two.GameObject.extend Two.Components.P2Physics,
 
   ballSprite:
     new Two.Sprite
-      image: "https://upload.wikimedia.org/wikipedia/en/thumb/e/ec/Soccer_ball.svg/480px-Soccer_ball.svg.png"
+      image: "/demo/assets/soccer_ball.png"
       width: 20
       height: 20
       crop: new Two.Rectangle
