@@ -17,6 +17,7 @@ P2PhysicsWorld = TwoObject.extend
       @world.step increment
       @_updateObjectTransforms()
 
+  # Don't hard-code physics -> game ojbect update. See ArcadePhysicsWorld.
   _updateObjectTransforms: ->
     for body in @world.bodies
       object = @_bodyMap[body.id]

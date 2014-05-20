@@ -121,7 +121,11 @@ ArcadePhysicsWorld = TwoObject.extend
       body.position[0] = right - halfWidth - boundingBox.x
       body.touching.right = true
 
+  # Use callback instead of hard-coding physics -> game object update
+  # Physics bodies should have a data pointer that points back to the game object
+  # Could even mark bodies as "dirty" so the update doesn't have to update every object
   _updateObjectTransforms: ->
+    # @updateCallback?(@bodies)
     for object in @objects
       transform = object.transform
       body = object.physics
