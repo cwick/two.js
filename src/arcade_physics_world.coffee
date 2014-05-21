@@ -8,11 +8,14 @@ ArcadePhysicsWorld = TwoObject.extend
     @bounds = new Rectangle()
     @gravity = new Vector2d()
     @updateCallback = ->
+    @isActive = false
 
   add: (body) ->
     @bodies.push body
+    @isActive = true
 
   step: (time) ->
+    return unless @isActive
     @_runSimulation(time)
     @updateCallback(@bodies)
 

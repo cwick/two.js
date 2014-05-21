@@ -10,7 +10,7 @@ GameWorld = TwoObject.extend
     @bounds = null
     @objects = []
     @physics =
-      p2: new P2PhysicsWorld()
+      p2: new P2PhysicsWorld(updateCallback: @_updateP2Objects)
       arcade: new ArcadePhysicsWorld(updateCallback: @_updateArcadeObjects)
 
   step: (increment) ->
@@ -40,6 +40,15 @@ GameWorld = TwoObject.extend
       transform = body.userData.transform
       transform.position[0] = body.position[0]
       transform.position[1] = body.position[1]
+
+    return
+
+  _updateP2Objects: (bodies) ->
+    for body in bodies
+      transform = body.userData.transform
+      transform.position[0] = body.position[0]
+      transform.position[1] = body.position[1]
+      transform.rotation = body.angle
 
     return
 

@@ -4,5 +4,6 @@
 P2Physics = Mixin.create
   initialize: ->
     @physics = new p2.Body()
+    @physics.userData = @
 
 `export default P2Physics`
