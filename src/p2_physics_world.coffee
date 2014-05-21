@@ -5,24 +5,18 @@
 P2PhysicsWorld = TwoObject.extend
   initialize: ->
     @world = new p2.World()
-    @_bodyMap = {}
+    @isActive = false
+    @updateCallback = ->
 
   add: (object) ->
     body = object.physics
-    @_bodyMap[body.id] = object
     @world.addBody body
+    @isActive = true
 
   step: (increment) ->
+    return unless @isActive
     if @world.bodies.length > 0
       @world.step increment
-      @_updateObjectTransforms()
-
-  _updateObjectTransforms: ->
-    for body in @world.bodies
-      object = @_bodyMap[body.id]
-      transform = object.transform
-      transform.position[0] = body.position[0]
-      transform.position[1] = body.position[1]
-      transform.rotation = body.angle
+      @updateCallback(@world.bodies)
 
 `export default P2PhysicsWorld`

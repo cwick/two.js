@@ -1,25 +1,26 @@
 `import TwoObject from "./object"`
-`import Property from "./property"`
 `import Rectangle from "./rectangle"`
 `import Vector2d from "./vector2d"`
 
 ArcadePhysicsWorld = TwoObject.extend
   initialize: ->
-    @objects = []
+    @bodies = []
     @bounds = new Rectangle()
     @gravity = new Vector2d()
+    @updateCallback = ->
+    @isActive = false
 
-  add: (object) ->
-    @objects.push object
+  add: (body) ->
+    @bodies.push body
+    @isActive = true
 
   step: (time) ->
+    return unless @isActive
     @_runSimulation(time)
-    @_updateObjectTransforms()
+    @updateCallback(@bodies)
 
   _runSimulation: (time) ->
-    for object in @objects
-      body = object.physics
-
+    for body in @bodies
       @_resetTouches body
       @_updateBody body, time
       @_collideWorldBounds body
@@ -120,15 +121,6 @@ ArcadePhysicsWorld = TwoObject.extend
       body.velocity[0] = body.acceleration[0] = 0
       body.position[0] = right - halfWidth - boundingBox.x
       body.touching.right = true
-
-  _updateObjectTransforms: ->
-    for object in @objects
-      transform = object.transform
-      body = object.physics
-      transform.position[0] = body.position[0]
-      transform.position[1] = body.position[1]
-
-    return
 
 `export default ArcadePhysicsWorld`
 

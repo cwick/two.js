@@ -5,6 +5,7 @@
 ArcadePhysics = Mixin.create
   initialize: ->
     @physics =
+      userData: @
       velocity: new Vector2d()
       acceleration: new Vector2d()
       position: new Vector2d()

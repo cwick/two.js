@@ -17,6 +17,6 @@ describe "Components.P2Physics", ->
     world.add @obj
     world.step 1/60
 
-    expect(@obj.transform.position.x).toBeCloseTo 1
+    expect(@obj.physics.position[0]).toBeCloseTo 1
 
 

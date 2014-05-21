@@ -43,37 +43,37 @@ MARS_DAY_LENGTH = 1
 
 sun = new Two.RenderNode()
 sun.add new Two.Sprite
-  image: "http://music.ckut.ca/wp-content/uploads/2011/09/sun-solar-flare.jpg"
+  image: "/demo/assets/sun.jpg"
   width: 200
   height: 200
 
 mercury = new Two.RenderNode()
 mercury.add new Two.Sprite
-  image: "http://tallbloke.files.wordpress.com/2012/02/mercury-300x300.jpg"
+  image: "/demo/assets/mercury.jpg"
   width: 20
   height: 20
 
 venus = new Two.RenderNode()
 venus.add new Two.Sprite
-  image: "https://d1jqu7g1y74ds1.cloudfront.net/wp-content/uploads/2009/08/venusmagellan.jpg"
+  image: "/demo/assets/venus.jpg"
   width: 60
   height: 60
 
 earth = new Two.RenderNode()
 earth.add new Two.Sprite
-  image: "http://img3.wikia.nocookie.net/__cb20100221225734/uncyclopedia/images/d/d0/Earth.PNG"
+  image: "/demo/assets/earth.png"
   width: 50
   height: 50
 
 moon = new Two.RenderNode()
 moon.add new Two.Sprite
-  image: "http://www.howitworksdaily.com/wp-content/uploads/2012/12/Moon.jpg"
+  image: "/demo/assets/moon.jpg"
   width: 20
   height: 20
 
 mars = new Two.RenderNode()
 mars.add new Two.Sprite
-  image: "http://schoolofartgalleries.dsc.rmit.edu.au/PSSR/exhibitions/2008/the_mars_project/mars0_lth.jpg"
+  image: "/demo/assets/mars.jpg"
   width: 30
   height: 30
 
