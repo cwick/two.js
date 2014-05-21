@@ -1,25 +1,23 @@
 `import TwoObject from "./object"`
-`import Property from "./property"`
 `import Rectangle from "./rectangle"`
 `import Vector2d from "./vector2d"`
 
 ArcadePhysicsWorld = TwoObject.extend
   initialize: ->
-    @objects = []
+    @bodies = []
     @bounds = new Rectangle()
     @gravity = new Vector2d()
+    @updateCallback = ->
 
-  add: (object) ->
-    @objects.push object
+  add: (body) ->
+    @bodies.push body
 
   step: (time) ->
     @_runSimulation(time)
-    @_updateObjectTransforms()
+    @updateCallback(@bodies)
 
   _runSimulation: (time) ->
-    for object in @objects
-      body = object.physics
-
+    for body in @bodies
       @_resetTouches body
       @_updateBody body, time
       @_collideWorldBounds body
@@ -120,19 +118,6 @@ ArcadePhysicsWorld = TwoObject.extend
       body.velocity[0] = body.acceleration[0] = 0
       body.position[0] = right - halfWidth - boundingBox.x
       body.touching.right = true
-
-  # Use callback instead of hard-coding physics -> game object update
-  # Physics bodies should have a data pointer that points back to the game object
-  # Could even mark bodies as "dirty" so the update doesn't have to update every object
-  _updateObjectTransforms: ->
-    # @updateCallback?(@bodies)
-    for object in @objects
-      transform = object.transform
-      body = object.physics
-      transform.position[0] = body.position[0]
-      transform.position[1] = body.position[1]
-
-    return
 
 `export default ArcadePhysicsWorld`
 

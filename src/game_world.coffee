@@ -11,7 +11,7 @@ GameWorld = TwoObject.extend
     @objects = []
     @physics =
       p2: new P2PhysicsWorld()
-      arcade: new ArcadePhysicsWorld()
+      arcade: new ArcadePhysicsWorld(updateCallback: @_updateArcadeObjects)
 
   step: (increment) ->
     @_stepGameObjects()
@@ -23,7 +23,7 @@ GameWorld = TwoObject.extend
     if P2Physics.detect(obj)
       @physics.p2.add obj
     else if ArcadePhysics.detect(obj)
-      @physics.arcade.add obj
+      @physics.arcade.add obj.physics
 
   _stepGameObjects: ->
     obj.update() for obj in @objects
@@ -33,6 +33,14 @@ GameWorld = TwoObject.extend
     for _, physics of @physics
       physics.bounds = @bounds
       physics.step increment
+    return
+
+  _updateArcadeObjects: (bodies) ->
+    for body in bodies
+      transform = body.userData.transform
+      transform.position[0] = body.position[0]
+      transform.position[1] = body.position[1]
+
     return
 
 `export default GameWorld`
