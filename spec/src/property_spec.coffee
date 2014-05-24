@@ -111,29 +111,3 @@ describe "Property", ->
 
       expect(new Derived().foo).toEqual "goodbye"
 
-    it "can call a super class property", ->
-      Base = TwoObject.extend
-        foo: Property
-          get: -> "hello"
-
-      Derived = Base.extend
-        foo: Property
-          get: -> @_super(Base, "foo") + " there"
-
-      expect(new Derived().foo).toEqual "hello there"
-
-    it "can call a super class property two levels deep", ->
-      Base = TwoObject.extend
-        foo: Property
-          get: -> "hello"
-
-      Derived = Base.extend
-        foo: Property
-          get: -> @_super(Base, "foo") + " there"
-
-      MoreDerived = Derived.extend
-        foo: Property
-          get: -> @_super(Derived, "foo") + " world"
-
-      expect(new MoreDerived().foo).toEqual "hello there world"
-

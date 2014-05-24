@@ -7,7 +7,7 @@ Camera = TransformNode.extend
     @anchorPoint = [0, 0]
 
   updateMatrix: ->
-    @_super(TransformNode, "updateMatrix")()
+    TransformNode.prototype.updateMatrix.apply @
 
     @_matrix
       .translate(-@width*@anchorPoint[0], -@height*@anchorPoint[1])

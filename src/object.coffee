@@ -46,7 +46,6 @@ setupClass = (Class, ParentClass, properties, mixins) ->
   mixin.apply Class.prototype for mixin in mixins
   PropertyMarker.setupProperties properties, Class.prototype
   copyOwnProperties(properties, Class.prototype)
-  Class.prototype._super = superFunction
 
   if Class.prototype[INITIALIZE_FUNCTION]?
     Class.prototype[INITIALIZE_FUNCTION] = wrapInitializer(Class.prototype[INITIALIZE_FUNCTION], ParentClass)
@@ -55,13 +54,6 @@ wrapInitializer = (initializer, ParentClass) ->
   ->
     ParentClass.prototype[INITIALIZE_FUNCTION]?.apply @, arguments
     initializer.apply @, arguments
-
-superFunction = (Parent, property) ->
-  parentProperty = Parent.prototype[property]
-  throw new TypeError("Superclass property '#{property}' does not exist.") unless parentProperty?
-  if typeof parentProperty == "function"
-    parentProperty = parentProperty.bind @
-  parentProperty
 
 extractArguments = ->
   mixins = []
