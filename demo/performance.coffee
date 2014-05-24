@@ -1,11 +1,11 @@
 `module Two from "two"`
 
 PROFILE_FREQUENCY = 2
-timer = new Two.Timer()
 profiler = Two.Profiler.create("frametime", PROFILE_FREQUENCY)
 sampler = new Two.PeriodicSampler(PROFILE_FREQUENCY)
 
-render = ->
+previousTime = 0
+render = (time) ->
   requestAnimationFrame(render)
 
   for ball in balls
@@ -17,7 +17,8 @@ render = ->
 
   frameTime = profiler.collect(-> renderer.render(scene, camera)).toFixed(3)
   document.getElementById("frame-time").innerHTML = frameTime
-  document.getElementById("fps").innerHTML = sampler.sample(1000 / timer.mark()).toFixed(2)
+  document.getElementById("fps").innerHTML = sampler.sample(1000 / (time - previousTime)).toFixed(2)
+  previousTime = time
 
 canvas = new Two.Canvas(width: 640, height: 480)
 renderer = new Two.SceneRenderer(canvas: canvas)
@@ -28,7 +29,7 @@ scene = new Two.TransformNode()
 class Ball
   constructor: ->
     @transform = new Two.TransformNode()
-    @velocity = [ Math.random() - .5, Math.random() - .5]
+    @velocity = [Math.random() - .5, Math.random() - .5]
     @velocity[0] *= 20
     @velocity[1] *= 20
     @transform.position = @getRandomPosition()
