@@ -15,6 +15,7 @@
 `import TransformNode from "./transform"`
 `import { Profiler, Timer, PeriodicSampler } from "./benchmark"`
 `import Keys from "./keys"`
+`import AssetLoader from "./asset_loader"`
 
 Components =
   P2Physics: P2Physics
@@ -22,5 +23,5 @@ Components =
 
 `export { Object, Canvas, SceneRenderer, TransformNode, RenderNode, Sprite, Matrix2d,
 DeviceMetrics, Profiler, Timer, PeriodicSampler, GameObject, Components, GameWorld,
-Rectangle, Camera, Game, Keys
+Rectangle, Camera, Game, Keys, AssetLoader
 }`

@@ -27,7 +27,7 @@ Game = Two.Game.extend
   drawHeightMarkers: ->
     markers = new Two.TransformNode()
     sprite = new Two.Sprite
-      image: new Two.Canvas(devicePixelRatio: 1, width: @canvas.width, height: @canvas.height)
+      image: Two.Canvas.create(devicePixelRatio: 1, width: @canvas.width, height: @canvas.height).domElement
       anchorPoint: [0, 0]
     markers.add new Two.RenderNode(elements: [sprite])
 

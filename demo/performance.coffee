@@ -23,8 +23,10 @@ render = (time) ->
 canvas = new Two.Canvas(width: 640, height: 480)
 renderer = new Two.SceneRenderer(canvas: canvas)
 camera = new Two.Camera(anchorPoint: [0,0], width: canvas.width, height: canvas.height)
-
+loader = new Two.AssetLoader()
 scene = new Two.TransformNode()
+
+loader.preloadImage "Dream_Moon_Ball_Sprite", "/demo/assets/Dream_Moon_Ball_Sprite.png"
 
 class Ball
   constructor: ->
@@ -36,7 +38,7 @@ class Ball
     @transform.add new Two.RenderNode(elements: [@ballSprite])
 
   ballSprite: new Two.Sprite
-    image: "/demo/assets/Dream_Moon_Ball_Sprite.png"
+    image: loader.loadImage "Dream_Moon_Ball_Sprite"
     width: 40
     height: 40
 

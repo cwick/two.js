@@ -16,9 +16,9 @@ initializeObject = (properties, object, mixins) ->
   copyOwnProperties(properties, object)
   object
 
-create = (Constructor) ->
-  return (properties={}) ->
-    initializeObject properties, new Constructor, []
+create = (Class) ->
+  return (properties) ->
+    new Class(properties)
 
 extend = (ParentClass) ->
   return ->
@@ -72,11 +72,11 @@ extractArguments = ->
 
 class TwoObject
   constructor: (properties={}) ->
-    return TwoObject.create properties
+    return initializeObject properties, @, []
 
   @__mixins__: []
 
-  @create: create(Object)
+  @create: create(TwoObject)
 
   @extend: extend(TwoObject)
 

@@ -48,7 +48,7 @@ Sprite = TwoObject.extend
 
     commands.push
       name: "drawImage"
-      image: if image instanceof Canvas then image._domElement else image
+      image: image
       transform: transform
       origin: @pixelOrigin
       crop: @crop || {
