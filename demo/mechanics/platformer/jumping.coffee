@@ -19,6 +19,10 @@ Game = Two.Game.extend
       do (x) ->
         groundBlock = new Two.TransformNode(position: [x, 0])
         groundBlock.add new Two.RenderNode(elements: [groundSprite])
+        groundBlockCollider = new Two.ArcadePhysicsBody
+          boundingBox: new Two.Rectangle(x: -16, y: -16, width: 32, height: 32)
+          type: Two.ArcadePhysicsBody.STATIC
+
         ground.add groundBlock
 
     @scene.add @drawHeightMarkers()

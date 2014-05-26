@@ -10,6 +10,7 @@
 `import RenderNode from "./render_node"`
 `import P2Physics from "./components/p2_physics"`
 `import ArcadePhysics from "./components/arcade_physics"`
+`import ArcadePhysicsBody from "./arcade_physics_body"`
 `import SceneRenderer from "./scene_renderer"`
 `import Sprite from "./sprite"`
 `import TransformNode from "./transform"`
@@ -23,5 +24,5 @@ Components =
 
 `export { Object, Canvas, SceneRenderer, TransformNode, RenderNode, Sprite, Matrix2d,
 DeviceMetrics, Profiler, Timer, PeriodicSampler, GameObject, Components, GameWorld,
-Rectangle, Camera, Game, Keys, AssetLoader
+Rectangle, Camera, Game, Keys, AssetLoader, ArcadePhysicsBody
 }`
