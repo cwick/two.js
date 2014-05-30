@@ -16,14 +16,16 @@ Game = Two.Game.extend
     groundSprite = new Two.Sprite(image: "/demo/assets/ground.png", anchorPoint: [0, 0])
 
     for x in [0...@canvas.width] by 32
-      do (x) ->
-        groundBlock = new Two.TransformNode(position: [x, 0])
+      do (x) =>
+        groundBlock = new Two.TransformNode(position: [x+32*2, 1*64])
         groundBlock.add new Two.RenderNode(elements: [groundSprite])
         groundBlockCollider = new Two.ArcadePhysicsBody
           boundingBox: new Two.Rectangle(x: -16, y: -16, width: 32, height: 32)
           type: Two.ArcadePhysicsBody.STATIC
+          position: groundBlock.position
 
         ground.add groundBlock
+        @world.physics.arcade.add groundBlockCollider
 
     @scene.add @drawHeightMarkers()
     @spawn "Player"
@@ -73,7 +75,7 @@ game.registerEntity "Player", Two.GameObject.extend Two.Components.ArcadePhysics
 
   spawn: ->
     @physics.position.x = @game.canvas.width/2
-    @physics.position.y = 32
+    @physics.position.y = 0
 
   update: ->
     if @game.input.keyboard.isKeyDown Two.Keys.LEFT

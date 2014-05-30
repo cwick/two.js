@@ -1,10 +1,10 @@
 Vector2d = (values) ->
   if values?
-    @[0] = values[0]
-    @[1] = values[1]
+    @[0] = 1.0 * values[0]
+    @[1] = 1.0 * values[1]
   else
-    @[0] = 0
-    @[1] = 0
+    @[0] = 0.0
+    @[1] = 0.0
   return
 
 Vector2d:: = new Array(2)
