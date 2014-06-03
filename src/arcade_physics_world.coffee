@@ -21,9 +21,13 @@ ArcadePhysicsWorld = TwoObject.extend
 
   _runSimulation: (time) ->
     for body in @bodies
+      body.position[0] -= body.boundingBox.x
+      body.position[1] -= body.boundingBox.y
       @_resetTouches body
       @_updateBody body, time
       @_collideWorldBounds body
+      body.position[0] += body.boundingBox.x
+      body.position[1] += body.boundingBox.y
 
     return
 
@@ -89,13 +93,10 @@ ArcadePhysicsWorld = TwoObject.extend
     halfWidth = boundingBox.width/2
     halfHeight = boundingBox.height/2
 
-    center_x = body.position[0] - boundingBox.x
-    center_y = body.position[1] - boundingBox.y
-
-    min_x = center_x - halfWidth
-    max_x = center_x + halfWidth
-    min_y = center_y - halfHeight
-    max_y = center_y + halfHeight
+    min_x = body.position[0] - halfWidth
+    max_x = body.position[0] + halfWidth
+    min_y = body.position[1] - halfHeight
+    max_y = body.position[1] + halfHeight
 
     bottom = @bounds.y
     top = @bounds.y + @bounds.height
@@ -104,22 +105,22 @@ ArcadePhysicsWorld = TwoObject.extend
 
     if min_y <= bottom
       body.velocity[1] = body.acceleration[1] = 0
-      body.position[1] = bottom + halfHeight + boundingBox.y
+      body.position[1] = bottom + halfHeight
       body.touching.down = true
 
     if max_y >= top
       body.velocity[1] = body.acceleration[1] = 0
-      body.position[1] = top - halfHeight + boundingBox.y
+      body.position[1] = top - halfHeight
       body.touching.up = true
 
     if min_x <= left
       body.velocity[0] = body.acceleration[0] = 0
-      body.position[0] = left + halfWidth - boundingBox.x
+      body.position[0] = left + halfWidth
       body.touching.left = true
 
     if max_x >= right
       body.velocity[0] = body.acceleration[0] = 0
-      body.position[0] = right - halfWidth - boundingBox.x
+      body.position[0] = right - halfWidth
       body.touching.right = true
 
 `export default ArcadePhysicsWorld`
