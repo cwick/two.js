@@ -19,7 +19,7 @@ render = ->
   document.getElementById("fps").innerHTML = sampler.sample(1000 / timer.mark()).toFixed(2)
 
 canvas = new Two.Canvas(width: 640, height: 480)
-renderer = new Two.SceneRenderer(canvas: canvas)
+renderer = new Two.SceneRenderer(backend: new Two.CanvasRenderer(canvas: canvas))
 camera = new Two.Camera(anchorPoint: [0,0], width: canvas.width, height: canvas.height)
 scene = new Two.TransformNode()
 

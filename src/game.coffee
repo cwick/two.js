@@ -2,6 +2,7 @@
 `import Property from "./property"`
 `import Canvas from "./canvas"`
 `import SceneRenderer from "./scene_renderer"`
+`import CanvasRenderer from "./canvas_renderer"`
 `import Camera from "./camera"`
 `import TransformNode from "./transform"`
 `import GameWorld from "./game_world"`
@@ -22,7 +23,7 @@ Game = TwoObject.extend
   canvas: Property
     set: (value) ->
       @_canvas = value
-      @renderer = new SceneRenderer(canvas: value)
+      @renderer = new SceneRenderer(backend: new CanvasRenderer(canvas: value))
 
   start: ->
     @configure()
@@ -34,6 +35,7 @@ Game = TwoObject.extend
 
   # Implement in derived classes
   configure: ->
+
   update: ->
     @world.step 1/60 # TODO: use variable step?
 

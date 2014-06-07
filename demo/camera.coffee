@@ -9,7 +9,7 @@ render = ->
   camera.scale = scale
 
 canvas = new Two.Canvas(width: 640, height: 480)
-renderer = new Two.SceneRenderer(canvas: canvas)
+renderer = new Two.SceneRenderer(backend: new Two.CanvasRenderer(canvas: canvas))
 renderer.backend.imageSmoothingEnabled = false
 
 camera = new Two.Camera(anchorPoint: [0.5, 0.5], position: [0, 100], width: canvas.width, height: canvas.height)

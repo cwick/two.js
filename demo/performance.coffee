@@ -21,7 +21,7 @@ render = (time) ->
   previousTime = time
 
 canvas = new Two.Canvas(width: 640, height: 480)
-renderer = new Two.SceneRenderer(canvas: canvas)
+renderer = new Two.SceneRenderer(backend: new Two.CanvasRenderer(canvas: canvas))
 camera = new Two.Camera(anchorPoint: [0,0], width: canvas.width, height: canvas.height)
 loader = new Two.AssetLoader()
 scene = new Two.TransformNode()

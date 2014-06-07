@@ -28,7 +28,7 @@ render = ->
   marsTransform.rotation += marsOrbitSpeed * (1 - MARS_PERIOD / MARS_DAY_LENGTH)
 
 canvas = new Two.Canvas(width: 800, height: 800)
-renderer = new Two.SceneRenderer(canvas: canvas)
+renderer = new Two.SceneRenderer(backend: new Two.CanvasRenderer(canvas: canvas))
 scene = new Two.TransformNode()
 camera = new Two.Camera(width: canvas.width, height: canvas.height, anchorPoint: [0.5, 0.5])
 

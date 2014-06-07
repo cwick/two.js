@@ -2,8 +2,12 @@
 `import Property from "./property"`
 `import DeviceMetrics from "./device_metrics"`
 `import Matrix2d from "./matrix2d"`
+`import Canvas from "./canvas"`
 
 CanvasRenderer = TwoObject.extend
+  initialize: ->
+    @canvas = new Canvas()
+
   canvas: Property
     set: (value) ->
       @_canvas = value

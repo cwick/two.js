@@ -9,27 +9,22 @@
 
 SceneRenderer = TwoObject.extend
   initialize: ->
-    @_backend = new CanvasRenderer()
+    @backend = new CanvasRenderer()
     @backgroundColor = "black"
 
-  canvas: Property
-    set: (value) -> @_canvas = @_backend.canvas = value
-
-  backend: Property readonly: true
   backgroundColor: Property
     set: (value) ->
       @_backgroundColor = new Color(value)
 
   render: (scene, camera) ->
     commands = []
-    backend = @_backend
     commands.push
       name: "clear"
       color: @_backgroundColor
 
     camera.updateMatrix()
     cameraMatrix = camera.updateWorldMatrix().clone()
-      .scale(1/@_canvas.width, 1/@_canvas.height)
+      .scale(1/@backend._canvas.width, 1/@backend._canvas.height)
       .invert()
 
     new DepthFirstTreeIterator(scene).execute (node) =>
@@ -40,7 +35,7 @@ SceneRenderer = TwoObject.extend
 
     for command in commands
       command.transform.preMultiply cameraMatrix if command.transform?
-      backend.execute command
+      @backend.execute command
 
     return
 
