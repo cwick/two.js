@@ -1,4 +1,4 @@
-`module gl from "lib/gl-matrix"`
+`module gl from "./lib/gl-matrix"`
 
 class Matrix2d
   constructor: (values) ->

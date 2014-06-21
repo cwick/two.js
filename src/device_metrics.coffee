@@ -1,5 +1,5 @@
 `import TwoObject from "./object"`
-`import Property from "./property";`
+`import Property from "./property"`
 
 DeviceMetrics = TwoObject.createWithMixins
   devicePixelRatio: Property

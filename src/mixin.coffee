@@ -1,4 +1,4 @@
-`import { PropertyMarker } from "property"`
+`import { PropertyMarker } from "./property"`
 
 INIT_FUNCTION = "initialize"
 META_KEY = "__two_meta__"

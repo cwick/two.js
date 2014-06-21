@@ -1,6 +1,6 @@
 `import TwoObject from "./object"`
 `import Property from "./property"`
-`module p2 from "../lib/p2"`
+`module p2 from "./lib/p2"`
 
 P2PhysicsWorld = TwoObject.extend
   initialize: ->

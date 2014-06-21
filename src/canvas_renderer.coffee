@@ -1,4 +1,4 @@
-`import TwoObject from "object"`
+`import TwoObject from "./object"`
 `import Property from "./property"`
 `import DeviceMetrics from "./device_metrics"`
 `import Matrix2d from "./matrix2d"`

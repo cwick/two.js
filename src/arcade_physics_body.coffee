@@ -1,6 +1,6 @@
 `import TwoObject from "./object"`
-`import Vector2d from "../vector2d"`
-`import Rectangle from "../rectangle"`
+`import Vector2d from "./vector2d"`
+`import Rectangle from "./rectangle"`
 
 ArcadePhysicsBody = TwoObject.extend
   initialize: ->
