@@ -37,14 +37,14 @@ Sprite = TwoObject.extend
 
   pixelOrigin: Property
     get: ->
-      image = @image
-      w = image.width
-      h = image.height
+      width = @width
+      height = @height
 
-      return [0,0] unless w? && h?
+      return [0,0] unless width? && height?
 
-      [ @anchorPoint[0] * w,
-        h - @anchorPoint[1] * h
+      [
+        @anchorPoint[0] * width,
+        height - @anchorPoint[1] * height
       ]
 
   image: Property

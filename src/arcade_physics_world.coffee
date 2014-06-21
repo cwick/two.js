@@ -9,6 +9,7 @@ ArcadePhysicsWorld = TwoObject.extend
     @gravity = new Vector2d()
     @updateCallback = ->
     @isActive = false
+    @collideWorldBounds = true
 
   add: (body) ->
     @bodies.push body
@@ -25,7 +26,7 @@ ArcadePhysicsWorld = TwoObject.extend
       body.applyGravity(time, @gravity)
       body.updateVelocity(time)
       body.updatePosition(time)
-      body.doWorldBoundsCollision(@bounds)
+      body.doWorldBoundsCollision(@bounds) if @collideWorldBounds
       body.postUpdate()
 
     return

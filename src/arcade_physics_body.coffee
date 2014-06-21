@@ -2,13 +2,20 @@
 `import Vector2d from "./vector2d"`
 `import Rectangle from "./rectangle"`
 
+BoundingBox = Rectangle.extend
+  fromSprite: (sprite) ->
+    @width = sprite.width
+    @height = sprite.height
+    @y = (sprite.anchorPoint[1] - 0.5) * @height
+    @x = (sprite.anchorPoint[0] - 0.5) * @width
+
 ArcadePhysicsBody = TwoObject.extend
   initialize: ->
     @userData = null
     @velocity = new Vector2d()
     @acceleration = new Vector2d()
     @position = new Vector2d()
-    @boundingBox = new Rectangle()
+    @boundingBox = new BoundingBox()
     @maxVelocity = new Vector2d([Number.MAX_VALUE, Number.MAX_VALUE])
     @drag = new Vector2d()
     @type = ArcadePhysicsBody.DYNAMIC
