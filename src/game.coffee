@@ -9,6 +9,7 @@
 `import Keyboard from "./keyboard"`
 `import GameObject from "./game_object"`
 `import Rectangle from "./rectangle"`
+`import AssetLoader from "./asset_loader"`
 
 Game = TwoObject.extend
   initialize: ->
@@ -18,6 +19,7 @@ Game = TwoObject.extend
     @scene = new TransformNode()
     @world = new GameWorld()
     @input = { keyboard: new Keyboard() }
+    @loader = new AssetLoader()
     @_entityClasses = {}
 
   canvas: Property
