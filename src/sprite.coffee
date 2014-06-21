@@ -15,6 +15,26 @@ Sprite = TwoObject.extend
       height: @height
       crop: @crop?.clone()
 
+  width: Property
+    get: ->
+      return @_width if @_width?
+      return @crop.width if @crop
+      return @_image.width if @_image.width
+      null
+
+    set: (value) ->
+      @_width = value
+
+  height: Property
+    get: ->
+      return @_height if @_height?
+      return @crop.height if @crop
+      return @_image.height if @_image.height
+      null
+
+    set: (value) ->
+      @_height = value
+
   pixelOrigin: Property
     get: ->
       image = @image
@@ -38,9 +58,6 @@ Sprite = TwoObject.extend
   pushRenderCommands: (commands, transform) ->
     image = @_image
     scaleX = scaleY = 1
-
-    @width = @crop.width if @crop && !@width?
-    @height = @crop.height if @crop && !@height?
 
     if @width && image.width
       scaleX = @width / image.width
