@@ -13,3 +13,4 @@
 `import "./game_object_spec"`
 `import "./p2_physics_spec"`
 `import "./vector2d_spec"`
+`import "./asset_loader_spec"`

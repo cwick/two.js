@@ -1,9 +1,6 @@
 `module Two from "two"`
 
 Game = Two.Game.extend
-  setup: ->
-    @canvasSize = [640, 480]
-
   update: ->
     helloWorldTransform.rotation += 0.008
     wobble.position.x = Math.sin(Date.now() / 500) * 100

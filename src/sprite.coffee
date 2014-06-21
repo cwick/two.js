@@ -39,6 +39,9 @@ Sprite = TwoObject.extend
     image = @_image
     scaleX = scaleY = 1
 
+    @width = @crop.width if @crop && !@width?
+    @height = @crop.height if @crop && !@height?
+
     if @width && image.width
       scaleX = @width / image.width
     if @height && image.height
