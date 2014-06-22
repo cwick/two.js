@@ -14,7 +14,7 @@ StateManager = TwoObject.extend
     state = new State()
 
     @_preloadState(state, @game).then =>
-      state.enter(@game)
+      setTimeout (=> state.enter(@game)), 0
 
   _preloadState: (state, game) ->
     i = game.loader.pending.length

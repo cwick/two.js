@@ -6,6 +6,8 @@ Sprite = TwoObject.extend
   initialize: ->
     @anchorPoint = [0.5, 0.5]
     @crop = null
+    @_frame = null
+    @_frames = {}
 
   clone: ->
     new Sprite
@@ -54,6 +56,15 @@ Sprite = TwoObject.extend
         @_image.src = value
       else
         @_image = value
+
+  frame: Property
+    set: (value) ->
+      @_frame = value
+      frame = @_frames[value]
+      @crop = frame if frame
+
+  addFrame: (name, frame) ->
+    @_frames[name] ||= frame
 
   pushRenderCommands: (commands, transform) ->
     image = @_image
