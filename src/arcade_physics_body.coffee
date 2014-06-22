@@ -33,6 +33,12 @@ ArcadePhysicsBody = TwoObject.extend
   velocity: Property
     set: (value) -> @_velocity = new Vector2d(value)
 
+  maxVelocity: Property
+    set: (value) -> @_maxVelocity = new Vector2d(value)
+
+  drag: Property
+    set: (value) -> @_drag = new Vector2d(value)
+
   postUpdate: ->
   preUpdate: ->
 
@@ -111,31 +117,31 @@ ArcadePhysicsBody = TwoObject.extend
   applyXDrag: (time) ->
     if @acceleration[0] == 0
       if @_velocity[0] > 0
-        @_velocity[0] -= @drag[0]*time
+        @_velocity[0] -= @_drag[0]*time
         @_velocity[0] = 0 if @_velocity[0] < 0
       else if @_velocity[0] < 0
-        @_velocity[0] += @drag[0]*time
+        @_velocity[0] += @_drag[0]*time
         @_velocity[0] = 0 if @_velocity[0] > 0
 
   applyYDrag: (time) ->
     if @acceleration[1] == 0
       if @_velocity[1] > 0
-        @_velocity[1] -= @drag[1]*time
+        @_velocity[1] -= @_drag[1]*time
         @_velocity[1] = 0 if @_velocity[1] < 0
       else if @_velocity[1] < 0
-        @_velocity[1] += @drag[1]*time
+        @_velocity[1] += @_drag[1]*time
         @_velocity[1] = 0 if @_velocity[1] > 0
 
   limitVelocity: ->
-    if @_velocity[0] > @maxVelocity[0]
-      @_velocity[0] = @maxVelocity[0]
-    else if @_velocity[0] < -@maxVelocity[0]
-      @_velocity[0] = -@maxVelocity[0]
+    if @_velocity[0] > @_maxVelocity[0]
+      @_velocity[0] = @_maxVelocity[0]
+    else if @_velocity[0] < -@_maxVelocity[0]
+      @_velocity[0] = -@_maxVelocity[0]
 
-    if @_velocity[1] > @maxVelocity[1]
-      @_velocity[1] = @maxVelocity[1]
-    else if @_velocity[1] < -@maxVelocity[1]
-      @_velocity[1] = -@maxVelocity[1]
+    if @_velocity[1] > @_maxVelocity[1]
+      @_velocity[1] = @_maxVelocity[1]
+    else if @_velocity[1] < -@_maxVelocity[1]
+      @_velocity[1] = -@_maxVelocity[1]
 
   resetTouches: ->
     t = @touching
