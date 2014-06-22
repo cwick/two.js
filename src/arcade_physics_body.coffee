@@ -1,6 +1,7 @@
 `import TwoObject from "./object"`
 `import Vector2d from "./vector2d"`
 `import Rectangle from "./rectangle"`
+`import Property from "./property"`
 
 BoundingBox = Rectangle.extend
   fromSprite: (sprite) ->
@@ -26,12 +27,23 @@ ArcadePhysicsBody = TwoObject.extend
       left: false
       right: false
 
-  preUpdate: ->
-    @unsetOrigin()
-    @resetTouches()
+  position: Property
+    set: (value) -> @_position = new Vector2d(value)
+
+  velocity: Property
+    set: (value) -> @_velocity = new Vector2d(value)
 
   postUpdate: ->
+  preUpdate: ->
+
+  _preUpdate: ->
+    @unsetOrigin()
+    @resetTouches()
+    @preUpdate()
+
+  _postUpdate: ->
     @setOrigin()
+    @postUpdate()
 
   doWorldBoundsCollision: (worldBounds) ->
     return unless @collideWorldBounds
@@ -40,10 +52,10 @@ ArcadePhysicsBody = TwoObject.extend
     halfWidth = @boundingBox.width/2
     halfHeight = @boundingBox.height/2
 
-    min_x = @position[0] - halfWidth
-    max_x = @position[0] + halfWidth
-    min_y = @position[1] - halfHeight
-    max_y = @position[1] + halfHeight
+    min_x = @_position[0] - halfWidth
+    max_x = @_position[0] + halfWidth
+    min_y = @_position[1] - halfHeight
+    max_y = @_position[1] + halfHeight
 
     bottom = worldBounds.y
     top = worldBounds.y + worldBounds.height
@@ -51,36 +63,36 @@ ArcadePhysicsBody = TwoObject.extend
     right = worldBounds.x + worldBounds.width
 
     if min_y <= bottom
-      @velocity[1] = @acceleration[1] = 0
-      @position[1] = bottom + halfHeight
+      @_velocity[1] = @acceleration[1] = 0
+      @_position[1] = bottom + halfHeight
       @touching.down = true
 
     if max_y >= top
-      @velocity[1] = @acceleration[1] = 0
-      @position[1] = top - halfHeight
+      @_velocity[1] = @acceleration[1] = 0
+      @_position[1] = top - halfHeight
       @touching.up = true
 
     if min_x <= left
-      @velocity[0] = @acceleration[0] = 0
-      @position[0] = left + halfWidth
+      @_velocity[0] = @acceleration[0] = 0
+      @_position[0] = left + halfWidth
       @touching.left = true
 
     if max_x >= right
-      @velocity[0] = @acceleration[0] = 0
-      @position[0] = right - halfWidth
+      @_velocity[0] = @acceleration[0] = 0
+      @_position[0] = right - halfWidth
       @touching.right = true
 
   unsetOrigin: ->
-    @position[0] -= @boundingBox.x
-    @position[1] -= @boundingBox.y
+    @_position[0] -= @boundingBox.x
+    @_position[1] -= @boundingBox.y
 
   setOrigin: ->
-    @position[0] += @boundingBox.x
-    @position[1] += @boundingBox.y
+    @_position[0] += @boundingBox.x
+    @_position[1] += @boundingBox.y
 
   applyGravity: (time, gravity) ->
-    @velocity[0] += gravity[0]*time
-    @velocity[1] += gravity[1]*time
+    @_velocity[0] += gravity[0]*time
+    @_velocity[1] += gravity[1]*time
 
   updateVelocity: (time) ->
     @applyAcceleration(time)
@@ -89,41 +101,41 @@ ArcadePhysicsBody = TwoObject.extend
     @limitVelocity()
 
   updatePosition: (time) ->
-    @position[0] += @velocity[0]*time
-    @position[1] += @velocity[1]*time
+    @_position[0] += @_velocity[0]*time
+    @_position[1] += @_velocity[1]*time
 
   applyAcceleration: (time) ->
-    @velocity[0] += @acceleration[0]*time
-    @velocity[1] += @acceleration[1]*time
+    @_velocity[0] += @acceleration[0]*time
+    @_velocity[1] += @acceleration[1]*time
 
   applyXDrag: (time) ->
     if @acceleration[0] == 0
-      if @velocity[0] > 0
-        @velocity[0] -= @drag[0]*time
-        @velocity[0] = 0 if @velocity[0] < 0
-      else if @velocity[0] < 0
-        @velocity[0] += @drag[0]*time
-        @velocity[0] = 0 if @velocity[0] > 0
+      if @_velocity[0] > 0
+        @_velocity[0] -= @drag[0]*time
+        @_velocity[0] = 0 if @_velocity[0] < 0
+      else if @_velocity[0] < 0
+        @_velocity[0] += @drag[0]*time
+        @_velocity[0] = 0 if @_velocity[0] > 0
 
   applyYDrag: (time) ->
     if @acceleration[1] == 0
-      if @velocity[1] > 0
-        @velocity[1] -= @drag[1]*time
-        @velocity[1] = 0 if @velocity[1] < 0
-      else if @velocity[1] < 0
-        @velocity[1] += @drag[1]*time
-        @velocity[1] = 0 if @velocity[1] > 0
+      if @_velocity[1] > 0
+        @_velocity[1] -= @drag[1]*time
+        @_velocity[1] = 0 if @_velocity[1] < 0
+      else if @_velocity[1] < 0
+        @_velocity[1] += @drag[1]*time
+        @_velocity[1] = 0 if @_velocity[1] > 0
 
   limitVelocity: ->
-    if @velocity[0] > @maxVelocity[0]
-      @velocity[0] = @maxVelocity[0]
-    else if @velocity[0] < -@maxVelocity[0]
-      @velocity[0] = -@maxVelocity[0]
+    if @_velocity[0] > @maxVelocity[0]
+      @_velocity[0] = @maxVelocity[0]
+    else if @_velocity[0] < -@maxVelocity[0]
+      @_velocity[0] = -@maxVelocity[0]
 
-    if @velocity[1] > @maxVelocity[1]
-      @velocity[1] = @maxVelocity[1]
-    else if @velocity[1] < -@maxVelocity[1]
-      @velocity[1] = -@maxVelocity[1]
+    if @_velocity[1] > @maxVelocity[1]
+      @_velocity[1] = @maxVelocity[1]
+    else if @_velocity[1] < -@maxVelocity[1]
+      @_velocity[1] = -@maxVelocity[1]
 
   resetTouches: ->
     t = @touching

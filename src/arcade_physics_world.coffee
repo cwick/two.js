@@ -22,12 +22,12 @@ ArcadePhysicsWorld = TwoObject.extend
 
   _runSimulation: (time) ->
     for body in @bodies
-      body.preUpdate()
+      body._preUpdate()
       body.applyGravity(time, @gravity)
       body.updateVelocity(time)
       body.updatePosition(time)
       body.doWorldBoundsCollision(@bounds) if @collideWorldBounds
-      body.postUpdate()
+      body._postUpdate()
 
     return
 

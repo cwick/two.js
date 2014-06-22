@@ -14,8 +14,8 @@ GameWorld = TwoObject.extend
       arcade: new ArcadePhysicsWorld(updateCallback: @_updateArcadeObjects)
 
   step: (increment) ->
-    @_stepGameObjects()
     @_stepPhysics(increment)
+    @_stepGameObjects()
 
   add: (obj) ->
     @objects.push obj
