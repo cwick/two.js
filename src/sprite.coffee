@@ -39,8 +39,8 @@ Sprite = TwoObject.extend
 
   pixelOrigin: Property
     get: ->
-      width = @width
-      height = @height
+      width = @image.width
+      height = @image.height
 
       return [0,0] unless width? && height?
 
