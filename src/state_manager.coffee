@@ -12,8 +12,15 @@ StateManager = TwoObject.extend
     State = @_states[name]
     throw new Error("StateManager#transitionTo -- Invalid state '#{name}'") unless State?
     state = new State()
-    state.preload(@game)
-    state.enter(@game)
+
+    @_preloadState(state, @game).then =>
+      state.enter(@game)
+
+  _preloadState: (state, game) ->
+    i = game.loader.pending.length
+    state.preload(game)
+    promises = game.loader.pending.slice(i)
+    Promise.all promises
 
 `export default StateManager`
 
