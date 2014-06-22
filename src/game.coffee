@@ -10,6 +10,7 @@
 `import GameObject from "./game_object"`
 `import Rectangle from "./rectangle"`
 `import AssetLoader from "./asset_loader"`
+`import StateManager from "./state_manager"`
 
 Game = TwoObject.extend
   initialize: ->
@@ -21,19 +22,21 @@ Game = TwoObject.extend
     @input = { keyboard: new Keyboard() }
     @loader = new AssetLoader()
     @_entityClasses = {}
+    @_stateManager = new StateManager(game: @)
 
   canvas: Property
     set: (value) ->
       @_canvas = value
       @renderer = new SceneRenderer(backend: new CanvasRenderer(canvas: value))
 
-  start: ->
+  start: (initialState) ->
     @configure()
     @_initializeWorld()
     @_initializeCanvas()
     @_initializeCamera()
     @_initializeInput()
     @_render()
+    @_stateManager.transitionTo initialState if initialState
 
   # Implement in derived classes
   configure: ->
@@ -43,6 +46,8 @@ Game = TwoObject.extend
 
   spawn: (type) ->
     entity = @_initializeEntity(type)
+    throw new Error("Game#spawn -- Unknown entity type '#{type}'") unless entity?
+
     @scene.add entity.transform
     @world.add entity
     entity.spawn()
@@ -50,6 +55,9 @@ Game = TwoObject.extend
 
   registerEntity: (name, Entity) ->
     @_entityClasses[name] = Entity
+
+  registerState: ->
+    @_stateManager.register.apply @_stateManager, arguments
 
   _render: ->
     requestAnimationFrame(@_render.bind @)
@@ -68,11 +76,13 @@ Game = TwoObject.extend
 
   _initializeEntity: (type) ->
     Entity = @_entityClasses[type]
-    entity = Object.create Entity.prototype
-    entity.game = @
 
-    Entity.apply entity
-    entity
+    if Entity
+      entity = Object.create Entity.prototype
+      entity.game = @
+
+      Entity.apply entity
+      entity
 
   _initializeWorld: ->
     unless @world.bounds?

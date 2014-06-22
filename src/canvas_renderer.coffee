@@ -7,7 +7,7 @@
 CanvasRenderer = TwoObject.extend
   initialize: ->
     @canvas = new Canvas()
-    @flipYAxis = true
+    @flipYAxis = false
 
   canvas: Property
     set: (value) ->
@@ -40,7 +40,7 @@ CanvasRenderer = TwoObject.extend
       -devicePixelRatio * values[2],
       devicePixelRatio * values[3],
       devicePixelRatio * values[4],
-      devicePixelRatio * if @flipYAxis then (@_canvas._height - values[5]) else values[5])
+      devicePixelRatio * if @flipYAxis then values[5] else (@_canvas._height - values[5]))
 
   drawImage: (options) ->
     image = options.image

@@ -13,6 +13,8 @@ AssetLoader = TwoObject.extend
     canvas = document.createElement "canvas"
     @_images[name] = canvas
 
+    # In Chrome for Mac, drawing an image from a canvas is much
+    # faster than drawing from an Image object
     image = new Image()
     image.onload = ->
       canvas.width = image.width
