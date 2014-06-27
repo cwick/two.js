@@ -6,6 +6,7 @@
 `import GameWorld from "./game_world"`
 `import Matrix2d from "./matrix2d"`
 `import Object from "./object"`
+`import Property from "./property"`
 `import Rectangle from "./rectangle"`
 `import RenderNode from "./render_node"`
 `import P2Physics from "./components/p2_physics"`
@@ -23,7 +24,7 @@ Components =
   P2Physics: P2Physics
   ArcadePhysics: ArcadePhysics
 
-`export { Object, Canvas, SceneRenderer, CanvasRenderer, TransformNode, RenderNode, Sprite, Matrix2d,
+`export { Object, Property, Canvas, SceneRenderer, CanvasRenderer, TransformNode, RenderNode, Sprite, Matrix2d,
 DeviceMetrics, Profiler, Timer, PeriodicSampler, GameObject, Components, GameWorld,
 Rectangle, Camera, Game, Keys, AssetLoader, ArcadePhysicsBody
 }`
