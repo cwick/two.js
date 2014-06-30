@@ -42,6 +42,14 @@ CanvasRenderer = TwoObject.extend
       devicePixelRatio * values[4],
       devicePixelRatio * if @flipYAxis then values[5] else (@_canvas._height - values[5]))
 
+  drawText: (options) ->
+    @setTransform options.transform
+
+    @_context.textBaseline = "top"
+    @_context.font = "#{options.fontSize}px monospace"
+    @_context.fillStyle = options.color
+    @_context.fillText(options.text, 0, 0)
+
   drawImage: (options) ->
     image = options.image
     crop = options.crop

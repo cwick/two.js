@@ -15,16 +15,18 @@
 `import CanvasRenderer from "./canvas_renderer"`
 `import SceneRenderer from "./scene_renderer"`
 `import Sprite from "./sprite"`
+`import Text from "./text"`
 `import TransformNode from "./transform"`
 `import { Profiler, Timer, PeriodicSampler } from "./benchmark"`
 `import Keys from "./keys"`
 `import AssetLoader from "./asset_loader"`
+`import State from "./state"`
 
 Components =
   P2Physics: P2Physics
   ArcadePhysics: ArcadePhysics
 
-`export { Object, Property, Canvas, SceneRenderer, CanvasRenderer, TransformNode, RenderNode, Sprite, Matrix2d,
-DeviceMetrics, Profiler, Timer, PeriodicSampler, GameObject, Components, GameWorld,
-Rectangle, Camera, Game, Keys, AssetLoader, ArcadePhysicsBody
+`export { Object, Property, Canvas, SceneRenderer, CanvasRenderer, TransformNode, RenderNode, Sprite, Text,
+Matrix2d, DeviceMetrics, Profiler, Timer, PeriodicSampler, GameObject, Components, GameWorld,
+Rectangle, Camera, Game, Keys, AssetLoader, ArcadePhysicsBody, State
 }`

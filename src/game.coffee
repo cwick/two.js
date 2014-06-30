@@ -35,8 +35,8 @@ Game = TwoObject.extend
     @_initializeCanvas()
     @_initializeCamera()
     @_initializeInput()
-    @_render()
     @_stateManager.transitionTo initialState if initialState
+    @_mainLoop()
 
   # Implement in derived classes
   configure: ->
@@ -61,8 +61,8 @@ Game = TwoObject.extend
   registerState: ->
     @_stateManager.register.apply @_stateManager, arguments
 
-  _render: ->
-    requestAnimationFrame(@_render.bind @)
+  _mainLoop: ->
+    requestAnimationFrame(@_mainLoop.bind @)
     @update()
     @renderer.render(@scene, @camera)
 
