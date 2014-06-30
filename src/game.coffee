@@ -42,7 +42,9 @@ Game = TwoObject.extend
   configure: ->
 
   update: ->
-    @world.step 1/60 # TODO: use variable step?
+    INCREMENT = 1/60 # TODO: use variable step?
+    @_stateManager.step INCREMENT
+    @world.step INCREMENT
 
   spawn: (type) ->
     entity = @_initializeEntity(type)
