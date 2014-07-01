@@ -11,6 +11,7 @@
 `import Rectangle from "./rectangle"`
 `import AssetLoader from "./asset_loader"`
 `import StateManager from "./state_manager"`
+`import Debug from "./debug"`
 
 Game = TwoObject.extend
   initialize: ->
@@ -21,6 +22,7 @@ Game = TwoObject.extend
     @world = new GameWorld()
     @input = { keyboard: new Keyboard() }
     @loader = new AssetLoader()
+    @debug = new Debug()
     @_entityClasses = {}
     @_stateManager = new StateManager(game: @)
 
@@ -61,7 +63,9 @@ Game = TwoObject.extend
   registerState: ->
     @_stateManager.register.apply @_stateManager, arguments
 
-  _mainLoop: ->
+  _mainLoop: (timestamp) ->
+    @debug._calcFrameTime(timestamp)
+
     requestAnimationFrame(@_mainLoop.bind @)
     @update()
     @renderer.render(@scene, @camera)
