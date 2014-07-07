@@ -58,7 +58,7 @@ AssetLoader = TwoObject.extend
     @_images[name]
 
   loadObject: (name) ->
-    @_objects[name]
+    @_objects[name] || throw new Error("JSON objects must be preloaded first")
 
   _resolved: (promise) ->
     @pending.splice(@pending.indexOf(promise), 1)
