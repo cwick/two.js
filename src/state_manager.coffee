@@ -13,7 +13,13 @@ StateManager = TwoObject.extend
     throw new Error("StateManager#transitionTo -- Invalid state '#{name}'") unless State?
     @currentState = new State()
     @currentState.game = @game
-    @currentState.__preload__().then => @currentState.enter()
+    @currentState.__preload__().then =>
+      # The browser will swallow all exceptions thrown from this callback
+      # so we have to capture and print the error ourself
+      try
+        @currentState.enter()
+      catch error
+        console.error error.stack
 
   step: (increment) ->
     return unless @currentState

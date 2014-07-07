@@ -24,5 +24,10 @@ CanGroup = Mixin.create
       if CanHaveParent.detect(child)
         child._setParent(null)
 
+  removeAll: ->
+    children = @_children.slice(0)
+    @remove child for child in children
+    @
+
 
 `export default CanGroup`

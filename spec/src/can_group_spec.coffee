@@ -55,6 +55,20 @@ describe "CanGroup", ->
     it "clears the 'parent' property of its former children", ->
       expect(child.parent).toBeNull()
 
+  describe "when removing all children", ->
+    it "removes all children", ->
+      parent = new GroupNode()
+      child1 = new GroupNode()
+      child2 = new GroupNode()
+
+      parent.add child1
+      parent.add child2
+
+      parent.removeAll()
+      expect(parent.children.length).toEqual 0
+      expect(child1.parent).toBeNull()
+      expect(child2.parent).toBeNull()
+
   describe "when adding a group to multiple parents", ->
     parent1 = parent2 = child = null
 
