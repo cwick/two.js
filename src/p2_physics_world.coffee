@@ -8,8 +8,7 @@ P2PhysicsWorld = TwoObject.extend
     @isActive = false
     @updateCallback = ->
 
-  add: (object) ->
-    body = object.physics
+  add: (body) ->
     @world.addBody body
     @isActive = true
 

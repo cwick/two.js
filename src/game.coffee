@@ -27,6 +27,7 @@ Game = TwoObject.extend
     @_entityClasses = {}
     @_stateManager = new StateManager(game: @)
     @_eventQueue = new EventQueue()
+    @_deferredActions = []
 
   canvas: Property
     set: (value) ->
@@ -50,13 +51,14 @@ Game = TwoObject.extend
     @_stateManager.step INCREMENT
     @_eventQueue.step INCREMENT
     @world.step INCREMENT
+    @_executeDeferredAction()
 
   spawn: (type, options) ->
     entity = @_initializeEntity(type)
     throw new Error("Game#spawn -- Unknown entity type '#{type}'") unless entity?
 
     @scene.add entity.transform
-    @world.add entity
+    @defer => @world.add entity
     entity.spawn(options)
     entity
 
@@ -68,6 +70,13 @@ Game = TwoObject.extend
 
   setTimeout: (delay, callback) ->
     @_eventQueue.schedule delay, callback
+
+  defer: (callback) ->
+    @_deferredActions.push callback
+
+  remove: (entity) ->
+    @defer => @world.remove entity
+    entity.transform.parent?.remove entity.transform
 
   _mainLoop: (timestamp) ->
     @debug._calcFrameTime(timestamp)
@@ -103,5 +112,13 @@ Game = TwoObject.extend
         y: 0
         width: @canvas.width
         height: @canvas.height
+
+  _executeDeferredAction: ->
+    actions = @_deferredActions
+    @_deferredActions = []
+
+    callback() for callback in actions
+
+    return
 
 `export default Game`

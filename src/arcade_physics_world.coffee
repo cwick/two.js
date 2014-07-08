@@ -15,6 +15,11 @@ ArcadePhysicsWorld = TwoObject.extend
     @bodies.push body
     @isActive = true
 
+  remove: (body) ->
+    idx = @bodies.indexOf body
+    if idx != -1
+      @bodies.splice(idx, 1)
+
   step: (time) ->
     return unless @isActive
     @_runSimulation(time)

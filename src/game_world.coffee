@@ -21,9 +21,19 @@ GameWorld = TwoObject.extend
     @objects.push obj
 
     if P2Physics.detect(obj)
-      @physics.p2.add obj
+      @physics.p2.add obj.physics
     else if ArcadePhysics.detect(obj)
       @physics.arcade.add obj.physics
+
+  remove: (obj) ->
+    idx = @objects.indexOf obj
+    if idx != -1
+      @objects.splice(idx, 1)
+
+    if P2Physics.detect(obj)
+      @physics.p2.remove obj.physics
+    else if ArcadePhysics.detect(obj)
+      @physics.arcade.remove obj.physics
 
   _stepGameObjects: ->
     obj.update() for obj in @objects
