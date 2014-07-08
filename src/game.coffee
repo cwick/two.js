@@ -12,6 +12,7 @@
 `import AssetLoader from "./asset_loader"`
 `import StateManager from "./state_manager"`
 `import Debug from "./debug"`
+`import EventQueue from "./event_queue"`
 
 Game = TwoObject.extend
   initialize: ->
@@ -25,6 +26,7 @@ Game = TwoObject.extend
     @debug = new Debug()
     @_entityClasses = {}
     @_stateManager = new StateManager(game: @)
+    @_eventQueue = new EventQueue()
 
   canvas: Property
     set: (value) ->
@@ -46,6 +48,7 @@ Game = TwoObject.extend
   update: ->
     INCREMENT = 1/60 # TODO: use variable step?
     @_stateManager.step INCREMENT
+    @_eventQueue.step INCREMENT
     @world.step INCREMENT
 
   spawn: (type) ->
@@ -62,6 +65,9 @@ Game = TwoObject.extend
 
   registerState: ->
     @_stateManager.register.apply @_stateManager, arguments
+
+  setTimeout: (delay, callback) ->
+    @_eventQueue.schedule delay, callback
 
   _mainLoop: (timestamp) ->
     @debug._calcFrameTime(timestamp)
