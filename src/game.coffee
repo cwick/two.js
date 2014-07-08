@@ -51,13 +51,13 @@ Game = TwoObject.extend
     @_eventQueue.step INCREMENT
     @world.step INCREMENT
 
-  spawn: (type) ->
+  spawn: (type, options) ->
     entity = @_initializeEntity(type)
     throw new Error("Game#spawn -- Unknown entity type '#{type}'") unless entity?
 
     @scene.add entity.transform
     @world.add entity
-    entity.spawn()
+    entity.spawn(options)
     entity
 
   registerEntity: (name, Entity) ->
