@@ -1,17 +1,19 @@
 class PeriodicSampler
   constructor: (@frequency) ->
+    @samples = {}
 
-  sample: (value) ->
+  sample: (value, name="default") ->
     now = window.performance.now()
 
-    if @_shouldSample(now)
-      @lastSample = value
-      @lastSampleTime = now
+    @samples[name] ||= value: 0, time: 0
 
-    @lastSample
+    if @_shouldSample(now, name)
+      @samples[name] = value: value, time: now
 
-  _shouldSample: (now) ->
-    !@frequency? || !@lastSample? || (now - @lastSampleTime) > 1000/@frequency
+    @samples[name].value
+
+  _shouldSample: (now, name) ->
+    !@frequency? || !@samples[name].value? || (now - @samples[name].time) > 1000/@frequency
 
 class ProfilerInstance
   constructor: (@name, frequency) ->
