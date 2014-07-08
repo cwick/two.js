@@ -19,7 +19,15 @@ class Mixin
 
     PropertyMarker.setupProperties(@properties, base)
 
-    (base[META_KEY] ?= {})[@id] = true
+    base[META_KEY] = @_createMetaData(base[META_KEY])
 
     return
+
+  _createMetaData: (baseMeta = {}) ->
+    meta = {}
+    meta[k] = v for own k,v of baseMeta
+    meta[@id] = true
+
+    meta
+
 `export default Mixin`

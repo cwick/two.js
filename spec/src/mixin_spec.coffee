@@ -10,10 +10,16 @@ describe "Mixin", ->
 
   it "can detect if mixed into a base object", ->
     base = new Object()
-    FooMixin = Mixin.create foo: "bar"
+    FooMixin = Mixin.create()
     FooMixin.apply base
 
     expect(FooMixin.detect base).toBe true
+
+  it "can detect if not mixed into a base object", ->
+    base = new Object()
+    FooMixin = Mixin.create()
+
+    expect(FooMixin.detect base).toBe false
 
   it "can mix its properties into a base object", ->
     base = new Object()
