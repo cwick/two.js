@@ -59,6 +59,8 @@ Game = TwoObject.extend
     entity = @_initializeEntity(type)
     throw new Error("Game#spawn -- Unknown entity type '#{type}'") unless entity?
 
+    entity.name = options.name if options.name?.length > 0
+
     @scene.add entity.transform
     @defer => @world.add entity
     entity.spawn(options)
@@ -104,6 +106,7 @@ Game = TwoObject.extend
       entity = Object.create Entity.prototype
       entity.game = @
       entity.id = nextID++
+      entity.name = "#{type}#{entity.id}"
 
       Entity.apply entity
       entity

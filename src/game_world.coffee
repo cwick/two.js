@@ -10,6 +10,7 @@ GameWorld = TwoObject.extend
   initialize: ->
     @bounds = null
     @_entitiesByID = []
+    @_entitiesByName = []
     @_entityCount = 0
     @physics =
       p2: new P2PhysicsWorld(updateCallback: @_updateP2Objects)
@@ -24,6 +25,7 @@ GameWorld = TwoObject.extend
   add: (obj) ->
     throw new Error("Entities must have a unique ID") if @_entitiesByID[obj.id] || !obj.id?
 
+    @_entitiesByName[obj.name] = obj if obj.name?.length > 0
     @_entitiesByID[obj.id] = obj
     @_entityCount++
 
@@ -37,10 +39,15 @@ GameWorld = TwoObject.extend
       delete @_entitiesByID[obj.id]
       @_entityCount--
 
+    delete @_entitiesByName[obj.name]
+
     if P2Physics.detect(obj)
       @physics.p2.remove obj.physics
     else if ArcadePhysics.detect(obj)
       @physics.arcade.remove obj.physics
+
+  findByName: (name) ->
+    @_entitiesByName[name]
 
   _stepGameObjects: ->
     @_entitiesByID[id].update() for id of @_entitiesByID
