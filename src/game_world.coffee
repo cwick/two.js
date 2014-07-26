@@ -1,6 +1,7 @@
 `import TwoObject from "./object"`
 `import P2PhysicsWorld from "./p2_physics_world"`
 `import P2Physics from "./components/p2_physics"`
+`import Property from "./property"`
 `import ArcadePhysicsWorld from "./arcade_physics_world"`
 `import ArcadePhysics from "./components/arcade_physics"`
 `import Rectangle from "./rectangle"`
@@ -8,7 +9,8 @@
 GameWorld = TwoObject.extend
   initialize: ->
     @bounds = null
-    @objects = []
+    @_entitiesByID = []
+    @_entityCount = 0
     @physics =
       p2: new P2PhysicsWorld(updateCallback: @_updateP2Objects)
       arcade: new ArcadePhysicsWorld(updateCallback: @_updateArcadeObjects)
@@ -17,8 +19,13 @@ GameWorld = TwoObject.extend
     @_stepGameObjects()
     @_stepPhysics(increment)
 
+  entityCount: Property readonly: true
+
   add: (obj) ->
-    @objects.push obj
+    throw new Error("Entities must have a unique ID") if @_entitiesByID[obj.id] || !obj.id?
+
+    @_entitiesByID[obj.id] = obj
+    @_entityCount++
 
     if P2Physics.detect(obj)
       @physics.p2.add obj.physics
@@ -26,9 +33,9 @@ GameWorld = TwoObject.extend
       @physics.arcade.add obj.physics
 
   remove: (obj) ->
-    idx = @objects.indexOf obj
-    if idx != -1
-      @objects.splice(idx, 1)
+    if @_entitiesByID[obj.id]
+      delete @_entitiesByID[obj.id]
+      @_entityCount--
 
     if P2Physics.detect(obj)
       @physics.p2.remove obj.physics
@@ -36,7 +43,7 @@ GameWorld = TwoObject.extend
       @physics.arcade.remove obj.physics
 
   _stepGameObjects: ->
-    obj.update() for obj in @objects
+    @_entitiesByID[id].update() for id of @_entitiesByID
     return
 
   _stepPhysics: (increment) ->

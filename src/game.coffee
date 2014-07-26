@@ -14,6 +14,8 @@
 `import Debug from "./debug"`
 `import EventQueue from "./event_queue"`
 
+nextID = 1
+
 Game = TwoObject.extend
   initialize: ->
     @domElement = "game"
@@ -101,6 +103,7 @@ Game = TwoObject.extend
     if Entity
       entity = Object.create Entity.prototype
       entity.game = @
+      entity.id = nextID++
 
       Entity.apply entity
       entity
