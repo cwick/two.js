@@ -4,13 +4,24 @@ AssetLoader = TwoObject.extend
   initialize: ->
     @_images = {}
     @_objects = {}
+    @_spritesheets = {}
     @baseDir = ""
     @pending = []
 
-  preloadImage: (name, path) ->
-    @_preload "images", name, path, (resolve, loader, fullPath, fullName) ->
+  preloadSpriteSheet: (name) ->
+    image = @preloadImage("#{name}.png")
+    frames = @preloadObject("#{name}.json")
+    spritesheet = Promise.all([image, frames])
+
+    @_preload "spritesheets", name, (resolve, fullPath) ->
+      o = {hello: "world"}
+
+      spritesheet.then ->
+        resolve(o)
+
+  preloadImage: (name) ->
+    @_preload "images", name, (resolve, fullPath) ->
       canvas = document.createElement "canvas"
-      loader._images[fullName] = canvas
 
       image = new Image()
       image.src = fullPath
@@ -24,35 +35,32 @@ AssetLoader = TwoObject.extend
         context.drawImage image, 0,0
         resolve(canvas)
 
-  preloadObject: (name, path) ->
-    @_preload "objects", name, path, (resolve, loader, fullPath, fullName) ->
+  preloadObject: (name) ->
+    @_preload "objects", name, (resolve, fullPath) ->
       xhr = new XMLHttpRequest()
       xhr.open "GET", fullPath, true
       xhr.onload = ->
-        object = loader._objects[fullName] = JSON.parse(xhr.responseText)
-        resolve(object)
+        resolve(JSON.parse(xhr.responseText))
       xhr.send()
 
 
-  _preload: (type, name, path, load) ->
-    unless path?
-      path = name
-      name = AssetLoader.stripExtension(name)
+  _preload: (type, name, load) ->
+    assets = @["_#{type}"]
+    shortName = AssetLoader.stripExtension(name)
 
-    return if @["_#{type}"][name]?
+    return Promise.resolve(assets[shortName]) if assets[shortName]?
 
-    loader = @
-    path = AssetLoader.join(@baseDir, path)
-
+    fullPath = AssetLoader.join(@baseDir, name)
     promise = new Promise (resolve) ->
-      load(resolve, loader, path, name)
+      load(resolve, fullPath)
 
-    promise.then ->
-      loader._resolved(promise)
+    promise.then (result) =>
+      assets[shortName] = result
+      @_assetLoaded(promise)
 
-    loader.pending.push promise
+    @pending.push promise
 
-    return
+    promise
 
   loadImage: (name) ->
     @_images[name]
@@ -60,7 +68,10 @@ AssetLoader = TwoObject.extend
   loadObject: (name) ->
     @_objects[name] || throw new Error("JSON objects must be preloaded first")
 
-  _resolved: (promise) ->
+  loadSpritesheet: (name) ->
+    @_spritesheets[name] || throw new Error("Spritesheets must be preloaded first")
+
+  _assetLoaded: (promise) ->
     @pending.splice(@pending.indexOf(promise), 1)
 
 AssetLoader.join = (a,b) ->
