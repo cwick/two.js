@@ -11,11 +11,13 @@ Sprite = TwoObject.extend
 
   clone: ->
     new Sprite
-      image: @_image
       anchorPoint: @anchorPoint.slice(0)
-      width: @width
-      height: @height
       crop: @crop?.clone()
+      _image: @_image
+      _width: @_width
+      _height: @_height
+      _frames: @_frames
+      _frame: @_frame
 
   width: Property
     get: ->
