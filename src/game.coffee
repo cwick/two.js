@@ -14,8 +14,6 @@
 `import Debug from "./debug"`
 `import EventQueue from "./event_queue"`
 
-nextID = 1
-
 Game = TwoObject.extend
   initialize: ->
     @domElement = "game"
@@ -55,7 +53,7 @@ Game = TwoObject.extend
     @world.step INCREMENT
     @_executeDeferredAction()
 
-  spawn: (type, options) ->
+  spawn: (type, options={}) ->
     entity = @_initializeEntity(type)
     throw new Error("Game#spawn -- Unknown entity type '#{type}'") unless entity?
 
@@ -105,7 +103,6 @@ Game = TwoObject.extend
     if Entity
       entity = Object.create Entity.prototype
       entity.game = @
-      entity.id = nextID++
       entity.name = "#{type}#{entity.id}"
 
       Entity.apply entity

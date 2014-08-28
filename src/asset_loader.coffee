@@ -9,17 +9,15 @@ AssetLoader = TwoObject.extend
     @pending = []
     @_initializePlugins()
 
-  _preload: (assets, name, load) ->
-    shortName = AssetLoader.stripExtension(name)
+  _preload: (assets, name, path, load) ->
+    return Promise.resolve(assets[name]) if assets[name]?
 
-    return Promise.resolve(assets[shortName]) if assets[shortName]?
-
-    fullPath = AssetLoader.join(@baseDir, name)
+    fullPath = AssetLoader.join(@baseDir, path)
     promise = new Promise (resolve) ->
       load(name, fullPath, resolve)
 
     promise.then (result) =>
-      assets[shortName] = result
+      assets[name] = result
       @_assetLoaded(promise)
 
     @pending.push promise
@@ -68,9 +66,12 @@ AssetLoader.registerPlugin = (type, Plugin) ->
 
     loader.assets[name]
 
-  AssetLoader.prototype["preload#{capitalizedType}"] = (name) ->
+  AssetLoader.prototype["preload#{capitalizedType}"] = (name, path) ->
+    path = name unless path?
+    logicalName = AssetLoader.stripExtension(name)
+
     loader = @_loaders[type]
-    @_preload(loader.assets, name, loader.preload.bind(loader))
+    @_preload(loader.assets, logicalName, path, loader.preload.bind(loader))
 
 AssetLoader.registerPlugin "JSON", ObjectLoader
 AssetLoader.registerPlugin "Image", ImageLoader
