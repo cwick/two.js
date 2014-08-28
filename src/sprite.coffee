@@ -4,7 +4,7 @@
 
 Sprite = TwoObject.extend
   initialize: ->
-    @anchorPoint = [0.5, 0.5]
+    @anchorPoint = Sprite.defaultAnchorPoint.slice(0)
     @crop = null
     @_frame = null
     @_frames = {}
@@ -89,5 +89,7 @@ Sprite = TwoObject.extend
         y: 0
         width: image.width
         height: image.height }
+
+Sprite.defaultAnchorPoint = [0.5, 0.5]
 
 `export default Sprite`
