@@ -8,6 +8,7 @@ State = TwoObject.extend
   preload: ->
   enter: ->
   step: ->
+  beforeRender: ->
 
   # Returns a promise that resolves when all assets loaded by the state's
   # 'preload' function have finished loading

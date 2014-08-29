@@ -21,9 +21,16 @@ StateManager = TwoObject.extend
       catch error
         console.error error.stack
 
+  beforeRender: ->
+    @_callState "beforeRender"
+
   step: (increment) ->
+    @_callState "step", increment
+
+  _callState: (func) ->
     return unless @currentState
-    @currentState.step(increment) if @currentState.__isReady__
+    args = Array.prototype.slice.call(arguments, 1)
+    @currentState[func].apply @currentState, args if @currentState.__isReady__
 
 `export default StateManager`
 

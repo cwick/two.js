@@ -7,6 +7,7 @@
 CanvasRenderer = TwoObject.extend
   initialize: ->
     @canvas = new Canvas()
+    @imageSmoothingEnabled = false
     @flipYAxis = false
 
   canvas: Property
@@ -15,11 +16,8 @@ CanvasRenderer = TwoObject.extend
       @_context = @_canvas.getContext "2d"
 
   imageSmoothingEnabled: Property
-    set: (value) ->
-      @_imageSmoothingEnabled =
-        @_context.imageSmoothingEnabled =
-        @_context.mozImageSmoothingEnabled =
-        @_context.webkitImageSmoothingEnabled = value
+    set: (value) -> @canvas.imageSmoothingEnabled = value
+    get: -> @canvas.imageSmoothingEnabled
 
   execute: (command) ->
     @[command.name](command)

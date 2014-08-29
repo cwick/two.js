@@ -85,6 +85,7 @@ Game = TwoObject.extend
 
     requestAnimationFrame(@_mainLoop.bind @)
     @update()
+    @_stateManager.beforeRender()
     @renderer.render(@scene, @camera)
 
   _initializeCanvas: ->
