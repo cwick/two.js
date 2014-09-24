@@ -5,7 +5,7 @@
 
 AssetLoader = TwoObject.extend
   initialize: ->
-    @baseDir = ""
+    @baseDir = "assets"
     @pending = []
     @_initializePlugins()
 
