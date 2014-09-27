@@ -63,3 +63,5 @@ describe "GroupNode", ->
     expect(node1.worldMatrix).toEqual new Matrix2d().
       multiply(node1.matrix)
 
+  it "throws an error if a child is added that does not implement CanHaveParent", ->
+    expect(-> new GroupNode().add(new Object())).toThrow()

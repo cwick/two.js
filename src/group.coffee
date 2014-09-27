@@ -12,6 +12,10 @@ GroupNode = TwoObject.extend CanHaveParent, CanGroup,
   matrix: Property readonly: true
   worldMatrix: Property readonly: true
 
+  add: (child) ->
+    throw new Error("Child nodes must implement CanHaveParent") unless CanHaveParent.detect(child)
+    CanGroup.properties.add.call @, child
+
   # Implement in subclass
   updateMatrix: ->
 
