@@ -26,6 +26,7 @@ ArcadePhysicsBody = TwoObject.extend
       down: false
       left: false
       right: false
+    @enabled = true
 
   position: Property
     set: (value) -> @_position = new Vector2d(value)

@@ -26,7 +26,7 @@ ArcadePhysicsWorld = TwoObject.extend
     @updateCallback(@bodies)
 
   _runSimulation: (deltaSeconds) ->
-    for body in @bodies
+    for body in @bodies when body.enabled
       body._preUpdate()
       body.applyGravity(deltaSeconds, @gravity)
       body.updateVelocity(deltaSeconds)
