@@ -58,12 +58,11 @@ CanvasRenderer = TwoObject.extend
 
     Profiler.incrementCounter "drawImage"
 
-    # Need to shift source rect by 0.5 pixels to ensure pixel-perfection
     @_context.drawImage(
       image,
-      crop.x + 0.5, #source X
+      crop.x, #source X
       crop.y, #source Y
-      crop.width - 0.5,  #source width
+      crop.width,  #source width
       crop.height, #source height
       -origin[0], #destination X
       -origin[1], #destination Y
