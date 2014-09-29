@@ -27,12 +27,20 @@ class ProfilerInstance
     @sampler.sample(end - start)
 
 Profiler =  {
-  measure: (fn) ->
+  measure: (frame, fn) ->
+    if typeof(frame) == "function"
+      fn = frame
+      frame = "default"
+
     start = window.performance.now()
     fn()
     end = window.performance.now()
 
-    (end - start).toFixed(0)
+    @frames[frame] = (end - start).toFixed(0)
+
+  resetFrames: -> @frames = {}
+
+  frames: {}
 }
 
 class Timer

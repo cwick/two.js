@@ -1,3 +1,5 @@
+`import { Profiler } from "./benchmark"`
+
 class Debug
   constructor: ->
     @_previousTimestamp = 0
@@ -10,7 +12,13 @@ class Debug
       total: 0
     }
 
-  _calcFramesPerSecond: (timestamp) ->
+  _updateStatistics: ->
+    @frameTime.total = Profiler.frames["mainLoop"]
+    @frameTime.logic = Profiler.frames["logic"]
+    @frameTime.render = Profiler.frames["render"]
+    @frameTime.physics = 0
+
+  _updateFramesPerSecond: (timestamp) ->
     return unless timestamp? && @_previousTimestamp?
 
     weight = .4

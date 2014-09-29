@@ -5,6 +5,7 @@
 `import ArcadePhysicsWorld from "./arcade_physics_world"`
 `import ArcadePhysics from "./components/arcade_physics"`
 `import Rectangle from "./rectangle"`
+`import { Profiler } from "./benchmark"`
 
 GameWorld = TwoObject.extend
   initialize: ->
@@ -17,8 +18,8 @@ GameWorld = TwoObject.extend
       arcade: new ArcadePhysicsWorld(updateCallback: @_updateArcadeObjects)
 
   tick: (deltaSeconds) ->
-    @_tickGameObjects()
-    @_tickPhysics(deltaSeconds)
+    Profiler.measure "logic", => @_tickGameObjects()
+    Profiler.measure "physics", => @_tickPhysics(deltaSeconds)
 
   entityCount: Property readonly: true
 

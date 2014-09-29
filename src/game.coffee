@@ -75,15 +75,19 @@ Game = TwoObject.extend
     entity.transform.parent?.remove entity.transform
 
   _mainLoop: (timestamp) ->
-    @debug.frameTime.total = Profiler.measure =>
-      @debug._calcFramesPerSecond(timestamp)
+    Profiler.resetFrames()
 
-      @_update()
-      @_render()
+    Profiler.measure "mainLoop", =>
+      @debug._updateFramesPerSecond(timestamp)
+
+      @_tick()
+      Profiler.measure "render", => @_render()
 
       requestAnimationFrame(@_mainLoop.bind @)
 
-  _update: ->
+    @debug._updateStatistics()
+
+  _tick: ->
     DELTA_SECONDS = 1/60 # TODO: use variable step?
     @_stateManager.tick DELTA_SECONDS
     @_eventQueue.tick DELTA_SECONDS
