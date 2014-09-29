@@ -61,7 +61,7 @@ GameWorld = TwoObject.extend
     return
 
   _updateArcadeObjects: (bodies) ->
-    for body in bodies when bodies.enabled
+    for body in bodies when body.enabled
       transform = body.userData.transform
       transform.position[0] = body.position[0]
       transform.position[1] = body.position[1]
