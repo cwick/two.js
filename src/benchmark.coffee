@@ -38,8 +38,15 @@ Profiler =  {
 
     @frames[frame] = (end - start).toFixed(0)
 
-  resetFrames: -> @frames = {}
+  incrementCounter: (name, amount=1) ->
+    @counters[name] ||= 0
+    @counters[name] += amount
 
+  reset: ->
+    @frames = {}
+    @counters = {}
+
+  counters: {}
   frames: {}
 }
 

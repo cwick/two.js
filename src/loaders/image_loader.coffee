@@ -1,18 +1,13 @@
 class ImageLoader
   preload: (name, fullPath, resolve) ->
-    canvas = document.createElement "canvas"
-
     image = new Image()
     image.src = fullPath
 
-    # In Chrome for Mac, drawing an image from a canvas is much
-    # faster than drawing from an Image object
+    # TO INVESTIGATE: performance can be greater if Image is copied into a Canvas
+    # first. But doing so can also make drawImage performance many times
+    # slower, depending on platform.
     image.onload = ->
-      canvas.width = image.width
-      canvas.height = image.height
-      context = canvas.getContext "2d"
-      context.drawImage image, 0,0
-      resolve(canvas)
+      resolve(image)
 
 `export default ImageLoader`
 

@@ -75,7 +75,7 @@ Game = TwoObject.extend
     entity.transform.parent?.remove entity.transform
 
   _mainLoop: (timestamp) ->
-    Profiler.resetFrames()
+    Profiler.reset()
 
     Profiler.measure "mainLoop", =>
       @debug._updateFramesPerSecond(timestamp)

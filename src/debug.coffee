@@ -12,11 +12,16 @@ class Debug
       total: 0
     }
 
+    @callCounter = {
+      drawImage: 0
+    }
+
   _updateStatistics: ->
     @frameTime.total = Profiler.frames["mainLoop"]
     @frameTime.logic = Profiler.frames["logic"]
     @frameTime.render = Profiler.frames["render"]
     @frameTime.physics = 0
+    @callCounter.drawImage = Profiler.counters["drawImage"]
 
   _updateFramesPerSecond: (timestamp) ->
     return unless timestamp? && @_previousTimestamp?

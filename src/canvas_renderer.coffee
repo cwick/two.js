@@ -3,6 +3,7 @@
 `import DeviceMetrics from "./device_metrics"`
 `import Matrix2d from "./matrix2d"`
 `import Canvas from "./canvas"`
+`import { Profiler } from "./benchmark"`
 
 CanvasRenderer = TwoObject.extend
   initialize: ->
@@ -54,6 +55,8 @@ CanvasRenderer = TwoObject.extend
     origin = options.origin
 
     @setTransform options.transform
+
+    Profiler.incrementCounter "drawImage"
 
     # Need to shift source rect by 0.5 pixels to prevent pixel bleeding
     @_context.drawImage(
