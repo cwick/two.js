@@ -1,4 +1,4 @@
-`import GroupNode from "group"`
+`import GroupNode from "group_node"`
 `import Matrix2d from "matrix2d"`
 
 describe "GroupNode", ->

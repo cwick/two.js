@@ -3,8 +3,9 @@
 `import CanGroup from "./can_group"`
 `import Property from "./property"`
 `import Matrix2d from "./matrix2d"`
+`import SceneNode from "./scene_node"`
 
-GroupNode = TwoObject.extend CanHaveParent, CanGroup,
+GroupNode = SceneNode.extend CanHaveParent, CanGroup,
   initialize: ->
     @_matrix = new Matrix2d()
     @_worldMatrix = new Matrix2d()

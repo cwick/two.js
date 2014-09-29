@@ -7,7 +7,9 @@ class DepthFirstTreeIterator
     @_visit @root, callback
 
   _visit: (root, callback) ->
-    callback(root)
+    shouldVisitChildren = callback(root)
+    return unless shouldVisitChildren
+
     children = root._children
     @_visit node, callback for node in children if children?
     return

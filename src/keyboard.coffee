@@ -9,6 +9,9 @@ class Keyboard
   isKeyDown: (key) ->
     @_keyState[key] || false
 
+  wasKeyPressed: (key) ->
+    @_keyState[key] || false
+
   _onKeyDown: (e) ->
     @_keyState[e.keyCode] = true
 

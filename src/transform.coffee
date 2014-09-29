@@ -1,4 +1,4 @@
-`import GroupNode from "./group"`
+`import GroupNode from "./group_node"`
 `import Property from "./property"`
 `import Matrix2d from "./matrix2d"`
 `import Vector2d from "./vector2d"`

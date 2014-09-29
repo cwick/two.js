@@ -4,7 +4,7 @@
 `import Color from "./color"`
 `import { DepthFirstTreeIterator } from "./tree_iterators"`
 `import RenderNode from "./render_node"`
-`import GroupNode from "./group"`
+`import GroupNode from "./group_node"`
 `import Color from "./color"`
 
 SceneRenderer = TwoObject.extend
@@ -27,16 +27,22 @@ SceneRenderer = TwoObject.extend
       .scale(1/@backend._canvas.width, 1/@backend._canvas.height)
       .invert()
 
-    new DepthFirstTreeIterator(scene).execute (node) =>
-      if node instanceof GroupNode
-        node.updateMatrix()
-      else if node instanceof RenderNode
-        node.pushRenderCommands commands, node._parent.updateWorldMatrix().clone()
+    new DepthFirstTreeIterator(scene).execute (node) => @_visitSceneNode(node, commands)
 
     for command in commands
       command.transform.preMultiply cameraMatrix if command.transform?
       @backend.execute command
 
     return
+
+  _visitSceneNode: (node, commandList) ->
+    return false unless node.enabled
+
+    if node instanceof GroupNode
+      node.updateMatrix()
+    else if node instanceof RenderNode
+      node.pushRenderCommands commandList, node._parent.updateWorldMatrix().clone()
+
+    return true
 
 `export default SceneRenderer`
