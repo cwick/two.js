@@ -9,6 +9,7 @@ class Keyboard
   isKeyDown: (key) ->
     @_keyState[key] || false
 
+  # TODO: make this work properly
   wasKeyPressed: (key) ->
     @_keyState[key] || false
 
