@@ -28,7 +28,6 @@ Game = TwoObject.extend
     @_entityClasses = {}
     @_stateManager = new StateManager(game: @)
     @_eventQueue = new EventQueue()
-    @_deferredActions = []
 
   canvas: Property
     set: (value) ->
@@ -54,7 +53,7 @@ Game = TwoObject.extend
     entity.name = options.name if options.name?.length > 0
 
     @scene.add entity.transform
-    @defer => @world.add entity
+    @world.add entity
     entity.spawn(options)
     entity
 
@@ -67,11 +66,8 @@ Game = TwoObject.extend
   setTimeout: (delay, callback) ->
     @_eventQueue.schedule delay, callback
 
-  defer: (callback) ->
-    @_deferredActions.push callback
-
   remove: (entity) ->
-    @defer => @world.remove entity
+    @world.remove entity
     entity.transform.parent?.remove entity.transform
 
   _mainLoop: (timestamp) ->
@@ -92,7 +88,6 @@ Game = TwoObject.extend
     @_stateManager.tick DELTA_SECONDS
     @_eventQueue.tick DELTA_SECONDS
     @world.tick DELTA_SECONDS
-    @_executeDeferredActions()
 
   _render: ->
     @_stateManager.beforeRender()
@@ -126,13 +121,5 @@ Game = TwoObject.extend
         y: 0
         width: @canvas.width
         height: @canvas.height
-
-  _executeDeferredActions: ->
-    actions = @_deferredActions
-    @_deferredActions = []
-
-    callback() for callback in actions
-
-    return
 
 `export default Game`
