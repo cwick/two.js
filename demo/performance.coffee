@@ -1,7 +1,6 @@
 `module Two from "two"`
 
 PROFILE_FREQUENCY = 2
-profiler = Two.Profiler.create("frametime", PROFILE_FREQUENCY)
 sampler = new Two.PeriodicSampler(PROFILE_FREQUENCY)
 
 previousTime = 0
@@ -15,7 +14,7 @@ render = (time) ->
       ball.velocity[0] *= -1
       ball.velocity[1] *= -1
 
-  frameTime = profiler.collect(-> renderer.render(scene, camera)).toFixed(3)
+  frameTime = sampler.sample(Two.Profiler.measure(-> renderer.render(scene, camera)), "frameTime")
   document.getElementById("frame-time").innerHTML = frameTime
   document.getElementById("fps").innerHTML = sampler.sample(1000 / (time - previousTime)).toFixed(2)
   previousTime = time
@@ -27,7 +26,7 @@ loader = new Two.AssetLoader()
 scene = new Two.TransformNode()
 
 balls = []
-loader.preloadImage("Dream_Moon_Ball_Sprite", "/demo/assets/Dream_Moon_Ball_Sprite.png").then ->
+loader.preloadImage("Dream_Moon_Ball_Sprite.png").then ->
 
   class Ball
     constructor: ->

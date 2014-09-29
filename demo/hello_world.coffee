@@ -1,11 +1,11 @@
 `module Two from "two"`
 
-Game = Two.Game.extend
-  update: ->
+MainState = Two.State.extend
+  step: ->
     helloWorldTransform.rotation += 0.008
     wobble.position.x = Math.sin(Date.now() / 500) * 100
 
-game = new Game()
+game = new Two.Game()
 game.camera.anchorPoint = [0.5, 0.5]
 
 wobble = new Two.TransformNode()
@@ -33,5 +33,6 @@ wobble.add helloWorldTransform
 helloWorldTransform.add helloTransform
 helloWorldTransform.add worldTransform
 
+game.registerState "main", MainState
 game.start()
 

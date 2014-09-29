@@ -13,6 +13,7 @@
 `import StateManager from "./state_manager"`
 `import Debug from "./debug"`
 `import EventQueue from "./event_queue"`
+`import { Profiler } from "./benchmark"`
 
 Game = TwoObject.extend
   initialize: ->
@@ -34,7 +35,7 @@ Game = TwoObject.extend
       @_canvas = value
       @renderer = new SceneRenderer(backend: new CanvasRenderer(canvas: value))
 
-  start: (initialState) ->
+  start: (initialState="main") ->
     @configure()
     @_initializeWorld()
     @_initializeCanvas()
@@ -45,13 +46,6 @@ Game = TwoObject.extend
 
   # Implement in derived classes
   configure: ->
-
-  update: ->
-    INCREMENT = 1/60 # TODO: use variable step?
-    @_stateManager.step INCREMENT
-    @_eventQueue.step INCREMENT
-    @world.step INCREMENT
-    @_executeDeferredAction()
 
   spawn: (type, options={}) ->
     entity = @_initializeEntity(type)
@@ -81,10 +75,22 @@ Game = TwoObject.extend
     entity.transform.parent?.remove entity.transform
 
   _mainLoop: (timestamp) ->
-    @debug._calcFrameTime(timestamp)
+    @debug.frameTime.total = Profiler.measure =>
+      @debug._calcFramesPerSecond(timestamp)
 
-    requestAnimationFrame(@_mainLoop.bind @)
-    @update()
+      @_update()
+      @_render()
+
+      requestAnimationFrame(@_mainLoop.bind @)
+
+  _update: ->
+    INCREMENT = 1/60 # TODO: use variable step?
+    @_stateManager.step INCREMENT
+    @_eventQueue.step INCREMENT
+    @world.step INCREMENT
+    @_executeDeferredActions()
+
+  _render: ->
     @_stateManager.beforeRender()
     @renderer.render(@scene, @camera)
 
@@ -117,7 +123,7 @@ Game = TwoObject.extend
         width: @canvas.width
         height: @canvas.height
 
-  _executeDeferredAction: ->
+  _executeDeferredActions: ->
     actions = @_deferredActions
     @_deferredActions = []
 

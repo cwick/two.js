@@ -27,7 +27,12 @@ class ProfilerInstance
     @sampler.sample(end - start)
 
 Profiler =  {
-  create: (name, frequency) -> new ProfilerInstance(name, frequency)
+  measure: (fn) ->
+    start = window.performance.now()
+    fn()
+    end = window.performance.now()
+
+    (end - start).toFixed(0)
 }
 
 class Timer

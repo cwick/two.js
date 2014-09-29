@@ -4,15 +4,13 @@
 PROFILE_FREQUENCY = 2
 BALL_COUNT = 15*10
 timer = new Two.Timer()
-renderProfiler = Two.Profiler.create("render", PROFILE_FREQUENCY)
-physicsProfiler = Two.Profiler.create("physics", PROFILE_FREQUENCY)
 sampler = new Two.PeriodicSampler(PROFILE_FREQUENCY)
 
 render = ->
   requestAnimationFrame(render)
 
-  renderTime = renderProfiler.collect(-> renderer.render(scene, camera)).toFixed(3)
-  physicsTime = physicsProfiler.collect(-> world.step(1/60)).toFixed(3)
+  renderTime = sampler.sample(Two.Profiler.measure(-> renderer.render(scene, camera)), "renderTime")
+  physicsTime = sampler.sample(Two.Profiler.measure(-> world.step(1/60)), "physicsTime")
 
   document.getElementById("render-time").innerHTML = renderTime
   document.getElementById("physics-time").innerHTML = physicsTime
