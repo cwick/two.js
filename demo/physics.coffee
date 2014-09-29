@@ -10,7 +10,7 @@ render = ->
   requestAnimationFrame(render)
 
   renderTime = sampler.sample(Two.Profiler.measure(-> renderer.render(scene, camera)), "renderTime")
-  physicsTime = sampler.sample(Two.Profiler.measure(-> world.step(1/60)), "physicsTime")
+  physicsTime = sampler.sample(Two.Profiler.measure(-> world.tick(1/60)), "physicsTime")
 
   document.getElementById("render-time").innerHTML = renderTime
   document.getElementById("physics-time").innerHTML = physicsTime

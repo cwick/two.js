@@ -11,8 +11,8 @@ class EventQueue
     @events[time] ||= []
     @events[time].push callback
 
-  step: (increment) ->
-    @currentTime += increment
+  tick: (deltaSeconds) ->
+    @currentTime += deltaSeconds
 
     for time, callbacks of @events
       if time <= @currentTime

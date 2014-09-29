@@ -7,7 +7,7 @@ State = TwoObject.extend
   # Override these in derived states
   preload: ->
   enter: ->
-  step: ->
+  tick: ->
   beforeRender: ->
 
   # Returns a promise that resolves when all assets loaded by the state's

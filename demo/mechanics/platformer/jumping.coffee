@@ -75,7 +75,7 @@ game.registerEntity "Player", Two.GameObject.extend Two.Components.ArcadePhysics
     @physics.position.x = @game.canvas.width/2
     @physics.position.y = 32
 
-  update: ->
+  tick: ->
     if @game.input.keyboard.isKeyDown Two.Keys.LEFT
       @physics.acceleration.x = -@ACCELERATION
     else if @game.input.keyboard.isKeyDown Two.Keys.RIGHT

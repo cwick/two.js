@@ -8,6 +8,9 @@ StateManager = TwoObject.extend
   register: (name, State) ->
     @_states[name] = State
 
+  isStateRegistered: (name) ->
+    @_states[name]?
+
   transitionTo: (name) ->
     State = @_states[name]
     throw new Error("StateManager#transitionTo -- Invalid state '#{name}'") unless State?
@@ -24,8 +27,8 @@ StateManager = TwoObject.extend
   beforeRender: ->
     @_callState "beforeRender"
 
-  step: (increment) ->
-    @_callState "step", increment
+  tick: (deltaSeconds) ->
+    @_callState "tick", deltaSeconds
 
   _callState: (func) ->
     return unless @currentState

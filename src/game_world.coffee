@@ -16,9 +16,9 @@ GameWorld = TwoObject.extend
       p2: new P2PhysicsWorld(updateCallback: @_updateP2Objects)
       arcade: new ArcadePhysicsWorld(updateCallback: @_updateArcadeObjects)
 
-  step: (increment) ->
-    @_stepGameObjects()
-    @_stepPhysics(increment)
+  tick: (deltaSeconds) ->
+    @_tickGameObjects()
+    @_tickPhysics(deltaSeconds)
 
   entityCount: Property readonly: true
 
@@ -49,14 +49,14 @@ GameWorld = TwoObject.extend
   findByName: (name) ->
     @_entitiesByName[name]
 
-  _stepGameObjects: ->
-    @_entitiesByID[id].update() for id of @_entitiesByID
+  _tickGameObjects: ->
+    @_entitiesByID[id].tick() for id of @_entitiesByID
     return
 
-  _stepPhysics: (increment) ->
+  _tickPhysics: (deltaSeconds) ->
     for _, physics of @physics
       physics.bounds = @bounds
-      physics.step increment
+      physics.tick deltaSeconds
     return
 
   _updateArcadeObjects: (bodies) ->

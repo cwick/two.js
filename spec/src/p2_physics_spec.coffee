@@ -15,7 +15,7 @@ describe "Components.P2Physics", ->
     world = new P2PhysicsWorld()
     world.world.gravity = [0, 0]
     world.add @obj.physics
-    world.step 1/60
+    world.tick 1/60
 
     expect(@obj.physics.position[0]).toBeCloseTo 1
 

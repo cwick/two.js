@@ -8,7 +8,7 @@ GameObject = TwoObject.extend Transform,
     @id = nextID++
 
   spawn: ->
-  update: ->
+  tick: ->
   die: ->
     @game.remove @
 

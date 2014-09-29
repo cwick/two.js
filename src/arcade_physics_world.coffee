@@ -20,17 +20,17 @@ ArcadePhysicsWorld = TwoObject.extend
     if idx != -1
       @bodies.splice(idx, 1)
 
-  step: (time) ->
+  tick: (deltaSeconds) ->
     return unless @isActive
-    @_runSimulation(time)
+    @_runSimulation(deltaSeconds)
     @updateCallback(@bodies)
 
-  _runSimulation: (time) ->
+  _runSimulation: (deltaSeconds) ->
     for body in @bodies
       body._preUpdate()
-      body.applyGravity(time, @gravity)
-      body.updateVelocity(time)
-      body.updatePosition(time)
+      body.applyGravity(deltaSeconds, @gravity)
+      body.updateVelocity(deltaSeconds)
+      body.updatePosition(deltaSeconds)
       body.doWorldBoundsCollision(@bounds) if @collideWorldBounds
       body._postUpdate()
 

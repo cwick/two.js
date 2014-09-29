@@ -41,7 +41,7 @@ Game = TwoObject.extend
     @_initializeCanvas()
     @_initializeCamera()
     @_initializeInput()
-    @_stateManager.transitionTo initialState if initialState
+    @_stateManager.transitionTo initialState if @_stateManager.isStateRegistered(initialState)
     @_mainLoop()
 
   # Implement in derived classes
@@ -84,10 +84,10 @@ Game = TwoObject.extend
       requestAnimationFrame(@_mainLoop.bind @)
 
   _update: ->
-    INCREMENT = 1/60 # TODO: use variable step?
-    @_stateManager.step INCREMENT
-    @_eventQueue.step INCREMENT
-    @world.step INCREMENT
+    DELTA_SECONDS = 1/60 # TODO: use variable step?
+    @_stateManager.tick DELTA_SECONDS
+    @_eventQueue.tick DELTA_SECONDS
+    @world.tick DELTA_SECONDS
     @_executeDeferredActions()
 
   _render: ->

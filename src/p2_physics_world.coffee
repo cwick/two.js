@@ -12,10 +12,10 @@ P2PhysicsWorld = TwoObject.extend
     @world.addBody body
     @isActive = true
 
-  step: (increment) ->
+  tick: (deltaSeconds) ->
     return unless @isActive
     if @world.bodies.length > 0
-      @world.step increment
+      @world.step deltaSeconds
       @updateCallback(@world.bodies)
 
 `export default P2PhysicsWorld`

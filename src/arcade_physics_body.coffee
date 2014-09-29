@@ -96,40 +96,40 @@ ArcadePhysicsBody = TwoObject.extend
     @_position[0] += @boundingBox.x
     @_position[1] += @boundingBox.y
 
-  applyGravity: (time, gravity) ->
-    @_velocity[0] += gravity[0]*time
-    @_velocity[1] += gravity[1]*time
+  applyGravity: (deltaSeconds, gravity) ->
+    @_velocity[0] += gravity[0]*deltaSeconds
+    @_velocity[1] += gravity[1]*deltaSeconds
 
-  updateVelocity: (time) ->
-    @applyAcceleration(time)
-    @applyXDrag(time)
-    @applyYDrag(time)
+  updateVelocity: (deltaSeconds) ->
+    @applyAcceleration(deltaSeconds)
+    @applyXDrag(deltaSeconds)
+    @applyYDrag(deltaSeconds)
     @limitVelocity()
 
-  updatePosition: (time) ->
-    @_position[0] += @_velocity[0]*time
-    @_position[1] += @_velocity[1]*time
+  updatePosition: (deltaSeconds) ->
+    @_position[0] += @_velocity[0]*deltaSeconds
+    @_position[1] += @_velocity[1]*deltaSeconds
 
-  applyAcceleration: (time) ->
-    @_velocity[0] += @acceleration[0]*time
-    @_velocity[1] += @acceleration[1]*time
+  applyAcceleration: (deltaSeconds) ->
+    @_velocity[0] += @acceleration[0]*deltaSeconds
+    @_velocity[1] += @acceleration[1]*deltaSeconds
 
-  applyXDrag: (time) ->
+  applyXDrag: (deltaSeconds) ->
     if @acceleration[0] == 0
       if @_velocity[0] > 0
-        @_velocity[0] -= @_drag[0]*time
+        @_velocity[0] -= @_drag[0]*deltaSeconds
         @_velocity[0] = 0 if @_velocity[0] < 0
       else if @_velocity[0] < 0
-        @_velocity[0] += @_drag[0]*time
+        @_velocity[0] += @_drag[0]*deltaSeconds
         @_velocity[0] = 0 if @_velocity[0] > 0
 
-  applyYDrag: (time) ->
+  applyYDrag: (deltaSeconds) ->
     if @acceleration[1] == 0
       if @_velocity[1] > 0
-        @_velocity[1] -= @_drag[1]*time
+        @_velocity[1] -= @_drag[1]*deltaSeconds
         @_velocity[1] = 0 if @_velocity[1] < 0
       else if @_velocity[1] < 0
-        @_velocity[1] += @_drag[1]*time
+        @_velocity[1] += @_drag[1]*deltaSeconds
         @_velocity[1] = 0 if @_velocity[1] > 0
 
   limitVelocity: ->
