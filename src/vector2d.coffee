@@ -1,3 +1,5 @@
+`module gl from "./lib/gl-matrix"`
+
 Vector2d = (values) ->
   if values?
     @[0] = values[0]
@@ -8,6 +10,9 @@ Vector2d = (values) ->
   return
 
 Vector2d:: = new Array(2)
+Vector2d::applyMatrix = (matrix) ->
+  gl.vec2.transformMat2d(@, @, matrix.values)
+  @
 
 Object.defineProperty Vector2d::, "x",
   set: (value) -> @[0] = value
