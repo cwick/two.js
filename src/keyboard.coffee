@@ -1,22 +1,32 @@
-class Keyboard
+class KeyState
   constructor: ->
-    @_keyState = {}
+    @isDown = false
+    @wasPressed = false
+
+class Keyboard
+  constructor: (@game) ->
+    @_keyStates = {}
 
   start: ->
     window.addEventListener('keydown', @_onKeyDown.bind @)
     window.addEventListener('keyup', @_onKeyUp.bind @)
 
   isKeyDown: (key) ->
-    @_keyState[key] || false
+    @_keyStates[key]?.isDown || false
 
   # TODO: make this work properly
   wasKeyPressed: (key) ->
-    @_keyState[key] || false
+    @_keyStates[key]?.wasPressed || false
 
   _onKeyDown: (e) ->
-    @_keyState[e.keyCode] = true
+    state = @_keyStates[e.keyCode] ||= new KeyState()
+    state.wasPressed = !state.isDown
+    state.isDown = true
+
+    @game.defer(1, (-> state.wasPressed = false))
 
   _onKeyUp: (e) ->
-    @_keyState[e.keyCode] = false
+    state = @_keyStates[e.keyCode] ||= new KeyState()
+    state.isDown = false
 
 `export default Keyboard`

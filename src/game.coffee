@@ -22,7 +22,7 @@ Game = TwoObject.extend
     @camera = new Camera()
     @scene = new TransformNode()
     @world = new GameWorld()
-    @input = { keyboard: new Keyboard() }
+    @input = { keyboard: new Keyboard(@) }
     @loader = new AssetLoader()
     @debug = new Debug()
     @_entityClasses = {}
@@ -63,8 +63,11 @@ Game = TwoObject.extend
   registerState: ->
     @_stateManager.register.apply @_stateManager, arguments
 
-  setTimeout: (delay, callback) ->
-    @_eventQueue.schedule delay, callback
+  setTimeout: (delayInSeconds, callback) ->
+    @_eventQueue.schedule.apply @_eventQueue, arguments
+
+  defer: (frameCount, callback) ->
+    @_eventQueue.frameDelay.apply @_eventQueue, arguments
 
   remove: (entity) ->
     @world.remove entity
