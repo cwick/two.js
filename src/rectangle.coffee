@@ -1,6 +1,6 @@
-`import Shape from "./shape"`
+`import TwoObject from "./object"`
 
-Rectangle = Shape.extend
+Rectangle = TwoObject.extend
   initialize: ->
     @x = @y = @width = @height = 0
 
