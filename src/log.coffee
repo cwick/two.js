@@ -8,4 +8,7 @@ Log.warning = (message) ->
 Log.debug = (message) ->
   console.debug(message)
 
+Log.error = (message) ->
+  console.error(message)
+
 `export default Log`

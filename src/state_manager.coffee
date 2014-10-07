@@ -8,12 +8,10 @@ StateManager = TwoObject.extend
   register: (name, State) ->
     @_states[name] = State
 
-  isStateRegistered: (name) ->
-    @_states[name]?
-
   transitionTo: (name) ->
     State = @_states[name]
-    throw new Error("StateManager#transitionTo -- Invalid state '#{name}'") unless State?
+    return false unless State?
+
     @currentState = new State()
     @currentState.game = @game
     @currentState.__preload__().then =>
@@ -23,6 +21,8 @@ StateManager = TwoObject.extend
         @currentState.enter()
       catch error
         console.error error.stack
+
+    true
 
   beforeRender: ->
     @_callState "beforeRender"

@@ -14,7 +14,10 @@
 `import StateManager from "./state_manager"`
 `import Debug from "./debug"`
 `import EventQueue from "./event_queue"`
+`import GameState from "./state"`
 `import { Profiler } from "./benchmark"`
+
+MainState = GameState.extend()
 
 class DefaultGameDelegate
   domElementForGame: ->
@@ -26,6 +29,9 @@ class DefaultGameDelegate
           "Continuing in off-screen rendering mode.")
 
     element
+
+  gameDidInitialize: (game) ->
+    game.registerState "main", MainState
 
 Game = TwoObject.extend
   initialize: ->
@@ -46,7 +52,10 @@ Game = TwoObject.extend
       @_canvas = value
       @renderer = new SceneRenderer(backend: new CanvasRenderer(canvas: value))
 
-  start: (initialState="main") ->
+  start: ->
+    @startFromInitialState "main"
+
+  startFromInitialState: (state) ->
     @delegate.gameWillInitialize?(@)
     @_initializeWorld()
     @_initializeCanvas()
@@ -54,8 +63,11 @@ Game = TwoObject.extend
     @_initializeInput()
     @delegate.gameDidInitialize?(@)
 
-    @_stateManager.transitionTo initialState if @_stateManager.isStateRegistered(initialState)
-    @_mainLoop()
+    if @_stateManager.transitionTo state
+      @_mainLoop()
+    else
+      Log.error("Failed initial state transition to '#{state}'. State is not registered.")
+
 
   spawn: (type, options={}) ->
     entity = @_initializeEntity(type)
