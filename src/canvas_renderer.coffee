@@ -32,14 +32,20 @@ CanvasRenderer = TwoObject.extend
     values = transform.values
     devicePixelRatio = @_canvas._devicePixelRatio
 
-    # Upscale according to devicePixelRatio and flip the Y axis
+    if @flipYAxis
+      scale = 1
+      yPosition = values[5]
+    else
+      scale = -1
+      yPosition = @_canvas._height - values[5]
+
     @_context.setTransform(
       devicePixelRatio * values[0],
-      -devicePixelRatio * values[1],
-      -devicePixelRatio * values[2],
+      devicePixelRatio * scale * values[1],
+      devicePixelRatio * scale * values[2],
       devicePixelRatio * values[3],
       devicePixelRatio * values[4],
-      devicePixelRatio * if @flipYAxis then values[5] else (@_canvas._height - values[5]))
+      devicePixelRatio * yPosition)
 
   drawText: (options) ->
     @setTransform options.transform

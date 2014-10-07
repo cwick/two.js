@@ -62,8 +62,12 @@ Sprite = TwoObject.extend
   frame: Property
     set: (value) ->
       @_frame = value
-      frame = @_frames[value]
-      @crop = frame if frame
+      if value?
+        frame = @_frames[value]
+      else
+        frame = null
+
+      @crop = frame
 
   addFrame: (name, frame) ->
     @_frames[name] ||= frame
