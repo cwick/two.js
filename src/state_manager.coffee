@@ -28,13 +28,12 @@ StateManager = TwoObject.extend
     @_callStateMethod "sceneWillRender"
 
   tick: (deltaSeconds) ->
-    @_callStateMethod "stateWillTick", deltaSeconds
+    @_callStateMethod "stateWillTick", [deltaSeconds]
 
-  _callStateMethod: (func) ->
+  _callStateMethod: (func, args=[]) ->
     return unless @currentState
 
     if @currentState.__isReady__
-      args = Array.prototype.slice.call(arguments, 1)
       @currentState[func].apply @currentState, args
 
 `export default StateManager`

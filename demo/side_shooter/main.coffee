@@ -6,7 +6,7 @@ MainState = Two.GameState.extend
 
 GameDelegate = Two.DefaultGameDelegate.extend
   gameDidInitialize: (game) ->
-    Two.DefaultGameDelegate.prototype.gameDidInitialize.apply @, arguments
+    @super(Two.DefaultGameDelegate, "gameDidInitialize", arguments)
 
     game.registerState "main", MainState
 

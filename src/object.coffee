@@ -83,5 +83,8 @@ class TwoObject
   @createWithMixins: ->
     TwoObject.extend.apply(TwoObject, arguments).create()
 
+  super: (Class, method, args=[]) ->
+    Class.prototype[method].apply @, args
+
 `export default TwoObject`
 

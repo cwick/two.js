@@ -22,7 +22,7 @@ Camera = TransformNode.extend
       height: @width * worldMatrix[3]
 
   updateMatrix: ->
-    TransformNode.prototype.updateMatrix.apply @
+    @super(TransformNode, "updateMatrix", arguments)
 
     localTranslation = @_getLocalTranslation()
 
