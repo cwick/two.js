@@ -1,3 +1,4 @@
+`import Log from "./log"`
 `import TwoObject from "./object"`
 `import Property from "./property"`
 `import Canvas from "./canvas"`
@@ -17,7 +18,7 @@
 
 Game = TwoObject.extend
   initialize: ->
-    @domElement = "game"
+    @domElement = "two-game"
     @canvas = new Canvas()
     @camera = new Camera()
     @scene = new TransformNode()
@@ -97,7 +98,13 @@ Game = TwoObject.extend
     @renderer.render(@scene, @camera)
 
   _initializeCanvas: ->
-    document.getElementById(@domElement)?.appendChild @canvas.domElement
+    element = document.getElementById(@domElement)
+
+    if element?
+      element.appendChild @canvas.domElement
+    else
+      Log.logWarning("Could not find document element with ID='#{@domElement}' to attach a canvas. " +
+        "Continuing in off-screen rendering mode.")
 
   _initializeCamera: ->
     @camera.width = @canvas.width unless @camera.width?
