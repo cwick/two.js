@@ -5,17 +5,17 @@ GameState = TwoObject.extend
     @__isReady__ = true
 
   # Override these in derived states
-  preload: ->
-  enter: ->
-  tick: ->
-  beforeRender: ->
+  stateWillPreloadAssets: ->
+  stateWillEnter: ->
+  stateDidExit: ->
+  stateWillTick: ->
+  sceneWillRender: ->
 
-  # Returns a promise that resolves when all assets loaded by the state's
-  # 'preload' function have finished loading
+  # Returns a promise that resolves when all preloadable assets have finished loading
   __preload__: ->
     @__isReady__ = false
     i = @game.loader.pending.length
-    @preload()
+    @stateWillPreloadAssets()
     promises = @game.loader.pending.slice(i)
     Promise.all(promises).then => @__isReady__ = true
 

@@ -116,7 +116,7 @@ Game = TwoObject.extend
     @world.tick DELTA_SECONDS
 
   _render: ->
-    @_stateManager.beforeRender()
+    @_stateManager.sceneWillRender()
     @renderer.render(@scene, @camera)
 
   _initializeCanvas: ->

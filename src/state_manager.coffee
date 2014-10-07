@@ -18,22 +18,24 @@ StateManager = TwoObject.extend
       # The browser will swallow all exceptions thrown from this callback
       # so we have to capture and print the error ourself
       try
-        @currentState.enter()
+        @currentState.stateWillEnter()
       catch error
         console.error error.stack
 
     true
 
-  beforeRender: ->
-    @_callState "beforeRender"
+  sceneWillRender: ->
+    @_callStateMethod "sceneWillRender"
 
   tick: (deltaSeconds) ->
-    @_callState "tick", deltaSeconds
+    @_callStateMethod "stateWillTick", deltaSeconds
 
-  _callState: (func) ->
+  _callStateMethod: (func) ->
     return unless @currentState
-    args = Array.prototype.slice.call(arguments, 1)
-    @currentState[func].apply @currentState, args if @currentState.__isReady__
+
+    if @currentState.__isReady__
+      args = Array.prototype.slice.call(arguments, 1)
+      @currentState[func].apply @currentState, args
 
 `export default StateManager`
 

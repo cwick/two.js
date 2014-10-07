@@ -1,6 +1,8 @@
 `module Two from "two"`
 
-MainState = Two.GameState.extend()
+MainState = Two.GameState.extend
+  stateWillPreloadAssets: ->
+  stateWillEnter: ->
 
 GameDelegate = Two.DefaultGameDelegate.extend
   gameDidInitialize: (game) ->
