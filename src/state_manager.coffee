@@ -5,14 +5,14 @@ StateManager = TwoObject.extend
     @game = null
     @_states = {}
 
-  register: (name, State) ->
-    @_states[name] = State
+  register: (name, GameState) ->
+    @_states[name] = GameState
 
   transitionTo: (name) ->
-    State = @_states[name]
-    return false unless State?
+    GameState = @_states[name]
+    return false unless GameState?
 
-    @currentState = new State()
+    @currentState = new GameState()
     @currentState.game = @game
     @currentState.__preload__().then =>
       # The browser will swallow all exceptions thrown from this callback

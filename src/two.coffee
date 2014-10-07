@@ -1,7 +1,7 @@
 `import Camera from "./camera"`
 `import Canvas from "./canvas"`
 `import DeviceMetrics from "./device_metrics"`
-`import Game from "./game"`
+`import { Game, DefaultGameDelegate } from "./game"`
 `import GameObject from "./game_object"`
 `import GameWorld from "./game_world"`
 `import Matrix2d from "./matrix2d"`
@@ -20,7 +20,7 @@
 `import { Profiler, Timer, PeriodicSampler } from "./benchmark"`
 `import Keys from "./keys"`
 `import AssetLoader from "./asset_loader"`
-`import State from "./state"`
+`import GameState from "./game_state"`
 
 Components =
   P2Physics: P2Physics
@@ -28,5 +28,5 @@ Components =
 
 `export { Object, Property, Canvas, SceneRenderer, CanvasRenderer, TransformNode, RenderNode, Sprite, Text,
 Matrix2d, DeviceMetrics, Profiler, Timer, PeriodicSampler, GameObject, Components, GameWorld,
-Rectangle, Camera, Game, Keys, AssetLoader, ArcadePhysicsBody, State
+Rectangle, Camera, Game, DefaultGameDelegate, Keys, AssetLoader, ArcadePhysicsBody, GameState
 }`

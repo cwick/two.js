@@ -1,6 +1,6 @@
 `import TwoObject from "./object"`
 
-State = TwoObject.extend
+GameState = TwoObject.extend
   initialize: ->
     @__isReady__ = true
 
@@ -19,4 +19,4 @@ State = TwoObject.extend
     promises = @game.loader.pending.slice(i)
     Promise.all(promises).then => @__isReady__ = true
 
-`export default State`
+`export default GameState`

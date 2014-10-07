@@ -14,12 +14,12 @@
 `import StateManager from "./state_manager"`
 `import Debug from "./debug"`
 `import EventQueue from "./event_queue"`
-`import GameState from "./state"`
+`import GameState from "./game_state"`
 `import { Profiler } from "./benchmark"`
 
 MainState = GameState.extend()
 
-class DefaultGameDelegate
+DefaultGameDelegate = TwoObject.extend
   domElementForGame: ->
     elementId = "two-game"
     element = document.getElementById(elementId)
@@ -153,4 +153,4 @@ Game = TwoObject.extend
         width: @canvas.width
         height: @canvas.height
 
-`export default Game`
+`export { Game, DefaultGameDelegate }`

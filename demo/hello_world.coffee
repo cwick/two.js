@@ -1,6 +1,6 @@
 `module Two from "two"`
 
-MainState = Two.State.extend
+MainState = Two.GameState.extend
   tick: (deltaSeconds) ->
     helloWorldTransform.rotation += 0.008
     wobble.position.x = Math.sin(Date.now() / 500) * 100
