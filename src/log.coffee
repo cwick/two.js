@@ -2,7 +2,10 @@ console = window.console
 
 Log = {}
 
-Log.logWarning = (message) ->
+Log.warning = (message) ->
   console.warn(message)
+
+Log.debug = (message) ->
+  console.debug(message)
 
 `export default Log`

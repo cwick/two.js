@@ -16,9 +16,20 @@
 `import EventQueue from "./event_queue"`
 `import { Profiler } from "./benchmark"`
 
+class DefaultGameDelegate
+  domElementForGame: ->
+    elementId = "two-game"
+    element = document.getElementById(elementId)
+
+    unless element?
+      Log.warning("Could not find document element with ID='#{elementId}' to attach a canvas. " +
+          "Continuing in off-screen rendering mode.")
+
+    element
+
 Game = TwoObject.extend
   initialize: ->
-    @domElement = "two-game"
+    @delegate = new DefaultGameDelegate()
     @canvas = new Canvas()
     @camera = new Camera()
     @scene = new TransformNode()
@@ -36,16 +47,15 @@ Game = TwoObject.extend
       @renderer = new SceneRenderer(backend: new CanvasRenderer(canvas: value))
 
   start: (initialState="main") ->
-    @configure()
+    @delegate.gameWillInitialize?(@)
     @_initializeWorld()
     @_initializeCanvas()
     @_initializeCamera()
     @_initializeInput()
+    @delegate.gameDidInitialize?(@)
+
     @_stateManager.transitionTo initialState if @_stateManager.isStateRegistered(initialState)
     @_mainLoop()
-
-  # Implement in derived classes
-  configure: ->
 
   spawn: (type, options={}) ->
     entity = @_initializeEntity(type)
@@ -98,13 +108,12 @@ Game = TwoObject.extend
     @renderer.render(@scene, @camera)
 
   _initializeCanvas: ->
-    element = document.getElementById(@domElement)
+    element = @delegate.domElementForGame?()
 
     if element?
       element.appendChild @canvas.domElement
     else
-      Log.logWarning("Could not find document element with ID='#{@domElement}' to attach a canvas. " +
-        "Continuing in off-screen rendering mode.")
+      Log.debug("Game delegate failed to return DOM element.")
 
   _initializeCamera: ->
     @camera.width = @canvas.width unless @camera.width?
