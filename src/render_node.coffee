@@ -1,8 +1,8 @@
 `import SceneNode from "./scene_node"`
 
 RenderNode = SceneNode.extend
-  add: (child) ->
-    throw new Error("RenderNodes cannot have children")
+  initialize: ->
+    @elements = []
 
   ###*
   #

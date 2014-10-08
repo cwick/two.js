@@ -1,5 +1,5 @@
 `import { DepthFirstTreeIterator } from "tree_iterators"`
-`import SceneNode from "scene_node"`
+`import GroupNode from "group_node"`
 
 iterate = (root) ->
   iterator = new DepthFirstTreeIterator(root)
@@ -14,7 +14,7 @@ Node = null
 
 describe "DepthFirstTreeIterator", ->
   beforeEach ->
-    Node = SceneNode.extend
+    Node = GroupNode.extend
       jasmineToString: -> @name || "unnamed node"
 
   it "iterates over a one-node tree", ->
