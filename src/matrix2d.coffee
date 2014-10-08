@@ -4,13 +4,7 @@ class Matrix2d
   constructor: (values) ->
     @values = gl.mat2d.create()
 
-    if values
-      @values[0] = values[0]
-      @values[1] = values[1]
-      @values[2] = values[2]
-      @values[3] = values[3]
-      @values[4] = values[4]
-      @values[5] = values[5]
+    @setValues(values) if values
 
   reset: ->
     gl.mat2d.identity @values
@@ -18,6 +12,14 @@ class Matrix2d
 
   clone: ->
     new Matrix2d(@values)
+
+  setValues: (values) ->
+    @values[0] = values[0]
+    @values[1] = values[1]
+    @values[2] = values[2]
+    @values[3] = values[3]
+    @values[4] = values[4]
+    @values[5] = values[5]
 
   translate: (x, y) ->
     values = @values

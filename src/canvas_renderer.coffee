@@ -10,6 +10,7 @@ CanvasRenderer = TwoObject.extend
     @canvas = new Canvas()
     @imageSmoothingEnabled = false
     @flipYAxis = false
+    @_transformStack = [ new Matrix2d() ]
 
   canvas: Property
     set: (value) ->
@@ -28,7 +29,22 @@ CanvasRenderer = TwoObject.extend
     @_context.fillStyle = options.color.toCSS()
     @_context.fillRect 0,0, @_canvas.frameWidth, @_canvas.frameHeight
 
+  pushTransform: ->
+    @_transformStack.push @_getTopMatrix().clone()
+
+  popTransform: ->
+    @_transformStack.pop()
+    @setTransform matrix: @_getTopMatrix()
+
+  transform: (options) ->
+    top = @_getTopMatrix()
+    top.multiply(options.matrix)
+
+    @setTransform(matrix: top)
+
   setTransform: (options) ->
+    @_setTopMatrix(options.matrix)
+
     values = options.matrix.values
     devicePixelRatio = @_canvas._devicePixelRatio
 
@@ -70,6 +86,12 @@ CanvasRenderer = TwoObject.extend
       -origin[1], #destination Y
       crop.width, #destination width
       crop.height) #destination height
+
+  _getTopMatrix: ->
+    @_transformStack[@_transformStack.length - 1]
+
+  _setTopMatrix: (matrix) ->
+    @_transformStack[@_transformStack.length - 1].setValues(matrix.values)
 
 `export default CanvasRenderer`
 
