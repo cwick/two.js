@@ -30,8 +30,8 @@ Sprite = Renderable.extend
 
   pixelOrigin: Property
     get: ->
-      width = @image.width
-      height = @image.height
+      width = @width
+      height = @height
 
       return [0,0] unless width? && height?
 
