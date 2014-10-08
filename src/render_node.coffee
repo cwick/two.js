@@ -7,28 +7,23 @@ RenderNode = SceneNode.extend
     @renderable = new Renderable()
     @width = @height = null
 
-  ###*
-  #
-  # @method generateRenderCommands
-  # @param {Matrix2d} worldTransform The world transformation matrix for this
-  #   RenderNode, computed from its position in the scene graph hierarchy.
-  # @return An array of render commands, or a single render command, that will render this node
-  ###
-  generateRenderCommands: (worldTransform) ->
-    commands = @renderable.generateRenderCommands(worldTransform)
+  generateRenderCommands: ->
+    commands = @renderable.generateRenderCommands()
 
+    [ @_getTransformCommand(@parent.worldMatrix), commands ]
+
+  _getTransformCommand: (transform) ->
+    transform = transform.clone()
     scaleX = scaleY = 1
+    bounds = @renderable.bounds
 
-    if @width && @renderable.width
-      scaleX = @width / @renderable.width
-    if @height && @renderable.height
-      scaleY = @height / @renderable.height
+    if @width && bounds.width
+      scaleX = @width / bounds.width
+    if @height && bounds.height
+      scaleY = @height / bounds.height
 
-    worldTransform.scale scaleX, scaleY
+    transform.scale scaleX, scaleY
 
-    [ @_transformCommand(worldTransform), commands ]
-
-  _transformCommand: (transform) ->
     { name: "setTransform", matrix: transform }
 
 `export default RenderNode`

@@ -1,5 +1,6 @@
 `import Renderable from "./renderable"`
 `import Property from "./property"`
+`import Rectangle from "./rectangle"`
 
 Sprite = Renderable.extend
   initialize: ->
@@ -27,6 +28,9 @@ Sprite = Renderable.extend
       return @crop.height if @crop
       return @_image.height if @_image.height
       null
+
+  bounds: Property
+    get: -> new Rectangle(width: @width, height: @height)
 
   pixelOrigin: Property
     get: ->
@@ -61,9 +65,8 @@ Sprite = Renderable.extend
   addFrame: (name, frame) ->
     @_frames[name] ||= frame
 
-  generateRenderCommands: (transform) ->
+  generateRenderCommands: ->
     image = @_image
-    scaleX = scaleY = 1
 
     return {
       name: "drawImage"

@@ -19,7 +19,8 @@ class TreeIteratorDelegate
     if node instanceof GroupNode
       node.updateMatrix()
     else if node instanceof RenderNode
-      @commands.push node.generateRenderCommands node._parent.updateWorldMatrix().clone()
+      node._parent.updateWorldMatrix()
+      @commands.push node.generateRenderCommands()
 
 SceneRenderer = TwoObject.extend
   initialize: ->
