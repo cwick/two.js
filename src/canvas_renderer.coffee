@@ -28,8 +28,8 @@ CanvasRenderer = TwoObject.extend
     @_context.fillStyle = options.color.toCSS()
     @_context.fillRect 0,0, @_canvas.frameWidth, @_canvas.frameHeight
 
-  setTransform: (transform) ->
-    values = transform.values
+  setTransform: (options) ->
+    values = options.matrix.values
     devicePixelRatio = @_canvas._devicePixelRatio
 
     if @flipYAxis
@@ -48,8 +48,6 @@ CanvasRenderer = TwoObject.extend
       devicePixelRatio * yPosition)
 
   drawText: (options) ->
-    @setTransform options.transform
-
     @_context.textBaseline = "top"
     @_context.font = "#{options.fontSize}px monospace"
     @_context.fillStyle = options.color
@@ -59,8 +57,6 @@ CanvasRenderer = TwoObject.extend
     image = options.image
     crop = options.crop
     origin = options.origin
-
-    @setTransform options.transform
 
     Profiler.incrementCounter "drawImage"
 
@@ -72,8 +68,8 @@ CanvasRenderer = TwoObject.extend
       crop.height, #source height
       -origin[0], #destination X
       -origin[1], #destination Y
-      image.width, #destination width
-      image.height) #destination height
+      crop.width, #destination width
+      crop.height) #destination height
 
 `export default CanvasRenderer`
 

@@ -13,30 +13,20 @@ Sprite = Renderable.extend
       anchorPoint: @anchorPoint.slice(0)
       crop: @crop?.clone()
       _image: @_image
-      _width: @_width
-      _height: @_height
       _frames: @_frames
       _frame: @_frame
 
   width: Property
     get: ->
-      return @_width if @_width?
       return @crop.width if @crop
       return @_image.width if @_image.width
       null
 
-    set: (value) ->
-      @_width = value
-
   height: Property
     get: ->
-      return @_height if @_height?
       return @crop.height if @crop
       return @_image.height if @_image.height
       null
-
-    set: (value) ->
-      @_height = value
 
   pixelOrigin: Property
     get: ->
@@ -75,17 +65,9 @@ Sprite = Renderable.extend
     image = @_image
     scaleX = scaleY = 1
 
-    if @width && image.width
-      scaleX = @width / image.width
-    if @height && image.height
-      scaleY = @height / image.height
-
-    transform.scale scaleX, scaleY
-
     return {
       name: "drawImage"
       image: image
-      transform: transform
       origin: @pixelOrigin
       crop: @crop || {
         x: 0

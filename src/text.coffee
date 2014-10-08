@@ -6,10 +6,9 @@ Text = Renderable.extend
       text: @text
       fontSize: @fontSize
 
-  generateRenderCommands: (transform) ->
+  generateRenderCommands: ->
     return {
       name: "drawText"
-      transform: transform
       text: if @text? then @text else ""
       fontSize: if @fontSize? then @fontSize else 12
       color: if @color? then @color else "white"

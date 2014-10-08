@@ -27,8 +27,6 @@ characterSheet.src = "assets/char1.png"
 snailSprite = new Two.Sprite
   image: characterSheet
   anchorPoint: [0.5, 0]
-  width: 32
-  height: 32
   crop: new Two.Rectangle
     x: 398
     y: 362
@@ -36,8 +34,6 @@ snailSprite = new Two.Sprite
     height: 34
 
 crabSprite = snailSprite.clone()
-crabSprite.width = 55
-crabSprite.height = 26
 crabSprite.crop = new Two.Rectangle
   x: 166
   y: 107
@@ -47,8 +43,6 @@ crabSprite.crop = new Two.Rectangle
 groundSprite = new Two.Sprite
   image: "assets/blocks1.png"
   anchorPoint: [0, 0]
-  width: tileSize
-  height: tileSize
   crop: new Two.Rectangle
     x: tileMargin + 2*(tileSize + tileMargin)
     y: tileMargin + 7*(tileSize + tileMargin)
@@ -57,15 +51,15 @@ groundSprite = new Two.Sprite
 
 for x in [0..40]
   tile = new Two.TransformNode(position: [x*tileSize, 0])
-  tile.add new Two.RenderNode(renderable: groundSprite)
+  tile.add new Two.RenderNode(renderable: groundSprite, width: tileSize, height: tileSize)
   ground.add tile
 
 crab.position = [tileSize*18, tileSize]
-crab.add new Two.RenderNode(renderable: crabSprite)
+crab.add new Two.RenderNode(renderable: crabSprite, width: 55, height: 26)
 
 snail.position = [tileSize*10, tileSize]
 snail.scale = [-1,1]
-snail.add new Two.RenderNode(renderable: snailSprite)
+snail.add new Two.RenderNode(renderable: snailSprite, width: 32, height: 32)
 
 scene.add ground
 scene.add snail

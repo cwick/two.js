@@ -44,7 +44,7 @@ SceneRenderer = TwoObject.extend
     new DepthFirstTreeIterator(scene).execute delegate
 
     iterateThroughNestedArrays delegate.commands, (command) =>
-      command.transform.preMultiply cameraMatrix if command.transform?
+      command.matrix.preMultiply cameraMatrix if command.name == "setTransform"
       @backend.execute command
 
     return
