@@ -6,6 +6,7 @@
 `import RenderNode from "./render_node"`
 `import GroupNode from "./group_node"`
 `import Color from "./color"`
+`import { iterateThroughNestedArrays } from "./utils"`
 
 SceneRenderer = TwoObject.extend
   initialize: ->
@@ -29,7 +30,7 @@ SceneRenderer = TwoObject.extend
 
     new DepthFirstTreeIterator(scene).execute (node) => @_visitSceneNode(node, commands)
 
-    for command in commands
+    iterateThroughNestedArrays commands, (command) =>
       command.transform.preMultiply cameraMatrix if command.transform?
       @backend.execute command
 
@@ -41,7 +42,7 @@ SceneRenderer = TwoObject.extend
     if node instanceof GroupNode
       node.updateMatrix()
     else if node instanceof RenderNode
-      node.generateRenderCommands commandList, node._parent.updateWorldMatrix().clone()
+      commandList.push node.generateRenderCommands node._parent.updateWorldMatrix().clone()
 
     return true
 

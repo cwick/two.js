@@ -72,7 +72,7 @@ Sprite = TwoObject.extend
   addFrame: (name, frame) ->
     @_frames[name] ||= frame
 
-  generateRenderCommands: (commands, transform) ->
+  generateRenderCommands: (transform) ->
     image = @_image
     scaleX = scaleY = 1
 
@@ -83,7 +83,7 @@ Sprite = TwoObject.extend
 
     transform.scale scaleX, scaleY
 
-    commands.push
+    return {
       name: "drawImage"
       image: image
       transform: transform
@@ -93,6 +93,7 @@ Sprite = TwoObject.extend
         y: 0
         width: image.width
         height: image.height }
+    }
 
 Sprite.defaultAnchorPoint = [0.5, 0.5]
 

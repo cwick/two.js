@@ -11,8 +11,8 @@ RenderNode = SceneNode.extend
   #   RenderNode, computed from its position in the scene graph hierarchy.
   # @return An array of render commands, or a single render command, that will render this node
   ###
-  generateRenderCommands: (outCommands, worldTransform) ->
-    component.generateRenderCommands outCommands, worldTransform for component in @elements
+  generateRenderCommands: (worldTransform) ->
+    component.generateRenderCommands worldTransform for component in @elements
 
 `export default RenderNode`
 
