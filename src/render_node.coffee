@@ -1,8 +1,9 @@
 `import SceneNode from "./scene_node"`
+`import Renderable from "./renderable"`
 
 RenderNode = SceneNode.extend
   initialize: ->
-    @elements = []
+    @renderable = new Renderable()
 
   ###*
   #
@@ -12,7 +13,7 @@ RenderNode = SceneNode.extend
   # @return An array of render commands, or a single render command, that will render this node
   ###
   generateRenderCommands: (worldTransform) ->
-    component.generateRenderCommands worldTransform for component in @elements
+    @renderable.generateRenderCommands worldTransform
 
 `export default RenderNode`
 

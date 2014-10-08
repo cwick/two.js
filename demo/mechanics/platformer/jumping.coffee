@@ -18,7 +18,7 @@ Game = Two.Game.extend
     for x in [0...@canvas.width] by 32
       do (x) ->
         groundBlock = new Two.TransformNode(position: [x, 0])
-        groundBlock.add new Two.RenderNode(elements: [groundSprite])
+        groundBlock.add new Two.RenderNode(renderable: groundSprite)
         groundBlockCollider = new Two.ArcadePhysicsBody
           boundingBox: new Two.Rectangle(x: -16, y: -16, width: 32, height: 32)
           type: Two.ArcadePhysicsBody.STATIC
@@ -33,7 +33,7 @@ Game = Two.Game.extend
     sprite = new Two.Sprite
       image: Two.Canvas.create(devicePixelRatio: 1, width: @canvas.width, height: @canvas.height).domElement
       anchorPoint: [0, 0]
-    markers.add new Two.RenderNode(elements: [sprite])
+    markers.add new Two.RenderNode(renderable: sprite)
 
     context = sprite.image.getContext "2d"
 
@@ -60,7 +60,7 @@ game.registerEntity "Player", Two.GameObject.extend Two.Components.ArcadePhysics
       image: "/demo/assets/player.png"
       anchorPoint: [0.5, 0]
 
-    @transform.add new Two.RenderNode(elements: [playerSprite])
+    @transform.add new Two.RenderNode(renderable: playerSprite)
 
     # Make player collide with world boundaries so he doesn't leave the stage
     @physics.collideWorldBounds = true

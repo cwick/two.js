@@ -35,7 +35,7 @@ loader.preloadImage("Dream_Moon_Ball_Sprite.png").then ->
       @velocity[0] *= 20
       @velocity[1] *= 20
       @transform.position = @getRandomPosition()
-      @transform.add new Two.RenderNode(elements: [@ballSprite])
+      @transform.add new Two.RenderNode(renderable: @ballSprite)
 
     ballSprite: new Two.Sprite
       image: loader.loadImage "Dream_Moon_Ball_Sprite"

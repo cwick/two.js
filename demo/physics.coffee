@@ -31,7 +31,7 @@ Ball = Two.GameObject.extend Two.Components.P2Physics,
     @physics.addShape new p2.Circle(@ballSprite.width/2)
     @physics.position = @getRandomPosition()
     @physics.updateMassProperties()
-    @transform.add new Two.RenderNode(elements: [@ballSprite])
+    @transform.add new Two.RenderNode(renderable: @ballSprite)
 
   ballSprite:
     new Two.Sprite

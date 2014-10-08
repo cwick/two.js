@@ -41,41 +41,35 @@ VENUS_DAY_LENGTH = 243
 MARS_PERIOD = 687
 MARS_DAY_LENGTH = 1
 
-sun = new Two.RenderNode()
-sun.add new Two.Sprite
+sun = new Two.RenderNode(renderable: new Two.Sprite
   image: "/demo/assets/sun.jpg"
   width: 200
-  height: 200
+  height: 200)
 
-mercury = new Two.RenderNode()
-mercury.add new Two.Sprite
+mercury = new Two.RenderNode(renderable: new Two.Sprite
   image: "/demo/assets/mercury.jpg"
   width: 20
-  height: 20
+  height: 20)
 
-venus = new Two.RenderNode()
-venus.add new Two.Sprite
+venus = new Two.RenderNode(renderable: new Two.Sprite
   image: "/demo/assets/venus.jpg"
   width: 60
-  height: 60
+  height: 60)
 
-earth = new Two.RenderNode()
-earth.add new Two.Sprite
+earth = new Two.RenderNode(renderable: new Two.Sprite
   image: "/demo/assets/earth.png"
   width: 50
-  height: 50
+  height: 50)
 
-moon = new Two.RenderNode()
-moon.add new Two.Sprite
+moon = new Two.RenderNode(renderable: new Two.Sprite
   image: "/demo/assets/moon.jpg"
   width: 20
-  height: 20
+  height: 20)
 
-mars = new Two.RenderNode()
-mars.add new Two.Sprite
+mars = new Two.RenderNode(renderable: new Two.Sprite
   image: "/demo/assets/mars.jpg"
   width: 30
-  height: 30
+  height: 30)
 
 earthTransform = new Two.TransformNode()
 sunTransform = new Two.TransformNode()

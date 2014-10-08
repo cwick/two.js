@@ -15,14 +15,13 @@ helloTransform = new Two.TransformNode()
 
 helloWorldTransform.scale = .5
 
-helloTransform.add new Two.RenderNode()
-helloTransform.children[0].add new Two.Sprite
+helloTransform.add new Two.RenderNode(renderable: new Two.Sprite
   image: "/demo/assets/hello.gif"
-  anchorPoint: [0, 1]
-worldTransform.add new Two.RenderNode()
-worldTransform.children[0].add new Two.Sprite
+  anchorPoint: [0, 1])
+
+worldTransform.add new Two.RenderNode(renderable: new Two.Sprite
   image: "/demo/assets/world.jpg"
-  anchorPoint: [0, 1]
+  anchorPoint: [0, 1])
 
 helloTransform.position = [-305, 150]
 worldTransform.position = [0, 150]

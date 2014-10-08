@@ -1,8 +1,7 @@
-`import TwoObject from "./object"`
+`import Renderable from "./renderable"`
 `import Property from "./property"`
-`import Canvas from "./canvas"`
 
-Sprite = TwoObject.extend
+Sprite = Renderable.extend
   initialize: ->
     @anchorPoint = Sprite.defaultAnchorPoint.slice(0)
     @crop = null

@@ -1,6 +1,6 @@
-`import TwoObject from "./object"`
+`import Renderable from "./renderable"`
 
-Text = TwoObject.extend
+Text = Renderable.extend
   clone: ->
     new Text
       text: @text
