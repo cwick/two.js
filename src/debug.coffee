@@ -12,8 +12,9 @@ class Debug
       total: 0
     }
 
-    @callCounter = {
+    @counters = {
       drawImage: 0
+      renderCommands: 0
     }
 
   _updateStatistics: ->
@@ -21,7 +22,8 @@ class Debug
     @frameTime.logic = Profiler.frames["logic"]
     @frameTime.render = Profiler.frames["render"]
     @frameTime.physics = 0
-    @callCounter.drawImage = Profiler.counters["drawImage"]
+    @counters.drawImage = Profiler.counters["drawImage"]
+    @counters.renderCommands = Profiler.counters["renderCommands"]
 
   _updateFramesPerSecond: (timestamp) ->
     return unless timestamp? && @_previousTimestamp?

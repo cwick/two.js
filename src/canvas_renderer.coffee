@@ -22,6 +22,7 @@ CanvasRenderer = TwoObject.extend
     get: -> @canvas.imageSmoothingEnabled
 
   execute: (command) ->
+    Profiler.incrementCounter "renderCommands"
     @[command.name](command)
 
   clear: (options) ->
