@@ -1,8 +1,7 @@
 `import TwoObject from "./object"`
-`import CanHaveParent from "./can_have_parent"`
 `import SceneNode from "./scene_node"`
 
-RenderNode = SceneNode.extend CanHaveParent,
+RenderNode = SceneNode.extend
   initialize: ->
     @elements = []
 

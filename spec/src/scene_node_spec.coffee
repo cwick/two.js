@@ -1,25 +1,16 @@
-`import CanGroup from "can_group"`
-`import CanHaveParent from "can_have_parent"`
-`import TwoObject from "object"`
+`import SceneNode from "scene_node"`
 
-GroupNode = null
-LeafNode = null
-
-describe "CanGroup", ->
-  beforeEach ->
-    GroupNode = TwoObject.extend CanGroup, CanHaveParent
-    LeafNode = TwoObject.extend CanHaveParent
-
+describe "SceneNode", ->
   it "starts with no children", ->
-    node = new GroupNode()
+    node = new SceneNode()
     expect(node.children.length).toEqual 0
 
   describe "when adding children", ->
     parent = child = null
 
     beforeEach ->
-      parent = new GroupNode()
-      child = new GroupNode()
+      parent = new SceneNode()
+      child = new SceneNode()
 
     it "updates its 'children' collection", ->
       parent.add child
@@ -43,8 +34,8 @@ describe "CanGroup", ->
     parent = child = null
 
     beforeEach ->
-      parent = new GroupNode()
-      child = new LeafNode()
+      parent = new SceneNode()
+      child = new SceneNode()
 
       parent.add child
       parent.remove child
@@ -57,9 +48,9 @@ describe "CanGroup", ->
 
   describe "when removing all children", ->
     it "removes all children", ->
-      parent = new GroupNode()
-      child1 = new GroupNode()
-      child2 = new GroupNode()
+      parent = new SceneNode()
+      child1 = new SceneNode()
+      child2 = new SceneNode()
 
       parent.add child1
       parent.add child2
@@ -73,9 +64,9 @@ describe "CanGroup", ->
     parent1 = parent2 = child = null
 
     beforeEach ->
-      child = new GroupNode()
-      parent1 = new GroupNode()
-      parent2 = new GroupNode()
+      child = new SceneNode()
+      parent1 = new SceneNode()
+      parent2 = new SceneNode()
 
       parent1.add child
       parent2.add child
@@ -89,9 +80,18 @@ describe "CanGroup", ->
     parent1 = parent2 = child = null
 
     beforeEach ->
-      child = new LeafNode()
-      parent1 = new GroupNode()
-      parent2 = new GroupNode()
+      child = new SceneNode()
+      parent1 = new SceneNode()
+      parent2 = new SceneNode()
 
       parent1.add child
       parent2.add child
+
+  it "can have a parent", ->
+    node = new SceneNode()
+    node._setParent(123)
+    expect(node.parent).toEqual 123
+
+  it "has no parent by default", ->
+    expect(new SceneNode().parent).toBeNull()
+

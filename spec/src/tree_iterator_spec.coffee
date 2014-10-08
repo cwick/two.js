@@ -1,6 +1,5 @@
-`import TwoObject from "object"`
-`import CanGroup from "can_group"`
 `import { DepthFirstTreeIterator } from "tree_iterators"`
+`import SceneNode from "scene_node"`
 
 iterate = (root) ->
   iterator = new DepthFirstTreeIterator(root)
@@ -15,7 +14,7 @@ Node = null
 
 describe "DepthFirstTreeIterator", ->
   beforeEach ->
-    Node = TwoObject.extend CanGroup,
+    Node = SceneNode.extend
       jasmineToString: -> @name || "unnamed node"
 
   it "iterates over a one-node tree", ->

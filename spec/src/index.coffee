@@ -1,8 +1,7 @@
 `import "./mixin_spec"`
 `import "./object_spec"`
 `import "./property_spec"`
-`import "./can_have_parent_spec"`
-`import "./can_group_spec"`
+`import "./scene_node_spec"`
 `import "./canvas_spec"`
 `import "./color_spec"`
 `import "./transform_spec"`
