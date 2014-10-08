@@ -41,7 +41,7 @@ SceneRenderer = TwoObject.extend
     if node instanceof GroupNode
       node.updateMatrix()
     else if node instanceof RenderNode
-      node.pushRenderCommands commandList, node._parent.updateWorldMatrix().clone()
+      node.generateRenderCommands commandList, node._parent.updateWorldMatrix().clone()
 
     return true
 

@@ -72,7 +72,7 @@ Sprite = TwoObject.extend
   addFrame: (name, frame) ->
     @_frames[name] ||= frame
 
-  pushRenderCommands: (commands, transform) ->
+  generateRenderCommands: (commands, transform) ->
     image = @_image
     scaleX = scaleY = 1
 

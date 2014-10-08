@@ -6,7 +6,7 @@ Text = TwoObject.extend
       text: @text
       fontSize: @fontSize
 
-  pushRenderCommands: (commands, transform) ->
+  generateRenderCommands: (commands, transform) ->
     commands.push
       name: "drawText"
       transform: transform
