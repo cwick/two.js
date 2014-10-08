@@ -1,17 +1,21 @@
 `import Property from "./property"`
 
+class DefaultTreeIteratorDelegate
+  shouldIterationContinue: -> true
+  visitNode: ->
+
 class DepthFirstTreeIterator
   constructor: (@root) ->
 
-  execute: (callback) ->
-    @_visit @root, callback
+  execute: (delegate = new DefaultTreeIteratorDelegate()) ->
+    @_visit @root, delegate
 
-  _visit: (root, callback) ->
-    shouldVisitChildren = callback(root)
-    return unless shouldVisitChildren
+  _visit: (root, delegate) ->
+    if delegate.shouldIterationContinue(root)
+      delegate.visitNode(root)
+      children = root._children
+      @_visit node, delegate for node in children if children?
 
-    children = root._children
-    @_visit node, callback for node in children if children?
     return
 
 `export { DepthFirstTreeIterator }`

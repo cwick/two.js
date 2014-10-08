@@ -8,6 +8,19 @@
 `import Color from "./color"`
 `import { iterateThroughNestedArrays } from "./utils"`
 
+class TreeIteratorDelegate
+  constructor: ->
+    @commands = []
+
+  shouldIterationContinue: (node) ->
+    node.enabled
+
+  visitNode: (node) ->
+    if node instanceof GroupNode
+      node.updateMatrix()
+    else if node instanceof RenderNode
+      @commands.push node.generateRenderCommands node._parent.updateWorldMatrix().clone()
+
 SceneRenderer = TwoObject.extend
   initialize: ->
     @backend = new CanvasRenderer()
@@ -18,8 +31,8 @@ SceneRenderer = TwoObject.extend
       @_backgroundColor = new Color(value)
 
   render: (scene, camera) ->
-    commands = []
-    commands.push
+    delegate = new TreeIteratorDelegate()
+    delegate.commands.push
       name: "clear"
       color: @_backgroundColor
 
@@ -28,22 +41,12 @@ SceneRenderer = TwoObject.extend
       .scale(1/@backend._canvas.width, 1/@backend._canvas.height)
       .invert()
 
-    new DepthFirstTreeIterator(scene).execute (node) => @_visitSceneNode(node, commands)
+    new DepthFirstTreeIterator(scene).execute delegate
 
-    iterateThroughNestedArrays commands, (command) =>
+    iterateThroughNestedArrays delegate.commands, (command) =>
       command.transform.preMultiply cameraMatrix if command.transform?
       @backend.execute command
 
     return
-
-  _visitSceneNode: (node, commandList) ->
-    return false unless node.enabled
-
-    if node instanceof GroupNode
-      node.updateMatrix()
-    else if node instanceof RenderNode
-      commandList.push node.generateRenderCommands node._parent.updateWorldMatrix().clone()
-
-    return true
 
 `export default SceneRenderer`

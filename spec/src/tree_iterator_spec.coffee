@@ -4,9 +4,12 @@
 iterate = (root) ->
   iterator = new DepthFirstTreeIterator(root)
   results = []
+  delegate = {
+    visitNode: (node) -> results.push node
+    shouldIterationContinue: -> true
+  }
 
-  iterator.execute (node) ->
-    results.push node
+  iterator.execute delegate
 
   results
 
