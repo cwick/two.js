@@ -1,6 +1,6 @@
 `import Renderable from "./renderable"`
 `import Property from "./property"`
-`import Rectangle from "./rectangle"`
+`import Size from "./size"`
 
 Sprite = Renderable.extend
   initialize: ->
@@ -30,7 +30,7 @@ Sprite = Renderable.extend
       null
 
   bounds: Property
-    get: -> new Rectangle(width: @width, height: @height)
+    get: -> new Size(width: @width, height: @height)
 
   pixelOrigin: Property
     get: ->

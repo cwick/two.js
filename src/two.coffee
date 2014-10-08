@@ -17,7 +17,7 @@
 `import Renderable from "./renderable"`
 `import Sprite from "./sprite"`
 `import Text from "./text"`
-`import TransformNode from "./transform"`
+`import TransformNode from "./transform_node"`
 `import { Profiler, Timer, PeriodicSampler } from "./benchmark"`
 `import Keys from "./keys"`
 `import AssetLoader from "./asset_loader"`

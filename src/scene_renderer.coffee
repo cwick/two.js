@@ -9,7 +9,7 @@
 `import { iterateThroughNestedArrays } from "./utils"`
 
 class TreeIteratorDelegate
-  constructor: ->
+  constructor: (@camera) ->
     @commands = []
 
   shouldIterationContinue: (node) ->
@@ -20,7 +20,7 @@ class TreeIteratorDelegate
       node.updateMatrix()
     else if node instanceof RenderNode
       node._parent.updateWorldMatrix()
-      @commands.push node.generateRenderCommands()
+      @commands.push node.generateRenderCommands(@camera)
 
 SceneRenderer = TwoObject.extend
   initialize: ->
@@ -32,20 +32,21 @@ SceneRenderer = TwoObject.extend
       @_backgroundColor = new Color(value)
 
   render: (scene, camera) ->
-    delegate = new TreeIteratorDelegate()
+    delegate = new TreeIteratorDelegate(camera)
     delegate.commands.push
       name: "clear"
       color: @_backgroundColor
 
+    camera.viewport.width = @backend._canvas.width
+    camera.viewport.height = @backend._canvas.height
+
     camera.updateMatrix()
-    cameraMatrix = camera.updateWorldMatrix().clone()
-      .scale(1/@backend._canvas.width, 1/@backend._canvas.height)
-      .invert()
+    camera.updateWorldMatrix()
+    camera.updateScreenMatrix()
 
     new DepthFirstTreeIterator(scene).execute delegate
 
     iterateThroughNestedArrays delegate.commands, (command) =>
-      command.matrix.preMultiply cameraMatrix if command.name == "setTransform"
       @backend.execute command
 
     return

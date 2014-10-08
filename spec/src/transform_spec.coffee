@@ -1,4 +1,4 @@
-`import TransformNode from "transform"`
+`import TransformNode from "transform_node"`
 `import Matrix2d from "matrix2d"`
 
 describe "TransformNode", ->

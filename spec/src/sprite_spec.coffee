@@ -40,8 +40,6 @@ describe "Sprite", ->
     sprite = new Sprite
       image: image
       anchorPoint: [3,3]
-      width: 10
-      height: 20
       crop:
         x: 2
         y: 3
@@ -52,8 +50,6 @@ describe "Sprite", ->
     clone = sprite.clone()
     expect(clone.image).toBe image
     expect(clone.anchorPoint).toEqual [3,3]
-    expect(clone.width).toEqual 10
-    expect(clone.height).toEqual 20
     expect(clone.crop.x).toEqual 2
     expect(clone.crop.y).toEqual 3
     expect(clone.crop.width).toEqual 4

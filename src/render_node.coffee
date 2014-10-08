@@ -7,13 +7,23 @@ RenderNode = SceneNode.extend
     @renderable = new Renderable()
     @width = @height = null
 
-  generateRenderCommands: ->
-    commands = @renderable.generateRenderCommands()
+  generateRenderCommands: (camera) ->
+    commands = @renderable.generateRenderCommands(camera)
+    worldMatrix = @_getWorldMatrix(@parent.worldMatrix.clone())
+    worldMatrix.preMultiply camera.screenMatrix
 
-    [ @_getTransformCommand(@parent.worldMatrix), commands ]
+    transformCommand = @_getTransformCommand(worldMatrix)
 
-  _getTransformCommand: (transform) ->
-    transform = transform.clone()
+    [ transformCommand, commands ]
+
+  _getWorldMatrix: (transform) ->
+    [scaleX, scaleY] = @_scaleFromBounds()
+    transform.scale(scaleX, scaleY)
+
+  _getTransformCommand: (worldMatrix) ->
+    { name: "setTransform", matrix: worldMatrix }
+
+  _scaleFromBounds: ->
     scaleX = scaleY = 1
     bounds = @renderable.bounds
 
@@ -22,9 +32,9 @@ RenderNode = SceneNode.extend
     if @height && bounds.height
       scaleY = @height / bounds.height
 
-    transform.scale scaleX, scaleY
+    [scaleX, scaleY]
 
-    { name: "setTransform", matrix: transform }
+
 
 `export default RenderNode`
 

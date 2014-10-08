@@ -1,12 +1,12 @@
 `import TwoObject from "./object"`
-`import Rectangle from "./rectangle"`
+`import Size from "./size"`
 `import Property from "./property"`
 
 Renderable = TwoObject.extend
   initialize: ->
 
   bounds: Property
-    get: -> new Rectangle()
+    get: -> new Size()
 
   ###*
   #
