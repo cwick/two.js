@@ -4,18 +4,18 @@
 
 P2PhysicsWorld = TwoObject.extend
   initialize: ->
-    @world = new p2.World()
+    @p2 = new p2.World()
     @isActive = false
     @updateCallback = ->
 
   add: (body) ->
-    @world.addBody body
+    @p2.addBody body
     @isActive = true
 
   tick: (deltaSeconds) ->
     return unless @isActive
-    if @world.bodies.length > 0
-      @world.step deltaSeconds
-      @updateCallback(@world.bodies)
+    if @p2.bodies.length > 0
+      @p2.step deltaSeconds
+      @updateCallback(@p2.bodies)
 
 `export default P2PhysicsWorld`

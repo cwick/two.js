@@ -1,7 +1,7 @@
 `import TwoObject from "./object"`
 `import Property from "./property"`
 
-DeviceMetrics = TwoObject.createWithMixins
+DeviceMetrics = TwoObject.extendAndCreate
   devicePixelRatio: Property
     get: ->
       @_devicePixelRatio || window.devicePixelRatio

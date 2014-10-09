@@ -1,5 +1,4 @@
 `import TwoObject from "object"`
-`import Mixin from "mixin"`
 `import Property from "property"`
 
 describe "TwoObject", ->
@@ -132,67 +131,6 @@ describe "TwoObject", ->
 
       expect(Derived.prototype.hello).toBe hello
 
-  describe "creating a subclass with mixins", ->
-    it "can apply a mixin to the subclass", ->
-      SimpleMixin = Mixin.create getMixinValue: -> "mixin"
-
-      Derived = TwoObject.extend SimpleMixin,
-        getDerivedValue: -> "derived"
-
-      d = Derived.create()
-      expect(d.getMixinValue()).toEqual "mixin"
-      expect(d.getDerivedValue()).toEqual "derived"
-
-    it "can apply multiple mixins to the subclass", ->
-      Mixin1 = Mixin.create mixin1: 1
-      Mixin2 = Mixin.create mixin2: 1
-
-      Derived = TwoObject.extend Mixin1, Mixin2,
-        derived: 3
-
-      d = Derived.create()
-      expect(d.mixin1).toEqual 1
-      expect(d.mixin2).toEqual 1
-      expect(d.derived).toEqual 3
-      expect(Mixin1.detect(d)).toBe true
-      expect(Mixin2.detect(d)).toBe true
-
-    it "can extend and create", ->
-      FooMixin = Mixin.create foo: -> "bar"
-      obj = TwoObject.createWithMixins FooMixin
-      expect(obj.foo()).toEqual "bar"
-
-    it "handles mixins from multiple subclasses", ->
-      A_Mixin = Mixin.create
-        a: -> "a"
-
-      B_Mixin = Mixin.create
-        b: -> "b"
-
-      A = TwoObject.extend A_Mixin
-      B = A.extend B_Mixin
-
-      base = new B()
-
-      expect(base.a()).toEqual "a"
-      expect(base.b()).toEqual "b"
-
-    it "the mixin initializer sets properties on the base object", ->
-      TestMixin = Mixin.create
-        initialize: ->
-          @foo = "hello"
-
-      base = TwoObject.createWithMixins(TestMixin)
-
-      expect(base.foo).toEqual "hello"
-
-    it "the mixin initializer is called after properties are defined", ->
-      TestMixin = Mixin.create
-        initialize: -> @readonly = 123
-        readonly: Property readonly: true
-
-      # Should throw "can't set readonly property"
-      expect(-> TwoObject.createWithMixins(TestMixin)).toThrow()
 
 
 

@@ -1,4 +1,3 @@
-`import "./mixin_spec"`
 `import "./object_spec"`
 `import "./property_spec"`
 `import "./scene_node_spec"`
