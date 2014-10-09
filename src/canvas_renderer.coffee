@@ -4,13 +4,14 @@
 `import Matrix2d from "./matrix2d"`
 `import Canvas from "./canvas"`
 `import { Profiler } from "./benchmark"`
+`import { iterateThroughNestedArrays } from "./utils"`
 
 CanvasRenderer = TwoObject.extend
   initialize: ->
     @canvas = new Canvas()
     @imageSmoothingEnabled = false
     @flipYAxis = false
-    @_transformStack = [ new Matrix2d() ]
+    @_referenceFrame = new Matrix2d()
 
   canvas: Property
     set: (value) ->
@@ -30,23 +31,11 @@ CanvasRenderer = TwoObject.extend
     @_context.fillStyle = options.color.toCSS()
     @_context.fillRect 0,0, @_canvas.frameWidth, @_canvas.frameHeight
 
-  pushTransform: ->
-    @_transformStack.push @_getTopMatrix().clone()
-
-  popTransform: ->
-    @_transformStack.pop()
-    @setTransform matrix: @_getTopMatrix()
-
-  transform: (options) ->
-    top = @_getTopMatrix()
-    top.multiply(options.matrix)
-
-    @setTransform(matrix: top)
-
   setTransform: (options) ->
-    @_setTopMatrix(options.matrix)
+    transform = @_referenceFrame.clone()
+    transform.multiply options.matrix
 
-    values = options.matrix.values
+    values = transform.values
     devicePixelRatio = @_canvas._devicePixelRatio
 
     if @flipYAxis
@@ -63,6 +52,15 @@ CanvasRenderer = TwoObject.extend
       devicePixelRatio * values[3],
       devicePixelRatio * values[4],
       devicePixelRatio * yPosition)
+
+  drawInReferenceFrame: (options) ->
+    @setTransform matrix: options.referenceFrame
+    @_referenceFrame = options.referenceFrame
+
+    iterateThroughNestedArrays [options.commands], (command) =>
+      @execute(command)
+
+    @_referenceFrame = new Matrix2d()
 
   drawText: (options) ->
     @_context.textBaseline = "top"
@@ -87,12 +85,6 @@ CanvasRenderer = TwoObject.extend
       -origin[1], #destination Y
       crop.width, #destination width
       crop.height) #destination height
-
-  _getTopMatrix: ->
-    @_transformStack[@_transformStack.length - 1]
-
-  _setTopMatrix: (matrix) ->
-    @_transformStack[@_transformStack.length - 1].setValues(matrix.values)
 
 `export default CanvasRenderer`
 

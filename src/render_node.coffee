@@ -12,16 +12,14 @@ RenderNode = SceneNode.extend
     worldMatrix = @_getWorldMatrix(@parent.worldMatrix.clone())
     worldMatrix.preMultiply camera.screenMatrix
 
-    transformCommand = @_getTransformCommand(worldMatrix)
-
-    [ transformCommand, commands ]
+    @_getRenderCommand(worldMatrix, commands)
 
   _getWorldMatrix: (transform) ->
     [scaleX, scaleY] = @_scaleFromBounds()
     transform.scale(scaleX, scaleY)
 
-  _getTransformCommand: (worldMatrix) ->
-    { name: "setTransform", matrix: worldMatrix }
+  _getRenderCommand: (worldMatrix, commands) ->
+    { name: "drawInReferenceFrame", referenceFrame: worldMatrix, commands: commands }
 
   _scaleFromBounds: ->
     scaleX = scaleY = 1
