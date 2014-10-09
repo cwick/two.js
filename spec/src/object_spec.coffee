@@ -124,6 +124,14 @@ describe "TwoObject", ->
       expect(derived.a).toEqual 3
       expect(derived.b).toEqual 4
 
+    it "adds methods to the object's prototype", ->
+      hello = -> "world"
+
+      Derived = TwoObject.extend
+        hello: hello
+
+      expect(Derived.prototype.hello).toBe hello
+
   describe "creating a subclass with mixins", ->
     it "can apply a mixin to the subclass", ->
       SimpleMixin = Mixin.create getMixinValue: -> "mixin"
