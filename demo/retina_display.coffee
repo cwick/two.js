@@ -17,6 +17,8 @@ highresRenderer = new Two.SceneRenderer(
   backgroundColor: "grey")
 camera = new Two.Camera(width: lowresCanvas.width, height: lowresCanvas.height)
 
+lowresRenderer.backend.flipYAxis = highresRenderer.backend.flipYAxis = true
+
 testImage = new Two.TransformNode()
 testImage.add new Two.RenderNode(renderable: new Two.Sprite
   image: "/demo/assets/retina_tree.jpg"
