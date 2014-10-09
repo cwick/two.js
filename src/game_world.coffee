@@ -12,7 +12,7 @@ GameWorld = TwoObject.extend
     @bounds = null
     @_entitiesByID = []
     @_entitiesByName = []
-    @_entityCount = 0
+    @_gameObjectCount = 0
     @physics =
       p2: new P2PhysicsWorld(updateCallback: @_updateP2Objects)
       arcade: new ArcadePhysicsWorld(updateCallback: @_updateArcadeObjects)
@@ -21,14 +21,14 @@ GameWorld = TwoObject.extend
     Profiler.measure "logic", => @_tickGameObjects()
     Profiler.measure "physics", => @_tickPhysics(deltaSeconds)
 
-  entityCount: Property readonly: true
+  gameObjectCount: Property readonly: true
 
   add: (obj) ->
     throw new Error("Entities must have a unique ID") if @_entitiesByID[obj.id] || !obj.id?
 
     @_entitiesByName[obj.name] = obj if obj.name?.length > 0
     @_entitiesByID[obj.id] = obj
-    @_entityCount++
+    @_gameObjectCount++
 
     if P2Physics.detect(obj)
       @physics.p2.add obj.physics
@@ -38,7 +38,7 @@ GameWorld = TwoObject.extend
   remove: (obj) ->
     if @_entitiesByID[obj.id]
       delete @_entitiesByID[obj.id]
-      @_entityCount--
+      @_gameObjectCount--
 
     delete @_entitiesByName[obj.name]
 

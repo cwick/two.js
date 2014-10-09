@@ -86,5 +86,21 @@ CanvasRenderer = TwoObject.extend
       crop.width, #destination width
       crop.height) #destination height
 
+  drawPolygon: (options) ->
+    @_context.beginPath()
+    @_context.strokeStyle = "red"
+
+    for point, i in options.points
+      if i ==0
+        method = "moveTo"
+      else
+        method = "lineTo"
+
+      @_context[method] point[0], point[1]
+
+    @_context.closePath()
+    @_context.stroke()
+
+
 `export default CanvasRenderer`
 

@@ -80,7 +80,7 @@ Game = TwoObject.extend
     entity.spawn(options)
     entity
 
-  registerEntity: (name, Entity) ->
+  registerGameObject: (name, Entity) ->
     @_entityClasses[name] = Entity
 
   registerState: ->

@@ -25,7 +25,7 @@ Game = Two.Game.extend
 game = new Game()
 
 # Create the player entity
-game.registerEntity "Player", Two.GameObject.extend Two.Components.ArcadePhysics,
+game.registerGameObject "Player", Two.GameObject.extend Two.Components.ArcadePhysics,
   initialize: ->
     playerSprite = new Two.Sprite
       image: "/demo/assets/player.png"

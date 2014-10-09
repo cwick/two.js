@@ -23,7 +23,7 @@ Game = Two.Game.extend
 game = new Game()
 
 # Create the player entity
-game.registerEntity "Player", Two.GameObject.extend Two.Components.ArcadePhysics,
+game.registerGameObject "Player", Two.GameObject.extend Two.Components.ArcadePhysics,
   MAX_SPEED: 500 # pixels / second
   ACCELERATION: 1500 # pixels / second / second
   DRAG: 600 # pixels / second

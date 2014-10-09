@@ -17,6 +17,7 @@
 `import Renderable from "./renderable"`
 `import Sprite from "./sprite"`
 `import Text from "./text"`
+`import Path from "./path"`
 `import TransformNode from "./transform_node"`
 `import { Profiler, Timer, PeriodicSampler } from "./benchmark"`
 `import Keys from "./keys"`
@@ -30,5 +31,5 @@ Components =
 `export { Object, Property, Canvas, SceneRenderer, CanvasRenderer, TransformNode, RenderNode, Sprite, Text,
 Matrix2d, DeviceMetrics, Profiler, Timer, PeriodicSampler, GameObject, Components, GameWorld,
 Rectangle, Camera, Game, DefaultGameDelegate, Keys, AssetLoader, ArcadePhysicsBody, GameState,
-Renderable
+Renderable, Path
 }`
