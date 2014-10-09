@@ -10,4 +10,7 @@ GameDelegate = Two.DefaultGameDelegate.extend
 
     game.registerState "main", MainState
 
+    game.scene.add new Two.RenderNode(renderable: new Two.Text(text: "hello world!"))
+    game.scene.position = [0,40]
+
 new Two.Game(delegate: new GameDelegate()).start()

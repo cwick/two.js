@@ -39,11 +39,11 @@ CanvasRenderer = TwoObject.extend
     devicePixelRatio = @_canvas._devicePixelRatio
 
     if @flipYAxis
-      scale = 1
-      yPosition = values[5]
-    else
       scale = -1
       yPosition = @_canvas._height - values[5]
+    else
+      scale = 1
+      yPosition = values[5]
 
     @_context.setTransform(
       devicePixelRatio * values[0],

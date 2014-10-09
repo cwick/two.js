@@ -7,7 +7,6 @@ Game = Two.Game.extend
   configure: ->
     @canvas.width = 848
     @canvas.height = 450
-    @renderer.backend.imageSmoothingEnabled = false
     @renderer.backgroundColor = "#4488cc"
     @world.physics.arcade.gravity.y = @GRAVITY
 

@@ -13,7 +13,12 @@ Canvas = TwoObject.extend
   domElement: Property readonly: true
 
   getContext: (type) ->
-    @_contexts[type] ||= @_domElement.getContext type
+    context = @_contexts[type]
+    unless context?
+      context = @_contexts[type] = @_domElement.getContext type
+      @_setCanvasOptions()
+
+    context
 
   devicePixelRatio: Property
     set: (value) ->
