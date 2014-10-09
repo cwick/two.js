@@ -5,8 +5,10 @@ TransformComponent = BaseComponent.extend
   initialize: ->
     @node = new TransformNode()
 
+  componentWasInstalled: (gameObject) ->
+    gameObject.transform = @node
+
 TransformComponent.componentName = "Transform"
 TransformComponent.propertyName = "transform"
-TransformComponent.hasConvenienceProperty = true
 
 `export default TransformComponent`

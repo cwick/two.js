@@ -14,8 +14,8 @@ Ship = Two.GameObject.extend
     shipBody.renderable = new Two.Path
       points: [[0,0], [0, 20], [40,0], [0,-20]]
 
-    @components.transform.node.add shipBody
-    @components.transform.node.position = [50, 100]
+    @components.transform.add shipBody
+    @components.transform.position = [50, 100]
 
 GameDelegate = Two.DefaultGameDelegate.extend
   gameDidInitialize: (game) ->

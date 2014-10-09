@@ -2,13 +2,15 @@
 `import BaseComponent from "./base"`
 
 ArcadePhysics = BaseComponent.extend
-  initialize: (options) ->
+  initialize: ->
     @body = new ArcadePhysicsBody()
-    @body.userData = options.gameObject
+
+  componentWasInstalled: (gameObject) ->
+    gameObject.physics = @body
+    @body.userData = gameObject
 
 ArcadePhysics.componentName = "ArcadePhysics"
 ArcadePhysics.propertyName = "physics"
-ArcadePhysics.hasConvenienceProperty = true
 
 `export default ArcadePhysics`
 

@@ -14,10 +14,10 @@ GameObject = TwoObject.extend
     @game.remove @
 
   addComponent: (ComponentType) ->
-    component = new ComponentType(gameObject: @)
+    component = new ComponentType()
     @components[ComponentType.propertyName] = component
     @_componentsByName[ComponentType.componentName] = component
-    @[ComponentType.propertyName] = component if ComponentType.hasConvenienceProperty
+    component.componentWasInstalled(@)
 
   hasComponent: (name) ->
     @_componentsByName[name]?
