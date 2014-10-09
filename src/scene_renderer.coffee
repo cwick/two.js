@@ -6,7 +6,6 @@
 `import RenderNode from "./render_node"`
 `import GroupNode from "./group_node"`
 `import Color from "./color"`
-`import { iterateThroughNestedArrays } from "./utils"`
 
 class TreeIteratorDelegate
   constructor: (@camera) ->
@@ -20,7 +19,7 @@ class TreeIteratorDelegate
       node.updateMatrix()
     else if node instanceof RenderNode
       node._parent.updateWorldMatrix()
-      @commands.push node.generateRenderCommands(@camera)
+      @commands.push node.generateRenderCommand(@camera)
 
 SceneRenderer = TwoObject.extend
   initialize: ->
@@ -46,8 +45,7 @@ SceneRenderer = TwoObject.extend
 
     new DepthFirstTreeIterator(scene).execute delegate
 
-    iterateThroughNestedArrays delegate.commands, (command) =>
-      @backend.execute command
+    @backend.execute command for command in delegate.commands
 
     return
 

@@ -7,7 +7,7 @@ RenderNode = SceneNode.extend
     @renderable = new Renderable()
     @width = @height = null
 
-  generateRenderCommands: (camera) ->
+  generateRenderCommand: (camera) ->
     commands = @renderable.generateRenderCommands(camera)
     worldMatrix = @_getWorldMatrix(@parent.worldMatrix.clone())
     worldMatrix.preMultiply camera.screenMatrix
