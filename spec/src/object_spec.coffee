@@ -27,6 +27,9 @@ describe "TwoObject", ->
 
       expect(obj2.a).toEqual 1
 
+    it "throws an error if it was not called with an options object", ->
+      expect(-> TwoObject.create(124)).toThrow(new TypeError("Two.Object must be initialized with an options object."))
+
   describe "creating a subclass", ->
     it "can extend a class", ->
       TestClass = TwoObject.extend

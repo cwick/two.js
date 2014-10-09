@@ -8,6 +8,9 @@ copyOwnProperties = (source, destination) ->
   destination
 
 initializeObject = (properties, object, mixins) ->
+  unless properties instanceof Object
+    throw TypeError("Two.Object must be initialized with an options object.")
+
   for mixin in mixins when mixin.properties[INITIALIZE_FUNCTION]?
     mixin.properties[INITIALIZE_FUNCTION].apply object
 
