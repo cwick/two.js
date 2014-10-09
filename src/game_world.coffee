@@ -6,6 +6,7 @@
 `import ArcadePhysics from "./components/arcade_physics"`
 `import Rectangle from "./rectangle"`
 `import { Profiler } from "./benchmark"`
+`import Log from "./log"`
 
 GameWorld = TwoObject.extend
   initialize: ->
@@ -30,10 +31,10 @@ GameWorld = TwoObject.extend
     @_entitiesByID[obj.id] = obj
     @_gameObjectCount++
 
-    if P2Physics.detect(obj)
-      @physics.p2.add obj.physics
-    else if ArcadePhysics.detect(obj)
-      @physics.arcade.add obj.physics
+    if obj.hasComponent("P2Physics")
+      @physics.p2.add obj.components.physics.body
+    else if obj.hasComponent("ArcadePhysics")
+      @physics.arcade.add obj.components.physics.body
 
   remove: (obj) ->
     if @_entitiesByID[obj.id]
@@ -42,10 +43,10 @@ GameWorld = TwoObject.extend
 
     delete @_entitiesByName[obj.name]
 
-    if P2Physics.detect(obj)
-      @physics.p2.remove obj.physics
-    else if ArcadePhysics.detect(obj)
-      @physics.arcade.remove obj.physics
+    if obj.hasComponent("P2Physics")
+      @physics.p2.remove obj.components.physics.body
+    else if obj.hasComponent("ArcadePhysics")
+      @physics.arcade.remove obj.components.physics.body
 
   findByName: (name) ->
     @_entitiesByName[name]
@@ -62,18 +63,24 @@ GameWorld = TwoObject.extend
 
   _updateArcadeObjects: (bodies) ->
     for body in bodies when body.enabled
-      transform = body.userData.transform
-      transform.position[0] = body.position[0]
-      transform.position[1] = body.position[1]
+      transform = body.userData.components.transform?.node
+      if transform
+        transform.position[0] = body.position[0]
+        transform.position[1] = body.position[1]
+      else
+        Log.warning("Can't update physics on #{body.userData.name}. Object has no Transform component.")
 
     return
 
   _updateP2Objects: (bodies) ->
     for body in bodies
-      transform = body.userData.transform
-      transform.position[0] = body.position[0]
-      transform.position[1] = body.position[1]
-      transform.rotation = body.angle
+      transform = body.userData.components.transform?.node
+      if transform
+        transform.position[0] = body.position[0]
+        transform.position[1] = body.position[1]
+        transform.rotation = body.angle
+      else
+        Log.warning("Can't update physics on #{body.userData.name}. Object has no Transform component.")
 
     return
 

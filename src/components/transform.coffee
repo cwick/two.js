@@ -1,8 +1,12 @@
-`import Mixin from "../mixin"`
+`import BaseComponent from "./base"`
 `import TransformNode from "../transform_node"`
 
-Transform = Mixin.create
+TransformComponent = BaseComponent.extend
   initialize: ->
-    @transform = new TransformNode()
+    @node = new TransformNode()
 
-`export default Transform`
+TransformComponent.componentName = "Transform"
+TransformComponent.propertyName = "transform"
+TransformComponent.hasConvenienceProperty = true
+
+`export default TransformComponent`

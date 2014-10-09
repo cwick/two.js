@@ -70,15 +70,15 @@ Game = TwoObject.extend
 
 
   spawn: (type, options={}) ->
-    entity = @_initializeEntity(type)
-    throw new Error("Game#spawn -- Unknown entity type '#{type}'") unless entity?
+    object = @_initializeEntity(type)
+    throw new Error("Game#spawn -- Unknown game object type '#{type}'") unless object?
 
-    entity.name = options.name if options.name?.length > 0
+    object.name = options.name if options.name?.length > 0
 
-    @scene.add entity.transform
-    @world.add entity
-    entity.spawn(options)
-    entity
+    @scene.add object.components.transform.node if object.hasComponent("Transform")
+    @world.add object
+    object.spawn(options)
+    object
 
   registerGameObject: (name, Entity) ->
     @_entityClasses[name] = Entity
@@ -140,9 +140,10 @@ Game = TwoObject.extend
     if Entity
       entity = Object.create Entity.prototype
       entity.game = @
-      entity.name = "#{type}#{entity.id}"
 
       Entity.apply entity
+      entity.name = "#{type}#{entity.id}" unless entity.name?
+
       entity
 
   _initializeWorld: ->

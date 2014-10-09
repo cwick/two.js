@@ -6,8 +6,8 @@ GameState = TwoObject.extend
 
   # Override these in derived states
   stateWillPreloadAssets: ->
-  stateWillEnter: ->
-  stateDidExit: ->
+  stateDidEnter: ->
+  stateWillExit: ->
   stateWillTick: ->
   sceneWillRender: ->
 

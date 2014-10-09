@@ -18,7 +18,7 @@ StateManager = TwoObject.extend
       # The browser will swallow all exceptions thrown from this callback
       # so we have to capture and print the error ourself
       try
-        @currentState.stateWillEnter()
+        @currentState.stateDidEnter()
       catch error
         console.error error.stack
 
