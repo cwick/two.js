@@ -41,7 +41,7 @@ game.registerGameObject "Player", Two.GameObject.extend Two.Components.ArcadePhy
     @physics.boundingBox.height = 32
     @physics.maxVelocity = [@MAX_SPEED, @MAX_SPEED]
 
-  spawn: ->
+  objectDidSpawn: ->
     @physics.position.x = @game.canvas.width/2
     @physics.position.y = 32
 

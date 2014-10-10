@@ -15,7 +15,7 @@ describe "Components.P2Physics", ->
     @obj.physics.velocity = [60, 0]
 
     world = new P2PhysicsWorld()
-    world.p2.gravity = [0, 0]
+    world.p2World.gravity = [0, 0]
     world.add @obj.physics
     world.tick 1/60
 

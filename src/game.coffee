@@ -77,7 +77,7 @@ Game = TwoObject.extend
 
     @scene.add object.components.transform.node if object.hasComponent("Transform")
     @world.add object
-    object.spawn(options)
+    object.objectDidSpawn(options)
     object
 
   registerGameObject: (name, Entity) ->

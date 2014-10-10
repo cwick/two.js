@@ -8,7 +8,7 @@ GameObject = TwoObject.extend
     @components = {}
     @_componentsByName = {}
 
-  spawn: ->
+  objectDidSpawn: ->
   tick: ->
   die: ->
     @game.remove @

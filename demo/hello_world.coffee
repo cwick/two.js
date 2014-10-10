@@ -1,6 +1,5 @@
 `module Two from "two"`
 
-
 MainState = Two.GameState.extend
   stateDidEnter: ->
     hello = @game.spawn "HelloWorld", name: "HelloWorld"
