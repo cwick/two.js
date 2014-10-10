@@ -65,8 +65,8 @@ GameWorld = TwoObject.extend
     for body in bodies when body.enabled
       transform = body.userData.components.transform?.node
       if transform
-        transform.position[0] = body.position[0]
-        transform.position[1] = body.position[1]
+        transform.position.x = body.position.x
+        transform.position.y = body.position.y
       else
         Log.warning("Can't update physics on #{body.userData.name}. Object has no Transform component.")
 
@@ -76,8 +76,8 @@ GameWorld = TwoObject.extend
     for body in bodies
       transform = body.userData.components.transform?.node
       if transform
-        transform.position[0] = body.position[0]
-        transform.position[1] = body.position[1]
+        transform.position.x = body.position[0]
+        transform.position.y = body.position[1]
         transform.rotation = body.angle
       else
         Log.warning("Can't update physics on #{body.userData.name}. Object has no Transform component.")

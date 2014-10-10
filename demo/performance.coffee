@@ -11,8 +11,8 @@ render = (time) ->
     x = ball.transform.position.x += ball.velocity[0]
     y = ball.transform.position.y += ball.velocity[1]
     if x > canvas.width || y > canvas.height || x < 0 || y < 0
-      ball.velocity[0] *= -1
-      ball.velocity[1] *= -1
+      ball.velocity.x *= -1
+      ball.velocity.y *= -1
 
   frameTime = sampler.sample(Two.Profiler.measure(-> renderer.render(scene, camera)), "frameTime")
   document.getElementById("frame-time").innerHTML = frameTime
@@ -32,8 +32,8 @@ loader.preloadImage("Dream_Moon_Ball_Sprite.png").then ->
     constructor: ->
       @transform = new Two.TransformNode()
       @velocity = [Math.random() - .5, Math.random() - .5]
-      @velocity[0] *= 20
-      @velocity[1] *= 20
+      @velocity.x *= 20
+      @velocity.y *= 20
       @transform.position = @getRandomPosition()
       @transform.add new Two.RenderNode(renderable: @ballSprite)
 

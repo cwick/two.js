@@ -2,6 +2,8 @@
 
 BaseComponent = TwoObject.extend
   initialize: ->
+    @owner = null
+
   componentWasInstalled: ->
 
 `export default BaseComponent`

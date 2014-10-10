@@ -4,6 +4,7 @@
 Ball = new Two.GameObject.extend
   initialize: ->
     @addComponent Two.Components.P2Physics
+    @addComponent Two.Components.Transform
 
     @width = @height = 20
 
@@ -42,19 +43,23 @@ Ball = new Two.GameObject.extend
 Boundary = Two.GameObject.extend
   initialize: (options) ->
     @addComponent Two.Components.P2Physics
+    @addComponent Two.Components.Transform
     @physics.addShape(new p2.Plane())
 
   type: Two.Property
     set: (value) ->
       switch value
         when "bottom"
-          @physics.position[1] = @game.canvas.height
-          @physics.angle = Math.PI
+          @physics.position[1] = 0
+          @physics.angle = 0
         when "left"
           @physics.angle = -Math.PI/2
         when "right"
           @physics.angle = Math.PI/2
           @physics.position[0] = @game.canvas.width
+        when "top"
+          @physics.position[1] = @game.canvas.height
+          @physics.angle = Math.PI
 
 MainState = Two.GameState.extend
   stateDidEnter: ->

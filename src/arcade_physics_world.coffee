@@ -1,6 +1,7 @@
 `import TwoObject from "./object"`
 `import Rectangle from "./rectangle"`
 `import Vector2d from "./vector2d"`
+`import Property from "./property"`
 
 ArcadePhysicsWorld = TwoObject.extend
   initialize: ->
@@ -10,6 +11,9 @@ ArcadePhysicsWorld = TwoObject.extend
     @updateCallback = ->
     @isActive = false
     @collideWorldBounds = true
+
+  gravity: Property
+    set: (value) -> @_gravity = new Vector2d(value)
 
   add: (body) ->
     @bodies.push body

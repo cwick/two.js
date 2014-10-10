@@ -17,49 +17,41 @@ describe "TransformNode", ->
   describe "position", ->
     it "defaults to [0,0]", ->
       t = new TransformNode()
-      expect(t.position).toEqual [0,0]
+      expect(t.position.values).toEqual [0,0]
 
     it "modifies the transformation matrix when re-assigning", ->
       t = new TransformNode()
-      position = [4,5]
-      t.position = position
+      t.position = [4,5]
       t.updateMatrix()
-      expect(t.matrix.values).toEqual new Matrix2d().translate(position[0], position[1]).values
+      expect(t.matrix.values).toEqual new Matrix2d().translate(t.position.x, t.position.y).values
 
     it "modifies the transformation matrix when updating an individual vector component", ->
       t = new TransformNode()
 
-      t.position[0] += 10
       t.position.x += 10
-
-      t.position[1] += 10
       t.position.y += 10
 
       t.updateMatrix()
-      expect(t.matrix.values).toEqual new Matrix2d().translate(20, 20).values
+      expect(t.matrix.values).toEqual new Matrix2d().translate(10, 10).values
 
   describe "scale", ->
     it "defaults to [1,1]", ->
       t = new TransformNode()
-      expect(t.scale).toEqual [1,1]
+      expect(t.scale.values).toEqual [1,1]
 
     it "modifies the transformation matrix when re-assigning", ->
       t = new TransformNode()
-      scale = [4,5]
-      t.scale = scale
+      t.scale = [4,5]
       t.updateMatrix()
-      expect(t.matrix.values).toEqual new Matrix2d().scale(scale[0], scale[1]).values
+      expect(t.matrix.values).toEqual new Matrix2d().scale(t.scale.x, t.scale.y).values
 
     it "modifies the transformation matrix when updating an individual vector component", ->
       t = new TransformNode()
-      t.scale[0] += 10
       t.scale.x += 10
-
-      t.scale[1] += 10
       t.scale.y += 10
 
       t.updateMatrix()
-      expect(t.matrix.values).toEqual new Matrix2d().scale(21, 21).values
+      expect(t.matrix.values).toEqual new Matrix2d().scale(11, 11).values
 
     it "can be scaled along both dimesions equally", ->
       t = new TransformNode()

@@ -1,25 +1,44 @@
 `module gl from "./lib/gl-matrix"`
 
-Vector2d = (values) ->
-  if values?
-    @[0] = values[0]
-    @[1] = values[1]
-  else
-    @[0] = 0
-    @[1] = 0
-  return
+class Vector2d
+  constructor: (v) ->
+    @values = gl.vec2.create()
 
-Vector2d:: = new Array(2)
-Vector2d::applyMatrix = (matrix) ->
-  gl.vec2.transformMat2d(@, @, matrix.values)
-  @
+    if v instanceof Vector2d
+      values = v.values
+    else
+      values = v
+
+    @setValues(values) if values
+
+  clone: ->
+    new Vector2d(@values)
+
+  setValues: (values) ->
+    @values[0] = values[0]
+    @values[1] = values[1]
+
+  applyMatrix: (matrix) ->
+    values = @values
+    gl.vec2.transformMat2d(values, values, matrix.values)
+    @
+
+  add: (other) ->
+    valus = @values
+    gl.vec2.add(values, values, other.values)
+    @
+
+  normalize: ->
+    values = @values
+    gl.vec2.normalize(values, values)
+    @
 
 Object.defineProperty Vector2d::, "x",
-  set: (value) -> @[0] = value
-  get: -> @[0]
+  set: (value) -> @values[0] = value
+  get: -> @values[0]
 
 Object.defineProperty Vector2d::, "y",
-  set: (value) -> @[1] = value
-  get: -> @[1]
+  set: (value) -> @values[1] = value
+  get: -> @values[1]
 
 `export default Vector2d`
