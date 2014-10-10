@@ -14,16 +14,23 @@ RenderNode = SceneNode.extend
 
     @_getRenderCommand(worldMatrix, commands)
 
+  bounds: Property
+    get: ->
+      renderableBounds = @renderable.bounds
+      [scaleX, scaleY] = @_scaleFromBounds(renderableBounds)
+      renderableBounds.width *= scaleX
+      renderableBounds.height *= scaleY
+      renderableBounds
+
   _getWorldMatrix: (transform) ->
-    [scaleX, scaleY] = @_scaleFromBounds()
+    [scaleX, scaleY] = @_scaleFromBounds(@renderable.bounds)
     transform.scale(scaleX, scaleY)
 
   _getRenderCommand: (worldMatrix, commands) ->
     { name: "drawInReferenceFrame", referenceFrame: worldMatrix, commands: commands }
 
-  _scaleFromBounds: ->
+  _scaleFromBounds: (bounds) ->
     scaleX = scaleY = 1
-    bounds = @renderable.bounds
 
     if @width && bounds.width
       scaleX = @width / bounds.width

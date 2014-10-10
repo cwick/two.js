@@ -8,7 +8,7 @@ BoundingBox = Rectangle.extend
     @width = sprite.width
     @height = sprite.height
     @y = (sprite.anchorPoint[1] - 0.5) * @height
-    @x = (sprite.anchorPoint[0] - 0.5) * @width
+    @x = -(sprite.anchorPoint[0] - 0.5) * @width
 
 ArcadePhysicsBody = TwoObject.extend
   initialize: ->
@@ -90,12 +90,12 @@ ArcadePhysicsBody = TwoObject.extend
       @touching.right = true
 
   unsetOrigin: ->
-    @_position[0] -= @boundingBox.x
-    @_position[1] -= @boundingBox.y
-
-  setOrigin: ->
     @_position[0] += @boundingBox.x
     @_position[1] += @boundingBox.y
+
+  setOrigin: ->
+    @_position[0] -= @boundingBox.x
+    @_position[1] -= @boundingBox.y
 
   applyGravity: (deltaSeconds, gravity) ->
     @_velocity[0] += gravity[0]*deltaSeconds
