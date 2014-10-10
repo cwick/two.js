@@ -1,13 +1,8 @@
 `module gl from "./lib/gl-matrix"`
 
 class Vector2d
-  constructor: (v) ->
+  constructor: (values) ->
     @values = gl.vec2.create()
-
-    if v instanceof Vector2d
-      values = v.values
-    else
-      values = v
 
     @setValues(values) if values
 

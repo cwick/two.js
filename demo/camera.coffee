@@ -6,13 +6,17 @@ render = ->
 
   scale = 1/(.5*Math.sin(Date.now()/3000) + 2)
   camera.position.x += .5
-  camera.scale = scale
+  camera.scale.setValues [scale, scale]
 
 canvas = new Two.Canvas(width: 640, height: 480)
 renderer = new Two.SceneRenderer(backend: new Two.CanvasRenderer(canvas: canvas))
 renderer.backend.flipYAxis = true
 
-camera = new Two.Camera(anchorPoint: [0.5, 0.5], position: [0, 100], width: canvas.width, height: canvas.height)
+camera = new Two.Camera
+  anchorPoint: [0.5, 0.5]
+  position: new Two.Vector2d([0, 100])
+  width: canvas.width,
+  height: canvas.height
 scene = new Two.TransformNode()
 ground = new Two.TransformNode()
 snail = new Two.TransformNode()
@@ -50,15 +54,15 @@ groundSprite = new Two.Sprite
     height: tileSize
 
 for x in [0..40]
-  tile = new Two.TransformNode(position: [x*tileSize, 0])
+  tile = new Two.TransformNode(position: new Two.Vector2d([x*tileSize, 0]))
   tile.add new Two.RenderNode(renderable: groundSprite, width: tileSize, height: tileSize)
   ground.add tile
 
-crab.position = [tileSize*18, tileSize]
+crab.position.setValues [tileSize*18, tileSize]
 crab.add new Two.RenderNode(renderable: crabSprite, width: 55, height: 26)
 
-snail.position = [tileSize*10, tileSize]
-snail.scale = [-1,1]
+snail.position.setValues [tileSize*10, tileSize]
+snail.scale.setValues [-1,1]
 snail.add new Two.RenderNode(renderable: snailSprite, width: 32, height: 32)
 
 scene.add ground

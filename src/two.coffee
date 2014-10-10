@@ -5,6 +5,7 @@
 `import GameObject from "./game_object"`
 `import GameWorld from "./game_world"`
 `import Matrix2d from "./matrix2d"`
+`import Vector2d from "./vector2d"`
 `import Object from "./object"`
 `import Property from "./property"`
 `import Rectangle from "./rectangle"`
@@ -33,5 +34,5 @@ Components =
 `export { Object, Property, Canvas, SceneRenderer, CanvasRenderer, TransformNode, RenderNode, Sprite, Text,
 Matrix2d, DeviceMetrics, Profiler, Timer, PeriodicSampler, GameObject, Components, GameWorld,
 Rectangle, Camera, Game, DefaultGameDelegate, Keys, AssetLoader, ArcadePhysicsBody, GameState,
-Renderable, Path
+Renderable, Path, Vector2d
 }`

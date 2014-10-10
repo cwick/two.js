@@ -14,7 +14,7 @@ Game = Two.Game.extend
 
     for x in [0...@canvas.width] by 32
       do (x) ->
-        groundBlock = new Two.TransformNode(position: [x, 0])
+        groundBlock = new Two.TransformNode(position: new Two.Vector2d([x, 0]))
         groundBlock.add new Two.RenderNode(renderable: groundSprite)
         ground.add groundBlock
 
@@ -39,7 +39,7 @@ game.registerGameObject "Player", Two.GameObject.extend Two.Components.ArcadePhy
     @physics.boundingBox.y = -16
     @physics.boundingBox.width = 32
     @physics.boundingBox.height = 32
-    @physics.maxVelocity = [@MAX_SPEED, @MAX_SPEED]
+    @physics.maxVelocity.setValues [@MAX_SPEED, @MAX_SPEED]
 
   objectDidSpawn: ->
     @physics.position.x = @game.canvas.width/2

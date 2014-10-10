@@ -24,12 +24,12 @@ HelloWorld = new Two.GameObject.extend
       image: "/demo/assets/world.jpg"
       anchorPoint: [0, 1])
 
-    helloTransform.position = [-305, 150]
-    worldTransform.position = [0, 150]
+    helloTransform.position.setValues [-305, 150]
+    worldTransform.position.setValues [0, 150]
 
     @transform.add helloTransform
     @transform.add worldTransform
-    @transform.scale = .5
+    @transform.scale.setValues [0.5, 0.5]
 
 GameDelegate = Two.DefaultGameDelegate.extend
   gameWillInitialize: (game) ->

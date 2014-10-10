@@ -12,9 +12,6 @@ ArcadePhysicsWorld = TwoObject.extend
     @isActive = false
     @collideWorldBounds = true
 
-  gravity: Property
-    set: (value) -> @_gravity = new Vector2d(value)
-
   add: (body) ->
     @bodies.push body
     body.world = @

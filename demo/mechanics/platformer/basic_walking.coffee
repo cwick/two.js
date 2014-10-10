@@ -16,7 +16,7 @@ Game = Two.Game.extend
 
     for x in [0...@canvas.width] by 32
       do (x) ->
-        groundBlock = new Two.TransformNode(position: [x, 0])
+        groundBlock = new Two.TransformNode(position: new Two.Vector2d([x, 0]))
         groundBlock.add new Two.RenderNode(renderable: groundSprite)
         ground.add groundBlock
 

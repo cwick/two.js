@@ -23,8 +23,8 @@ testImage = new Two.TransformNode()
 testImage.add new Two.RenderNode(renderable: new Two.Sprite
   image: "/demo/assets/retina_tree.jpg"
   anchorPoint: [0, 1])
-testImage.scale = 0.5
-testImage.position = [20, lowresCanvas.height - 20]
+testImage.scale.setValues [0.5, 0.5]
+testImage.position.setValues [20, lowresCanvas.height - 20]
 
 document.body.appendChild(lowresCanvas.domElement)
 document.body.appendChild(highresCanvas.domElement)

@@ -31,7 +31,7 @@ loader.preloadImage("Dream_Moon_Ball_Sprite.png").then ->
   class Ball
     constructor: ->
       @transform = new Two.TransformNode()
-      @velocity = [Math.random() - .5, Math.random() - .5]
+      @velocity.setValues [Math.random() - .5, Math.random() - .5]
       @velocity.x *= 20
       @velocity.y *= 20
       @transform.position = @getRandomPosition()

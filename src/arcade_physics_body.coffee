@@ -26,21 +26,6 @@ ArcadePhysicsBody = TwoObject.extend
 
   centerOfMass: Property readonly: true
 
-  position: Property
-    set: (value) -> @_position = new Vector2d(value)
-
-  velocity: Property
-    set: (value) -> @_velocity = new Vector2d(value)
-
-  acceleration: Property
-    set: (value) -> @_acceleration = new Vector2d(value)
-
-  maxVelocity: Property
-    set: (value) -> @_maxVelocity = new Vector2d(value)
-
-  drag: Property
-    set: (value) -> @_drag = new Vector2d(value)
-
   tick: (deltaSeconds) ->
     return unless @world
 
@@ -78,36 +63,36 @@ ArcadePhysicsBody = TwoObject.extend
     right = worldBounds.x + worldBounds.width
 
     if min_y <= bottom
-      @_velocity.y = @acceleration.y = 0
+      @velocity.y = @acceleration.y = 0
       @_centerOfMass.y = bottom + halfHeight
       @touching.down = true
 
     if max_y >= top
-      @_velocity.y = @acceleration.y = 0
+      @velocity.y = @acceleration.y = 0
       @_centerOfMass.y = top - halfHeight
       @touching.up = true
 
     if min_x <= left
-      @_velocity.x = @acceleration.x = 0
+      @velocity.x = @acceleration.x = 0
       @_centerOfMass.x = left + halfWidth
       @touching.left = true
 
     if max_x >= right
-      @_velocity.x = @acceleration.x = 0
+      @velocity.x = @acceleration.x = 0
       @_centerOfMass.x = right - halfWidth
       @touching.right = true
 
   updateCenterOfMassFromPosition: ->
-    @_centerOfMass.x = @_position.x + @boundingBox.x
-    @_centerOfMass.y = @_position.y + @boundingBox.y
+    @_centerOfMass.x = @position.x + @boundingBox.x
+    @_centerOfMass.y = @position.y + @boundingBox.y
 
   updatePositionFromCenterOfMass: ->
-    @_position.x = @_centerOfMass.x - @boundingBox.x
-    @_position.y = @_centerOfMass.y - @boundingBox.y
+    @position.x = @_centerOfMass.x - @boundingBox.x
+    @position.y = @_centerOfMass.y - @boundingBox.y
 
   applyGravity: (deltaSeconds, gravity) ->
-    @_velocity.x += gravity.x*deltaSeconds
-    @_velocity.y += gravity.y*deltaSeconds
+    @velocity.x += gravity.x*deltaSeconds
+    @velocity.y += gravity.y*deltaSeconds
 
   updateVelocity: (deltaSeconds) ->
     @applyAcceleration(deltaSeconds)
@@ -116,41 +101,41 @@ ArcadePhysicsBody = TwoObject.extend
     @limitVelocity()
 
   applyVelocity: (deltaSeconds) ->
-    @_centerOfMass.x += @_velocity.x*deltaSeconds
-    @_centerOfMass.y += @_velocity.y*deltaSeconds
+    @_centerOfMass.x += @velocity.x*deltaSeconds
+    @_centerOfMass.y += @velocity.y*deltaSeconds
 
   applyAcceleration: (deltaSeconds) ->
-    @_velocity.x += @acceleration.x*deltaSeconds
-    @_velocity.y += @acceleration.y*deltaSeconds
+    @velocity.x += @acceleration.x*deltaSeconds
+    @velocity.y += @acceleration.y*deltaSeconds
 
   applyXDrag: (deltaSeconds) ->
     if @acceleration.x == 0
-      if @_velocity.x > 0
-        @_velocity.x -= @_drag.x*deltaSeconds
-        @_velocity.x = 0 if @_velocity.x < 0
-      else if @_velocity.x < 0
-        @_velocity.x += @_drag.x*deltaSeconds
-        @_velocity.x = 0 if @_velocity.x > 0
+      if @velocity.x > 0
+        @velocity.x -= @drag.x*deltaSeconds
+        @velocity.x = 0 if @velocity.x < 0
+      else if @velocity.x < 0
+        @velocity.x += @drag.x*deltaSeconds
+        @velocity.x = 0 if @velocity.x > 0
 
   applyYDrag: (deltaSeconds) ->
     if @acceleration.y == 0
-      if @_velocity.y > 0
-        @_velocity.y -= @_drag.y*deltaSeconds
-        @_velocity.y = 0 if @_velocity.y < 0
-      else if @_velocity.y < 0
-        @_velocity.y += @_drag.y*deltaSeconds
-        @_velocity.y = 0 if @_velocity.y > 0
+      if @velocity.y > 0
+        @velocity.y -= @drag.y*deltaSeconds
+        @velocity.y = 0 if @velocity.y < 0
+      else if @velocity.y < 0
+        @velocity.y += @drag.y*deltaSeconds
+        @velocity.y = 0 if @velocity.y > 0
 
   limitVelocity: ->
-    if @_velocity.x > @_maxVelocity.x
-      @_velocity.x = @_maxVelocity.x
-    else if @_velocity.x < -@_maxVelocity.x
-      @_velocity.x = -@_maxVelocity.x
+    if @velocity.x > @maxVelocity.x
+      @velocity.x = @maxVelocity.x
+    else if @velocity.x < -@maxVelocity.x
+      @velocity.x = -@maxVelocity.x
 
-    if @_velocity.y > @_maxVelocity.y
-      @_velocity.y = @_maxVelocity.y
-    else if @_velocity.y < -@_maxVelocity.y
-      @_velocity.y = -@_maxVelocity.y
+    if @velocity.y > @maxVelocity.y
+      @velocity.y = @maxVelocity.y
+    else if @velocity.y < -@maxVelocity.y
+      @velocity.y = -@maxVelocity.y
 
   resetTouches: ->
     t = @touching

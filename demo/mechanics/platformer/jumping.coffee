@@ -16,7 +16,7 @@ Game = Two.Game.extend
 
     for x in [0...@canvas.width] by 32
       do (x) ->
-        groundBlock = new Two.TransformNode(position: [x, 0])
+        groundBlock = new Two.TransformNode(position: new Two.Vector2d([x, 0]))
         groundBlock.add new Two.RenderNode(renderable: groundSprite)
         groundBlockCollider = new Two.ArcadePhysicsBody
           boundingBox: new Two.Rectangle(x: -16, y: -16, width: 32, height: 32)
@@ -66,7 +66,7 @@ game.registerGameObject "Player", Two.GameObject.extend Two.Components.ArcadePhy
     @physics.boundingBox.y = -16
     @physics.boundingBox.width = 32
     @physics.boundingBox.height = 32
-    @physics.maxVelocity = [@MAX_SPEED, @MAX_SPEED * 10]
+    @physics.maxVelocity.setValues [@MAX_SPEED, @MAX_SPEED * 10]
     # Add drag to the player that slows them down when they are not accelerating
     @physics.drag.x = @DRAG
 

@@ -15,12 +15,6 @@ describe "Vector2d", ->
     expect(@vector.y).toEqual 3
     expect(@vector.values).toEqual [2,3]
 
-  it "can be constructed from another Vector2d", ->
-    @vector.x = 5
-    @vector.y = 6
-    v2 = new Vector2d(@vector)
-    expect(v2.values).toEqual [5,6]
-
   it "can be set with x and y", ->
     @vector.x = 6
     @vector.y = 7

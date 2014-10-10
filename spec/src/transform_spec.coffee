@@ -21,7 +21,7 @@ describe "TransformNode", ->
 
     it "modifies the transformation matrix when re-assigning", ->
       t = new TransformNode()
-      t.position = [4,5]
+      t.position.setValues [4,5]
       t.updateMatrix()
       expect(t.matrix.values).toEqual new Matrix2d().translate(t.position.x, t.position.y).values
 
@@ -41,7 +41,7 @@ describe "TransformNode", ->
 
     it "modifies the transformation matrix when re-assigning", ->
       t = new TransformNode()
-      t.scale = [4,5]
+      t.scale.setValues [4,5]
       t.updateMatrix()
       expect(t.matrix.values).toEqual new Matrix2d().scale(t.scale.x, t.scale.y).values
 
@@ -55,16 +55,16 @@ describe "TransformNode", ->
 
     it "can be scaled along both dimesions equally", ->
       t = new TransformNode()
-      t.scale = 5
+      t.scale.setValues [5,5]
       t.updateMatrix()
       expect(t.matrix.values).toEqual new Matrix2d().scale(5,5).values
 
   describe "composite transform", ->
     it "should scale, then rotate, then translate", ->
       t = new TransformNode()
-      t.position = [1,2]
+      t.position.setValues [1,2]
       t.rotation = 4
-      t.scale = [10,10]
+      t.scale.setValues [10,10]
       t.updateMatrix()
       expect(t.matrix.values).toEqual new Matrix2d().translate(1,2).rotate(4).scale(10,10).values
 
