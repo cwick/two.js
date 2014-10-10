@@ -28,6 +28,8 @@ ArcadePhysicsBody = TwoObject.extend
       left: false
       right: false
     @enabled = true
+    @delegate = null
+    @world = null
 
   centerOfMass: Property readonly: true
 
@@ -43,20 +45,26 @@ ArcadePhysicsBody = TwoObject.extend
   drag: Property
     set: (value) -> @_drag = new Vector2d(value)
 
-  postUpdate: ->
-  preUpdate: ->
+  tick: (deltaSeconds) ->
+    return unless @world
 
-  _preUpdate: ->
-    @updateCenterOfMassFromPosition()
-    @resetTouches()
     @preUpdate()
-
-  _postUpdate: ->
-    @updatePositionFromCenterOfMass()
+    @applyGravity(deltaSeconds, @world.gravity)
+    @updateVelocity(deltaSeconds)
+    @applyVelocity(deltaSeconds)
+    @doWorldBoundsCollision(@world.bounds) if @collideWorldBounds
     @postUpdate()
 
+  preUpdate: ->
+    @updateCenterOfMassFromPosition()
+    @resetTouches()
+    @delegate?.physicsBodyWillUpdate?()
+
+  postUpdate: ->
+    @updatePositionFromCenterOfMass()
+    @delegate?.physicsBodyDidUpdate?()
+
   doWorldBoundsCollision: (worldBounds) ->
-    return unless @collideWorldBounds
     return if worldBounds.width == 0 || worldBounds.height == 0
 
     halfWidth = @boundingBox.width/2
@@ -110,7 +118,7 @@ ArcadePhysicsBody = TwoObject.extend
     @applyYDrag(deltaSeconds)
     @limitVelocity()
 
-  updatePosition: (deltaSeconds) ->
+  applyVelocity: (deltaSeconds) ->
     @_centerOfMass[0] += @_velocity[0]*deltaSeconds
     @_centerOfMass[1] += @_velocity[1]*deltaSeconds
 

@@ -13,12 +13,14 @@ ArcadePhysicsWorld = TwoObject.extend
 
   add: (body) ->
     @bodies.push body
+    body.world = @
     @isActive = true
 
   remove: (body) ->
     idx = @bodies.indexOf body
     if idx != -1
       @bodies.splice(idx, 1)
+      body.world = null
 
   tick: (deltaSeconds) ->
     return unless @isActive
@@ -27,12 +29,7 @@ ArcadePhysicsWorld = TwoObject.extend
 
   _runSimulation: (deltaSeconds) ->
     for body in @bodies when body.enabled
-      body._preUpdate()
-      body.applyGravity(deltaSeconds, @gravity)
-      body.updateVelocity(deltaSeconds)
-      body.updatePosition(deltaSeconds)
-      body.doWorldBoundsCollision(@bounds) if @collideWorldBounds
-      body._postUpdate()
+      body.tick(deltaSeconds)
 
     return
 
