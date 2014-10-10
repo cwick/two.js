@@ -12,10 +12,7 @@ GameObject = TwoObject.extend
     @game.remove @
 
   addComponent: (ComponentType) ->
-    if @hasComponent(ComponentType.componentName)
-      Log.warning "Tried to install #{ComponentType.componentName} component into #{@name}, but " +
-        "#{@name} already has a component with that name."
-      return null
+    return if @hasComponent(ComponentType.componentName)
 
     component = new ComponentType()
     @components[ComponentType.propertyName] = component

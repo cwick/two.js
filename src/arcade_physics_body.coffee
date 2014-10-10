@@ -16,6 +16,7 @@ ArcadePhysicsBody = TwoObject.extend
     @velocity = new Vector2d()
     @acceleration = new Vector2d()
     @position = new Vector2d()
+    @_centerOfMass = new Vector2d()
     @boundingBox = new BoundingBox()
     @maxVelocity = new Vector2d([Number.MAX_VALUE, Number.MAX_VALUE])
     @drag = new Vector2d()
@@ -27,6 +28,8 @@ ArcadePhysicsBody = TwoObject.extend
       left: false
       right: false
     @enabled = true
+
+  centerOfMass: Property readonly: true
 
   position: Property
     set: (value) -> @_position = new Vector2d(value)
@@ -44,12 +47,12 @@ ArcadePhysicsBody = TwoObject.extend
   preUpdate: ->
 
   _preUpdate: ->
-    @unsetOrigin()
+    @updateCenterOfMassFromPosition()
     @resetTouches()
     @preUpdate()
 
   _postUpdate: ->
-    @setOrigin()
+    @updatePositionFromCenterOfMass()
     @postUpdate()
 
   doWorldBoundsCollision: (worldBounds) ->
@@ -59,10 +62,10 @@ ArcadePhysicsBody = TwoObject.extend
     halfWidth = @boundingBox.width/2
     halfHeight = @boundingBox.height/2
 
-    min_x = @_position[0] - halfWidth
-    max_x = @_position[0] + halfWidth
-    min_y = @_position[1] - halfHeight
-    max_y = @_position[1] + halfHeight
+    min_x = @_centerOfMass[0] - halfWidth
+    max_x = @_centerOfMass[0] + halfWidth
+    min_y = @_centerOfMass[1] - halfHeight
+    max_y = @_centerOfMass[1] + halfHeight
 
     bottom = worldBounds.y
     top = worldBounds.y + worldBounds.height
@@ -71,31 +74,31 @@ ArcadePhysicsBody = TwoObject.extend
 
     if min_y <= bottom
       @_velocity[1] = @acceleration[1] = 0
-      @_position[1] = bottom + halfHeight
+      @_centerOfMass[1] = bottom + halfHeight
       @touching.down = true
 
     if max_y >= top
       @_velocity[1] = @acceleration[1] = 0
-      @_position[1] = top - halfHeight
+      @_centerOfMass[1] = top - halfHeight
       @touching.up = true
 
     if min_x <= left
       @_velocity[0] = @acceleration[0] = 0
-      @_position[0] = left + halfWidth
+      @_centerOfMass[0] = left + halfWidth
       @touching.left = true
 
     if max_x >= right
       @_velocity[0] = @acceleration[0] = 0
-      @_position[0] = right - halfWidth
+      @_centerOfMass[0] = right - halfWidth
       @touching.right = true
 
-  unsetOrigin: ->
-    @_position[0] += @boundingBox.x
-    @_position[1] += @boundingBox.y
+  updateCenterOfMassFromPosition: ->
+    @_centerOfMass[0] = @_position[0] + @boundingBox.x
+    @_centerOfMass[1] = @_position[1] + @boundingBox.y
 
-  setOrigin: ->
-    @_position[0] -= @boundingBox.x
-    @_position[1] -= @boundingBox.y
+  updatePositionFromCenterOfMass: ->
+    @_position[0] = @_centerOfMass[0] - @boundingBox.x
+    @_position[1] = @_centerOfMass[1] - @boundingBox.y
 
   applyGravity: (deltaSeconds, gravity) ->
     @_velocity[0] += gravity[0]*deltaSeconds
@@ -108,8 +111,8 @@ ArcadePhysicsBody = TwoObject.extend
     @limitVelocity()
 
   updatePosition: (deltaSeconds) ->
-    @_position[0] += @_velocity[0]*deltaSeconds
-    @_position[1] += @_velocity[1]*deltaSeconds
+    @_centerOfMass[0] += @_velocity[0]*deltaSeconds
+    @_centerOfMass[1] += @_velocity[1]*deltaSeconds
 
   applyAcceleration: (deltaSeconds) ->
     @_velocity[0] += @acceleration[0]*deltaSeconds
