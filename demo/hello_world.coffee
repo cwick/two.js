@@ -1,37 +1,47 @@
 `module Two from "two"`
 
+
 MainState = Two.GameState.extend
+  stateDidEnter: ->
+    hello = @game.spawn "HelloWorld", name: "HelloWorld"
+
   stateWillTick: (deltaSeconds) ->
-    helloWorldTransform.rotation += 0.008
-    wobble.position.x = Math.sin(Date.now() / 500) * 100
+    helloObject = @game.world.findByName("HelloWorld")
+    helloObject.transform.position.x = Math.sin(Date.now() / 500) * 100
+    helloObject.transform.rotation += 0.008
 
-game = new Two.Game()
-game.camera.anchorPoint = [0.5, 0.5]
+HelloWorld = new Two.GameObject.extend
+  initialize: ->
+    @addComponent Two.Components.Transform
 
-wobble = new Two.TransformNode()
-helloWorldTransform = new Two.TransformNode()
-worldTransform = new Two.TransformNode()
-helloTransform = new Two.TransformNode()
+    worldTransform = new Two.TransformNode()
+    helloTransform = new Two.TransformNode()
 
-helloWorldTransform.scale = .5
+    helloTransform.add new Two.RenderNode(renderable: new Two.Sprite
+      image: "/demo/assets/hello.gif"
+      anchorPoint: [0, 1])
 
-helloTransform.add new Two.RenderNode(renderable: new Two.Sprite
-  image: "/demo/assets/hello.gif"
-  anchorPoint: [0, 1])
+    worldTransform.add new Two.RenderNode(renderable: new Two.Sprite
+      image: "/demo/assets/world.jpg"
+      anchorPoint: [0, 1])
 
-worldTransform.add new Two.RenderNode(renderable: new Two.Sprite
-  image: "/demo/assets/world.jpg"
-  anchorPoint: [0, 1])
+    helloTransform.position = [-305, 150]
+    worldTransform.position = [0, 150]
 
-helloTransform.position = [-305, 150]
-worldTransform.position = [0, 150]
+    @transform.add helloTransform
+    @transform.add worldTransform
+    @transform.scale = .5
 
-game.scene.add wobble
+GameDelegate = Two.DefaultGameDelegate.extend
+  gameWillInitialize: (game) ->
+    game.registerState "main", MainState
+    game.registerGameObject "HelloWorld", HelloWorld
 
-wobble.add helloWorldTransform
-helloWorldTransform.add helloTransform
-helloWorldTransform.add worldTransform
+  gameDidInitialize: (game) ->
+    game.camera.anchorPoint = [0.5, 0.5]
+    game.renderer.backend.flipYAxis = true
 
-game.registerState "main", MainState
+game = new Two.Game(delegate: new GameDelegate())
+
 game.start()
 
