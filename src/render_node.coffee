@@ -14,16 +14,18 @@ RenderNode = SceneNode.extend
 
     @_getRenderCommand(worldMatrix, commands)
 
-  bounds: Property
+  boundingBox: Property
     get: ->
-      renderableBounds = @renderable.bounds
+      renderableBounds = @renderable.boundingBox
       [scaleX, scaleY] = @_scaleFromBounds(renderableBounds)
       renderableBounds.width *= scaleX
       renderableBounds.height *= scaleY
+      renderableBounds.x *= scaleX
+      renderableBounds.y *= scaleY
       renderableBounds
 
   _getWorldMatrix: (transform) ->
-    [scaleX, scaleY] = @_scaleFromBounds(@renderable.bounds)
+    [scaleX, scaleY] = @_scaleFromBounds(@renderable.boundingBox)
     transform.scale(scaleX, scaleY)
 
   _getRenderCommand: (worldMatrix, commands) ->

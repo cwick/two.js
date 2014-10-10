@@ -1,6 +1,6 @@
 `import Renderable from "./renderable"`
 `import Property from "./property"`
-`import Size from "./size"`
+`import Rectangle from "./rectangle"`
 
 Sprite = Renderable.extend
   initialize: ->
@@ -29,8 +29,12 @@ Sprite = Renderable.extend
       return @_image.height if @_image.height
       null
 
-  bounds: Property
-    get: -> new Size(width: @width, height: @height)
+  boundingBox: Property
+    get: -> new Rectangle
+      width: @width
+      height: @height
+      x: (@anchorPoint[0] - 0.5) * @width
+      y: (@anchorPoint[1] - 0.5) * @height
 
   pixelOrigin: Property
     get: ->

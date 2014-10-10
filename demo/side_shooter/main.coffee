@@ -17,9 +17,7 @@ Ship = Two.GameObject.extend
 
     @transform.add shipBody
     @transform.position = @physics.position = [0, 100]
-    @physics.boundingBox.x = 20
-    @physics.boundingBox.width = shipBody.bounds.width
-    @physics.boundingBox.height = shipBody.bounds.height
+    @physics.boundingBox = shipBody.boundingBox
 
 GameDelegate = Two.DefaultGameDelegate.extend
   gameDidInitialize: (game) ->

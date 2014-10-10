@@ -3,13 +3,6 @@
 `import Rectangle from "./rectangle"`
 `import Property from "./property"`
 
-BoundingBox = Rectangle.extend
-  fromSprite: (sprite) ->
-    @width = sprite.width
-    @height = sprite.height
-    @y = (sprite.anchorPoint[1] - 0.5) * @height
-    @x = -(sprite.anchorPoint[0] - 0.5) * @width
-
 ArcadePhysicsBody = TwoObject.extend
   initialize: ->
     @userData = null
@@ -17,7 +10,7 @@ ArcadePhysicsBody = TwoObject.extend
     @acceleration = new Vector2d()
     @position = new Vector2d()
     @_centerOfMass = new Vector2d()
-    @boundingBox = new BoundingBox()
+    @boundingBox = new Rectangle()
     @maxVelocity = new Vector2d([Number.MAX_VALUE, Number.MAX_VALUE])
     @drag = new Vector2d()
     @type = ArcadePhysicsBody.DYNAMIC
@@ -52,7 +45,7 @@ ArcadePhysicsBody = TwoObject.extend
     @applyGravity(deltaSeconds, @world.gravity)
     @updateVelocity(deltaSeconds)
     @applyVelocity(deltaSeconds)
-    @doWorldBoundsCollision(@world.bounds) if @collideWorldBounds
+    @doWorldBoundsCollision(@world.bounds)
     @postUpdate()
 
   preUpdate: ->
@@ -65,6 +58,7 @@ ArcadePhysicsBody = TwoObject.extend
     @delegate?.physicsBodyDidUpdate?()
 
   doWorldBoundsCollision: (worldBounds) ->
+    return unless @world.collideWorldBounds && @collideWorldBounds
     return if worldBounds.width == 0 || worldBounds.height == 0
 
     halfWidth = @boundingBox.width/2
