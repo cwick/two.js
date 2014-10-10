@@ -1,5 +1,6 @@
 `import ArcadePhysicsBody from "../arcade_physics_body"`
 `import BaseComponent from "./base"`
+`import TransformComponent from "./transform"`
 
 ArcadePhysics = BaseComponent.extend
   initialize: ->
@@ -7,6 +8,10 @@ ArcadePhysics = BaseComponent.extend
 
   componentWasInstalled: (gameObject) ->
     gameObject.physics = @body
+
+    unless gameObject.hasComponent("Transform")
+      gameObject.addComponent TransformComponent
+
     @body.userData = gameObject
 
 ArcadePhysics.componentName = "ArcadePhysics"

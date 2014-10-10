@@ -139,10 +139,11 @@ Game = TwoObject.extend
 
     if Entity
       entity = Object.create Entity.prototype
+      entity.id = GameObject.__nextID__++
       entity.game = @
+      entity.name = "#{type}#{entity.id}"
 
       Entity.apply entity
-      entity.name = "#{type}#{entity.id}" unless entity.name?
 
       entity
 
