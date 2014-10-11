@@ -39,7 +39,7 @@ game.registerGameObject "Player", Two.GameObject.extend Two.Components.ArcadePhy
     @physics.boundingBox.width = 32
     @physics.boundingBox.height = 32
 
-  objectDidSpawn: ->
+  prepareToSpawn: ->
     @physics.position.x = @game.canvas.width/2
     @physics.position.y = 32
 

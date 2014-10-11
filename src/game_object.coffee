@@ -1,6 +1,7 @@
 `import TwoObject from "./object"`
 `import Log from "./log"`
 `import Vector2d from "./vector2d"`
+`import Property from "./property"`
 
 GameObject = TwoObject.extend
   initialize: ->
@@ -8,8 +9,12 @@ GameObject = TwoObject.extend
     @_componentsByName = {}
     @_inputVector = new Vector2d()
 
-  objectDidSpawn: ->
-  tick: ->
+  prepareToSpawn: ->
+  tick: (deltaSeconds) ->
+    c.tick(deltaSeconds) for _, c of @components
+
+  inputVector: Property readonly: true
+
   die: ->
     @game.remove @
 

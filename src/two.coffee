@@ -21,6 +21,7 @@
 `import Path from "./path"`
 `import TransformNode from "./transform_node"`
 `import TransformComponent from "./components/transform"`
+`import PlayerMovementComponent from "./components/player_movement"`
 `import { Profiler, Timer, PeriodicSampler } from "./benchmark"`
 `import Keys from "./keys"`
 `import AssetLoader from "./asset_loader"`
@@ -30,6 +31,7 @@ Components =
   P2Physics: P2Physics
   ArcadePhysics: ArcadePhysics
   Transform: TransformComponent
+  PlayerMovement: PlayerMovementComponent
 
 `export { Object, Property, Canvas, SceneRenderer, CanvasRenderer, TransformNode, RenderNode, Sprite, Text,
 Matrix2d, DeviceMetrics, Profiler, Timer, PeriodicSampler, GameObject, Components, GameWorld,

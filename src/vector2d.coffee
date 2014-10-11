@@ -1,3 +1,4 @@
+`import Property from "./property"`
 `module gl from "./lib/gl-matrix"`
 
 class Vector2d
@@ -19,8 +20,13 @@ class Vector2d
     @
 
   add: (other) ->
-    valus = @values
+    values = @values
     gl.vec2.add(values, values, other.values)
+    @
+
+  multiply: (other) ->
+    values = @values
+    gl.vec2.multiply(values, values, other.values)
     @
 
   normalize: ->
@@ -35,5 +41,11 @@ Object.defineProperty Vector2d::, "x",
 Object.defineProperty Vector2d::, "y",
   set: (value) -> @values[1] = value
   get: -> @values[1]
+
+Object.defineProperty Vector2d::, "length",
+  get: -> gl.vec2.length @values
+
+Object.defineProperty Vector2d::, "squaredLength",
+  get: -> gl.vec2.squaredLength @values
 
 `export default Vector2d`

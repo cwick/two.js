@@ -70,7 +70,7 @@ game.registerGameObject "Player", Two.GameObject.extend Two.Components.ArcadePhy
     # Add drag to the player that slows them down when they are not accelerating
     @physics.drag.x = @DRAG
 
-  objectDidSpawn: ->
+  prepareToSpawn: ->
     @physics.position.x = @game.canvas.width/2
     @physics.position.y = 32
 

@@ -31,7 +31,7 @@ Ball = new Two.GameObject.extend
     @physics.addShape new p2.Circle(@width/2)
     @physics.updateMassProperties()
 
-  objectDidSpawn: ->
+  prepareToSpawn: ->
     @physics.position = @_getRandomPosition()
 
   _getRandomPosition: ->

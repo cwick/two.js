@@ -27,3 +27,10 @@ describe "Vector2d", ->
     @vector.y = 10
     expect(@vector.clone().values).toEqual [3,10]
 
+  it "can be added to another vector", ->
+    v2 = new Vector2d([5, 6])
+    @vector.x = 10
+    @vector.add(v2)
+
+    expect(@vector.values).toEqual [15, 6]
+
