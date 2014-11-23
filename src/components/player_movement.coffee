@@ -7,11 +7,24 @@ PlayerMovement = BaseComponent.extend
 
   tick: ->
     input = @owner.consumeInputVector()
-    input.normalize()
     acceleration = @maxAcceleration.clone()
     acceleration.multiply input
 
+    @_limitAcceleration(acceleration)
+
     @owner.physics.acceleration = acceleration
+
+  _limitAcceleration: (v) ->
+    if v.x > @maxAcceleration.x
+      v.x = @maxAcceleration.x
+    else if v.x < -@maxAcceleration.x
+      v.x = -@maxAcceleration.x
+
+    if v.y > @maxAcceleration.y
+      v.y = @maxAcceleration.y
+    else if v.y < -@maxAcceleration.y
+      v.y = -@maxAcceleration.y
+
 
 PlayerMovement.componentName = "PlayerMovement"
 PlayerMovement.propertyName = "movement"

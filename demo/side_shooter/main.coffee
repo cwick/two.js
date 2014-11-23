@@ -12,16 +12,27 @@ Ship = Two.GameObject.extend
     @addComponent Two.Components.ArcadePhysics
     @addComponent Two.Components.PlayerMovement
 
-    shipBody = new Two.RenderNode()
-    shipBody.renderable = new Two.Path
+    @initializeRenderable()
+    @initializePhysics()
+
+  initializePhysics: ->
+    SPEED_MULTIPLIER = 60
+
+    maxAcceleration = Math.pow SPEED_MULTIPLIER, 2
+    maxVelocity = 4*SPEED_MULTIPLIER
+
+    @physics.position.setValues [100, 100]
+    @physics.boundingBox = @shipBody.boundingBox
+    @physics.maxVelocity.setValues [maxVelocity, maxVelocity]
+    @physics.drag.setValues [maxAcceleration/2, maxAcceleration/2]
+    @components.movement.maxAcceleration.setValues [maxAcceleration, maxAcceleration]
+
+  initializeRenderable: ->
+    @shipBody = new Two.RenderNode()
+    @shipBody.renderable = new Two.Path
       points: [[0,0], [0, 20], [40,0], [0,-20]]
 
-    @transform.add shipBody
-    @physics.position.setValues [100, 100]
-    @physics.boundingBox = shipBody.boundingBox
-    @physics.maxVelocity.setValues [500, 500]
-    @physics.drag.setValues [5000, 5000]
-    @components.movement.maxAcceleration.setValues [10000, 10000]
+    @transform.add @shipBody
 
   tick: ->
     inputVector = new Two.Vector2d()
